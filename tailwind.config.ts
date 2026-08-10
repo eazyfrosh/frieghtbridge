@@ -21,21 +21,21 @@ const config: Config = {
     },
     extend: {
       colors: {
-        // Warm neutral. Deliberately brown-tinted rather than navy so nothing
-        // on the page reads as blue. `ink-400` is the lightest step used for
-        // body text on white and clears 4.5:1.
+        // True neutral. The scheme is orange and white, so the greys stay
+        // untinted — no navy cast, no brown cast. `ink-400` is the lightest
+        // step used for body text on white and clears 4.5:1.
         ink: {
-          50: '#FBF8F6',
-          100: '#F3ECE7',
-          200: '#E4D9D1',
-          300: '#CBBBAF',
-          400: '#7E6B5F',
-          500: '#64544A',
-          600: '#4C3F37',
-          700: '#382E28',
-          800: '#261F1A',
-          900: '#17110E',
-          950: '#0C0806',
+          50: '#F8F8F8',
+          100: '#EFEFEF',
+          200: '#DCDCDC',
+          300: '#BFBFBF',
+          400: '#6E6E6E',
+          500: '#565656',
+          600: '#414141',
+          700: '#2E2E2E',
+          800: '#1F1F1F',
+          900: '#121212',
+          950: '#0A0A0A',
         },
         // Primary. `brand-600` is the darkest step still used behind white
         // text — it clears 4.5:1, so buttons stay readable at body size.
@@ -79,14 +79,14 @@ const config: Config = {
         '5xl': '2.75rem',
       },
       boxShadow: {
-        soft: '0 1px 2px rgba(23,17,14,0.05), 0 8px 24px -12px rgba(23,17,14,0.13)',
-        card: '0 2px 4px rgba(23,17,14,0.04), 0 18px 40px -20px rgba(23,17,14,0.20)',
-        lift: '0 8px 12px -6px rgba(23,17,14,0.09), 0 32px 64px -28px rgba(23,17,14,0.30)',
+        soft: '0 1px 2px rgba(18,18,18,0.05), 0 8px 24px -12px rgba(18,18,18,0.13)',
+        card: '0 2px 4px rgba(18,18,18,0.04), 0 18px 40px -20px rgba(18,18,18,0.20)',
+        lift: '0 8px 12px -6px rgba(18,18,18,0.09), 0 32px 64px -28px rgba(18,18,18,0.30)',
         glow: '0 24px 70px -30px rgba(209,69,10,0.6)',
       },
       backgroundImage: {
         'grid-light':
-          'linear-gradient(to right, rgba(23,17,14,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(23,17,14,0.06) 1px, transparent 1px)',
+          'linear-gradient(to right, rgba(18,18,18,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(18,18,18,0.06) 1px, transparent 1px)',
         'grid-dark':
           'linear-gradient(to right, rgba(255,255,255,0.055) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.055) 1px, transparent 1px)',
       },

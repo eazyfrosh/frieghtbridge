@@ -20,19 +20,19 @@ interface PageHeroProps {
 export function PageHero({ eyebrow, title, description, breadcrumb, children, overlap }: PageHeroProps) {
   return (
     <section
-      className={`relative isolate overflow-hidden bg-ink-950 pt-[124px] text-white lg:pt-[148px] ${
+      className={`relative isolate overflow-hidden bg-brand-700 pt-[124px] text-white lg:pt-[148px] ${
         overlap ? 'pb-32 sm:pb-40' : 'pb-16 sm:pb-20 lg:pb-24'
       }`}
     >
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(100%_80%_at_20%_-20%,#7A2E0C_0%,transparent_58%),radial-gradient(70%_60%_at_95%_0%,#C7420A_0%,transparent_55%)] opacity-65" />
+        <div className="absolute inset-0 bg-[radial-gradient(100%_80%_at_20%_-20%,#7A2E0C_0%,transparent_58%),radial-gradient(70%_60%_at_95%_0%,#D1450A_0%,transparent_55%)] opacity-65" />
         <div className="absolute inset-0 bg-grid-dark bg-[size:60px_60px] opacity-40 mask-fade-b" />
       </div>
 
       <div className="on-dark container">
         <Reveal>
           <nav aria-label="Breadcrumb" className="mb-7">
-            <ol className="flex items-center gap-1.5 text-sm text-ink-400">
+            <ol className="flex items-center gap-1.5 text-sm text-white/70">
               <li>
                 <Link href="/" className="transition-colors hover:text-white">
                   Home
@@ -50,7 +50,7 @@ export function PageHero({ eyebrow, title, description, breadcrumb, children, ov
 
         <Reveal delay={0.05}>
           <span className="eyebrow-dark">
-            <span className="h-1.5 w-1.5 rounded-full bg-brand-500" aria-hidden="true" />
+            <span className="h-1.5 w-1.5 rounded-full bg-white" aria-hidden="true" />
             {eyebrow}
           </span>
         </Reveal>

@@ -28,13 +28,13 @@ export function Hero() {
         };
 
   return (
-    <section className="relative isolate overflow-hidden bg-ink-950 pb-40 pt-[128px] text-white sm:pb-48 lg:pb-56 lg:pt-[150px]">
+    <section className="relative isolate overflow-hidden bg-brand-700 pb-40 pt-[128px] text-white sm:pb-48 lg:pb-56 lg:pt-[150px]">
       {/* Ambient background */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_15%_-10%,#7A2E0C_0%,transparent_55%),radial-gradient(90%_70%_at_92%_8%,#C7420A_0%,transparent_52%)] opacity-70" />
+        <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_15%_-10%,#7A2E0C_0%,transparent_55%),radial-gradient(90%_70%_at_92%_8%,#D1450A_0%,transparent_52%)] opacity-70" />
         <div className="absolute inset-0 bg-grid-dark bg-[size:64px_64px] mask-fade-b opacity-[0.55]" />
-        <div className="absolute -left-40 top-1/3 h-[26rem] w-[26rem] rounded-full bg-signal-700/25 blur-[110px]" />
-        <div className="absolute bottom-0 left-1/2 h-64 w-[140%] -translate-x-1/2 bg-gradient-to-t from-ink-950 to-transparent" />
+        <div className="absolute -left-40 top-1/3 h-[26rem] w-[26rem] rounded-full bg-white/10 blur-[110px]" />
+        <div className="absolute bottom-0 left-1/2 h-64 w-[140%] -translate-x-1/2 bg-gradient-to-t from-brand-800 to-transparent" />
       </div>
 
       <div className="container">
@@ -44,8 +44,8 @@ export function Hero() {
             <motion.div {...rise(0)}>
               <span className="eyebrow-dark">
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-pulse-ring rounded-full bg-brand-400" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand-400" />
+                  <span className="absolute inline-flex h-full w-full animate-pulse-ring rounded-full bg-white" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-white" />
                 </span>
                 Move Freight. Build Connections.
               </span>
@@ -60,7 +60,7 @@ export function Hero() {
                   animate={reduced ? undefined : { opacity: 1, y: 0 }}
                   transition={{ duration: 0.65, ease: EASE_PREMIUM, delay: 0.12 + index * 0.06 }}
                 >
-                  {index >= 4 ? <span className="text-brand-300">{word}</span> : word}
+                  {index >= 4 ? <span className="text-signal-200">{word}</span> : word}
                 </motion.span>
               ))}
             </h1>
@@ -71,7 +71,7 @@ export function Hero() {
             </motion.p>
 
             <motion.div {...rise(0.56)} className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Button href="/quote" size="lg" className="w-full sm:w-auto">
+              <Button href="/quote" size="lg" variant="onDark" className="w-full sm:w-auto">
                 Get a Quote
                 <ArrowRight className="h-[1.1rem] w-[1.1rem] transition-transform duration-300 group-hover:translate-x-1" />
               </Button>
@@ -84,7 +84,7 @@ export function Hero() {
             <motion.ul {...rise(0.68)} className="mt-10 flex flex-wrap gap-x-6 gap-y-3">
               {TRUST_POINTS.map((point) => (
                 <li key={point.label} className="flex items-center gap-2 text-sm text-ink-300">
-                  <point.icon className="h-4 w-4 text-brand-300" aria-hidden="true" />
+                  <point.icon className="h-4 w-4 text-signal-200" aria-hidden="true" />
                   {point.label}
                 </li>
               ))}

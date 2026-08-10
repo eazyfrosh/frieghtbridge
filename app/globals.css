@@ -86,10 +86,10 @@
 }
 
 @layer utilities {
-  /* Keeps highlighted words a consistent brand blue on dark backgrounds — a
-     gradient running to white reads unevenly across different line lengths. */
+  /* Highlighted words sit on deep-orange bands, so the highlight runs pale
+     rather than lighter-orange, which would all but vanish against the ground. */
   .text-gradient {
-    @apply bg-gradient-to-r from-brand-300 to-brand-200 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-white to-signal-200 bg-clip-text text-transparent;
   }
 
   .mask-fade-b {

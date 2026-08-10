@@ -69,13 +69,21 @@ This is a front-end prototype: there is no backend.
 
 Tokens live in `tailwind.config.ts`:
 
-The palette is deliberately all-warm — there is no blue anywhere in the UI.
+The scheme is **orange and white**. Surfaces are white or near-white, the
+feature bands are deep brand orange, and the greys are untinted so nothing
+reads as a third colour.
 
-- `ink` — warm, brown-tinted neutral for text and dark surfaces (not navy).
-  `ink-400` is the lightest step used for body text on white and clears 4.5:1
-- `brand` — primary orange (CTAs, links, active states, brand accents).
-  `brand-600` is the darkest step used behind white text and clears 4.5:1
-- `signal` — warm gold secondary for highlights and glows
+- `ink` — true neutral grey for text and the few near-black surfaces (footer,
+  the coverage map panel). `ink-400` is the lightest step used for body text on
+  white and clears 4.5:1
+- `brand` — primary orange. `brand-600` is the darkest step used behind white
+  text and clears 4.5:1; `brand-700` is the full-bleed band colour
+- `signal` — warm gold, used only for highlights on the orange bands where a
+  lighter orange would disappear
+
+On an orange band, primary buttons switch to the `onDark` (white) variant and
+small print goes to `text-white/70` — brand orange on brand orange has almost
+no contrast.
 
 Semantic status colours stay outside the brand ramp so a status never reads as
 decoration: emerald for delivered, rose for delayed/exception. "In transit" and

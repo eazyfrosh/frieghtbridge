@@ -37,7 +37,7 @@ export function LogoMark({ className }: { className?: string }) {
         {/* Piers */}
         <path d="M7 14v5M17 14v5" stroke="white" strokeWidth="1.7" strokeLinecap="round" opacity="0.55" />
         {/* Freight unit crossing the span */}
-        <rect x="9.5" y="8.6" width="5" height="3.6" rx="1" fill="#17110E" />
+        <rect x="9.5" y="8.6" width="5" height="3.6" rx="1" fill="#121212" />
       </svg>
     </span>
   );

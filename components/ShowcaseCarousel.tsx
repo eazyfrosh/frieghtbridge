@@ -100,9 +100,9 @@ export function ShowcaseCarousel() {
   const autoplayOn = !paused && !reduced;
 
   return (
-    <section id="showcase" className="section relative overflow-hidden bg-ink-950 text-white">
+    <section id="showcase" className="section relative overflow-hidden bg-brand-700 text-white">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(85%_70%_at_15%_0%,#8A3410_0%,transparent_55%),radial-gradient(60%_60%_at_90%_100%,#A2530C_0%,transparent_55%)] opacity-60" />
+        <div className="absolute inset-0 bg-[radial-gradient(85%_70%_at_15%_0%,#7A2E0C_0%,transparent_55%),radial-gradient(60%_60%_at_90%_100%,#CC7409_0%,transparent_55%)] opacity-60" />
         <div className="absolute inset-0 bg-grid-dark bg-[size:56px_56px] opacity-30" />
       </div>
 
@@ -154,7 +154,7 @@ export function ShowcaseCarousel() {
                 >
                   <div className="min-w-0">
                     <span className="eyebrow-dark">
-                      <span className="h-1.5 w-1.5 rounded-full bg-brand-500" aria-hidden="true" />
+                      <span className="h-1.5 w-1.5 rounded-full bg-white" aria-hidden="true" />
                       {slide.eyebrow}
                     </span>
                     <h3 className="mt-5 font-display text-[1.9rem] font-semibold leading-[1.1] tracking-[-0.03em] text-white sm:text-4xl">
@@ -169,7 +169,7 @@ export function ShowcaseCarousel() {
                         <div key={stat.label}>
                           <dt className="sr-only">{stat.label}</dt>
                           <dd>
-                            <span className="block font-display text-2xl font-semibold text-brand-300">
+                            <span className="block font-display text-2xl font-semibold text-signal-200">
                               {stat.value}
                             </span>
                             <span className="mt-0.5 block text-xs font-medium uppercase tracking-[0.12em] text-ink-300">
@@ -225,7 +225,7 @@ export function ShowcaseCarousel() {
                         {active && (
                           <motion.span
                             key={`${index}-${paused}-${String(reduced)}`}
-                            className="absolute inset-y-0 left-0 rounded-full bg-brand-400"
+                            className="absolute inset-y-0 left-0 rounded-full bg-white"
                             initial={{ width: autoplayOn ? '0%' : '100%' }}
                             animate={{ width: '100%' }}
                             transition={{

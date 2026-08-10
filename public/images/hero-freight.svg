@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1000" width="1200" height="1000" role="img" aria-label="Illustration of a FreightBridge semi-truck on a highway at dusk with a container yard and gantry cranes behind it">
   <defs>
     <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#0C0806"/>
-      <stop offset="38%" stop-color="#33150A"/>
-      <stop offset="72%" stop-color="#8A3410"/>
-      <stop offset="100%" stop-color="#C7420A"/>
+      <stop offset="0%" stop-color="#050B15"/>
+      <stop offset="38%" stop-color="#101F45"/>
+      <stop offset="72%" stop-color="#23409B"/>
+      <stop offset="100%" stop-color="#5B4CB8"/>
     </linearGradient>
     <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5">
       <stop offset="0%" stop-color="#FFB37A" stop-opacity="0.95"/>
@@ -12,33 +12,33 @@
       <stop offset="100%" stop-color="#FF5C0A" stop-opacity="0"/>
     </radialGradient>
     <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#17110E"/>
-      <stop offset="100%" stop-color="#0C0806"/>
+      <stop offset="0%" stop-color="#0A1424"/>
+      <stop offset="100%" stop-color="#050B15"/>
     </linearGradient>
     <linearGradient id="road" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#2A1A12"/>
-      <stop offset="100%" stop-color="#170F0A"/>
+      <stop offset="0%" stop-color="#16223A"/>
+      <stop offset="100%" stop-color="#0C1425"/>
     </linearGradient>
     <linearGradient id="trailer" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#FFFFFF"/>
-      <stop offset="60%" stop-color="#F7F0EA"/>
-      <stop offset="100%" stop-color="#E4D9D1"/>
+      <stop offset="60%" stop-color="#E7EDF8"/>
+      <stop offset="100%" stop-color="#C3CFE4"/>
     </linearGradient>
     <linearGradient id="cab" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#FA5B0A"/>
       <stop offset="100%" stop-color="#A93706"/>
     </linearGradient>
     <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#FFE0B8"/>
-      <stop offset="100%" stop-color="#F0A868"/>
+      <stop offset="0%" stop-color="#BBD1FF"/>
+      <stop offset="100%" stop-color="#6E8FE0"/>
     </linearGradient>
     <linearGradient id="beam" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#FFE3B8" stop-opacity="0.55"/>
-      <stop offset="100%" stop-color="#FFE3B8" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#FFD9A8" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#FFD9A8" stop-opacity="0"/>
     </linearGradient>
     <linearGradient id="haze" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#FA5B0A" stop-opacity="0"/>
-      <stop offset="100%" stop-color="#FA5B0A" stop-opacity="0.22"/>
+      <stop offset="0%" stop-color="#2F5BFF" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#2F5BFF" stop-opacity="0.22"/>
     </linearGradient>
   </defs>
 
@@ -48,7 +48,7 @@
   <circle cx="905" cy="612" r="230" fill="url(#sun)"/>
 
   <!-- Distant skyline -->
-  <g fill="#231208" opacity="0.9">
+  <g fill="#0A1730" opacity="0.9">
     <rect x="60" y="470" width="46" height="180"/>
     <rect x="118" y="516" width="30" height="134"/>
     <rect x="160" y="440" width="56" height="210"/>
@@ -59,7 +59,7 @@
   </g>
 
   <!-- Gantry cranes -->
-  <g stroke="#3A1C0C" stroke-width="8" fill="none" stroke-linecap="round">
+  <g stroke="#13224A" stroke-width="8" fill="none" stroke-linecap="round">
     <path d="M300 650V420h250"/>
     <path d="M300 470h250"/>
     <path d="M400 650V470"/>
@@ -77,17 +77,17 @@
 
   <!-- Container yard -->
   <g opacity="0.96">
-    <rect x="120" y="556" width="150" height="42" rx="4" fill="#8A3410"/>
-    <rect x="120" y="600" width="150" height="42" rx="4" fill="#3A2318"/>
-    <rect x="278" y="512" width="150" height="42" rx="4" fill="#A93706"/>
-    <rect x="278" y="556" width="150" height="42" rx="4" fill="#8A3410"/>
-    <rect x="278" y="600" width="150" height="42" rx="4" fill="#7A3A12"/>
-    <rect x="436" y="556" width="150" height="42" rx="4" fill="#6E4A16"/>
-    <rect x="436" y="600" width="150" height="42" rx="4" fill="#3A2318"/>
-    <rect x="770" y="556" width="150" height="42" rx="4" fill="#A93706"/>
-    <rect x="770" y="600" width="150" height="42" rx="4" fill="#8A3410"/>
-    <rect x="928" y="600" width="150" height="42" rx="4" fill="#3A2318"/>
-    <g stroke="#0C0806" stroke-opacity="0.35" stroke-width="2">
+    <rect x="120" y="556" width="150" height="42" rx="4" fill="#1B3168"/>
+    <rect x="120" y="600" width="150" height="42" rx="4" fill="#16274F"/>
+    <rect x="278" y="512" width="150" height="42" rx="4" fill="#8C3A18"/>
+    <rect x="278" y="556" width="150" height="42" rx="4" fill="#1B3168"/>
+    <rect x="278" y="600" width="150" height="42" rx="4" fill="#12325C"/>
+    <rect x="436" y="556" width="150" height="42" rx="4" fill="#123F4F"/>
+    <rect x="436" y="600" width="150" height="42" rx="4" fill="#16274F"/>
+    <rect x="770" y="556" width="150" height="42" rx="4" fill="#8C3A18"/>
+    <rect x="770" y="600" width="150" height="42" rx="4" fill="#1B3168"/>
+    <rect x="928" y="600" width="150" height="42" rx="4" fill="#16274F"/>
+    <g stroke="#050B15" stroke-opacity="0.35" stroke-width="2">
       <path d="M150 556v86M180 556v86M210 556v86M240 556v86"/>
       <path d="M308 512v130M338 512v130M368 512v130M398 512v130"/>
       <path d="M466 556v86M496 556v86M526 556v86M556 556v86"/>
@@ -102,9 +102,9 @@
 
   <!-- Road -->
   <rect y="742" width="1200" height="176" fill="url(#road)"/>
-  <rect y="740" width="1200" height="2" fill="#5A4034" opacity="0.7"/>
-  <rect y="916" width="1200" height="2" fill="#5A4034" opacity="0.5"/>
-  <g fill="#E0C3A6" opacity="0.35">
+  <rect y="740" width="1200" height="2" fill="#33477A" opacity="0.7"/>
+  <rect y="916" width="1200" height="2" fill="#33477A" opacity="0.5"/>
+  <g fill="#8FA6D6" opacity="0.35">
     <rect x="20" y="884" width="80" height="6" rx="3"/>
     <rect x="150" y="884" width="80" height="6" rx="3"/>
     <rect x="280" y="884" width="80" height="6" rx="3"/>
@@ -117,7 +117,7 @@
   </g>
 
   <!-- Motion streaks -->
-  <g stroke="#FFC078" stroke-linecap="round" opacity="0.5">
+  <g stroke="#7EA0FF" stroke-linecap="round" opacity="0.5">
     <path d="M40 700h150" stroke-width="4" opacity="0.25"/>
     <path d="M0 726h110" stroke-width="3" opacity="0.18"/>
     <path d="M70 764h120" stroke-width="4" opacity="0.22"/>
@@ -126,62 +126,62 @@
   <!-- Truck -->
   <g>
     <!-- shadow -->
-    <ellipse cx="640" cy="836" rx="380" ry="18" fill="#0C0806" opacity="0.55"/>
+    <ellipse cx="640" cy="836" rx="380" ry="18" fill="#050B15" opacity="0.55"/>
 
     <!-- trailer -->
     <rect x="256" y="596" width="512" height="152" rx="10" fill="url(#trailer)"/>
     <rect x="256" y="596" width="512" height="18" rx="9" fill="#FFFFFF" opacity="0.85"/>
-    <rect x="256" y="716" width="512" height="32" fill="#CBBBAF" opacity="0.55"/>
-    <g stroke="#E4D9D1" stroke-width="2" opacity="0.9">
+    <rect x="256" y="716" width="512" height="32" fill="#AFBFD9" opacity="0.55"/>
+    <g stroke="#C6D2E6" stroke-width="2" opacity="0.9">
       <path d="M320 606v104M384 606v104M448 606v104M512 606v104M576 606v104M640 606v104M704 606v104"/>
     </g>
     <!-- brand mark on the trailer -->
     <g transform="translate(300 640)">
       <path d="M0 34h140" stroke="#A93706" stroke-width="9" stroke-linecap="round"/>
       <path d="M4 34C28-12 112-12 136 34" stroke="#FA5B0A" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.8"/>
-      <rect x="52" y="2" width="36" height="22" rx="5" fill="#17110E"/>
+      <rect x="52" y="2" width="36" height="22" rx="5" fill="#0B1524"/>
     </g>
     <!-- underride bar -->
-    <rect x="264" y="750" width="150" height="10" rx="5" fill="#33241A"/>
+    <rect x="264" y="750" width="150" height="10" rx="5" fill="#1B2942"/>
 
     <!-- cab -->
     <path d="M772 640h74c10 0 19 5 24 14l40 66c4 7 6 14 6 22v6h-144z" fill="url(#cab)"/>
     <rect x="768" y="596" width="34" height="152" rx="8" fill="#D1450A"/>
     <path d="M852 660h22l30 52h-52z" fill="url(#glass)"/>
     <rect x="806" y="736" width="110" height="12" rx="6" fill="#5A1E06"/>
-    <rect x="904" y="700" width="14" height="26" rx="4" fill="#FFE3B8"/>
+    <rect x="904" y="700" width="14" height="26" rx="4" fill="#FFD9A8"/>
     <path d="M918 706l180 -22v56l-180 -18z" fill="url(#beam)"/>
     <!-- exhaust stack -->
-    <rect x="760" y="586" width="10" height="90" rx="5" fill="#B39A87"/>
+    <rect x="760" y="586" width="10" height="90" rx="5" fill="#8FA0BC"/>
 
     <!-- wheels -->
     <g>
-      <circle cx="358" cy="770" r="40" fill="#170F0A"/>
-      <circle cx="358" cy="770" r="40" fill="none" stroke="#4A382C" stroke-width="6"/>
-      <circle cx="358" cy="770" r="16" fill="#8A6E58"/>
-      <circle cx="452" cy="770" r="40" fill="#170F0A"/>
-      <circle cx="452" cy="770" r="40" fill="none" stroke="#4A382C" stroke-width="6"/>
-      <circle cx="452" cy="770" r="16" fill="#8A6E58"/>
-      <circle cx="798" cy="770" r="40" fill="#170F0A"/>
-      <circle cx="798" cy="770" r="40" fill="none" stroke="#4A382C" stroke-width="6"/>
-      <circle cx="798" cy="770" r="16" fill="#8A6E58"/>
-      <circle cx="886" cy="770" r="40" fill="#170F0A"/>
-      <circle cx="886" cy="770" r="40" fill="none" stroke="#4A382C" stroke-width="6"/>
-      <circle cx="886" cy="770" r="16" fill="#8A6E58"/>
+      <circle cx="358" cy="770" r="40" fill="#0C1425"/>
+      <circle cx="358" cy="770" r="40" fill="none" stroke="#26344F" stroke-width="6"/>
+      <circle cx="358" cy="770" r="16" fill="#5B6E90"/>
+      <circle cx="452" cy="770" r="40" fill="#0C1425"/>
+      <circle cx="452" cy="770" r="40" fill="none" stroke="#26344F" stroke-width="6"/>
+      <circle cx="452" cy="770" r="16" fill="#5B6E90"/>
+      <circle cx="798" cy="770" r="40" fill="#0C1425"/>
+      <circle cx="798" cy="770" r="40" fill="none" stroke="#26344F" stroke-width="6"/>
+      <circle cx="798" cy="770" r="16" fill="#5B6E90"/>
+      <circle cx="886" cy="770" r="40" fill="#0C1425"/>
+      <circle cx="886" cy="770" r="40" fill="none" stroke="#26344F" stroke-width="6"/>
+      <circle cx="886" cy="770" r="16" fill="#5B6E90"/>
     </g>
   </g>
 
   <!-- Foreground pallets -->
   <g opacity="0.95">
-    <rect x="60" y="930" width="122" height="34" rx="4" fill="#8A3410"/>
-    <rect x="60" y="964" width="122" height="14" rx="3" fill="#2A1A12"/>
+    <rect x="60" y="930" width="122" height="34" rx="4" fill="#123258"/>
+    <rect x="60" y="964" width="122" height="14" rx="3" fill="#0B1E38"/>
     <rect x="196" y="946" width="96" height="32" rx="4" fill="#7A3416"/>
-    <rect x="1040" y="936" width="120" height="42" rx="4" fill="#3A2318"/>
-    <rect x="1040" y="920" width="120" height="18" rx="4" fill="#8A3410"/>
+    <rect x="1040" y="936" width="120" height="42" rx="4" fill="#15294D"/>
+    <rect x="1040" y="920" width="120" height="18" rx="4" fill="#1B3168"/>
   </g>
 
   <!-- Vignette -->
   <rect width="1200" height="1000" fill="none"/>
-  <rect width="1200" height="120" fill="#0C0806" opacity="0.3"/>
-  <rect y="880" width="1200" height="120" fill="#0C0806" opacity="0.2"/>
+  <rect width="1200" height="120" fill="#050B15" opacity="0.3"/>
+  <rect y="880" width="1200" height="120" fill="#050B15" opacity="0.2"/>
 </svg>

@@ -17,9 +17,9 @@ const STATS = [
 
 export function EnterpriseSection() {
   return (
-    <section id="enterprise" className="section relative overflow-hidden bg-ink-950 text-white">
+    <section id="enterprise" className="section relative overflow-hidden bg-brand-700 text-white">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(90%_70%_at_10%_0%,#8A3410_0%,transparent_55%),radial-gradient(70%_60%_at_95%_100%,#8A3410_0%,transparent_55%)] opacity-60" />
+        <div className="absolute inset-0 bg-[radial-gradient(90%_70%_at_10%_0%,#7A2E0C_0%,transparent_55%),radial-gradient(70%_60%_at_95%_100%,#7A2E0C_0%,transparent_55%)] opacity-60" />
         <div className="absolute inset-0 bg-grid-dark bg-[size:56px_56px] opacity-40" />
       </div>
 
@@ -64,7 +64,7 @@ export function EnterpriseSection() {
         </div>
 
         <Reveal delay={0.1}>
-          <p className="mt-12 text-xs text-ink-400">
+          <p className="mt-12 text-xs text-white/70">
             Figures shown are demonstration values for this website prototype.
           </p>
         </Reveal>
@@ -100,11 +100,11 @@ function StatCard({ value, suffix, label }: { value: number; suffix: string; lab
     >
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-brand-500/25 blur-2xl transition-opacity duration-500 group-hover:opacity-100 md:opacity-0"
+        className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-white/20 blur-2xl transition-opacity duration-500 group-hover:opacity-100 md:opacity-0"
       />
       <p className="relative font-display text-4xl font-semibold tracking-[-0.04em] text-white sm:text-5xl">
         {display}
-        <span className="text-brand-300">{suffix}</span>
+        <span className="text-signal-200">{suffix}</span>
       </p>
       <p className="relative mt-2 text-sm font-medium text-ink-300">{label}</p>
     </motion.div>
