@@ -201,6 +201,21 @@ Landscape, 1600px wide or more; each is cropped with `object-cover`. If a `src`
 is missing or mistyped the bundled illustration renders instead, so a typo
 degrades rather than breaking the page.
 
+**PNG, JPEG and WebP all work** — just match the extension in `src`. Source
+format barely matters to visitors, because `next/image` resizes and re-encodes.
+Measured on a 1600px photographic PNG in this project:
+
+| | bytes |
+| --- | --- |
+| Source PNG in the repo | 1,813,200 |
+| Served as AVIF (most browsers) | 20,952 |
+| Served as WebP | 24,010 |
+| Served as PNG (no modern format support) | 165,298 |
+
+So a heavy PNG costs repository weight and build time, not page weight. Git
+keeps every version of a binary forever, so if the source files run to several
+MB it is worth exporting them as JPEG before committing.
+
 The shipped illustrations are original SVG authored for this project — no
 third-party or stock assets. They keep their own scene colours and sit outside
 the brand palette on purpose.
