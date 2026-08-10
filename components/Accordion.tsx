@@ -1,9 +1,10 @@
 'use client';
 
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { useReducedMotion } from '@/lib/use-reduced-motion';
 
 export interface AccordionItem {
   question: string;

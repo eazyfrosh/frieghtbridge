@@ -126,7 +126,16 @@ video: {
 Leave `src` empty to use the still image. Guidance for the clip:
 
 - 6–10 seconds, silently looping, compressed to **under ~3 MB** — it is the
-  first thing on the page and competes with the hero copy for bandwidth
+  first thing on the page and competes with the hero copy for bandwidth.
+  720p is plenty: the frame renders about 540 px tall, so a 4K master is
+  roughly 25× the bytes for no visible gain. To resize and strip audio:
+
+  ```bash
+  ffmpeg -i master.mp4 -vf scale=1280:-2 -c:v libx264 -crf 26 -preset slow \
+         -pix_fmt yuv420p -an -movflags +faststart hero-freight.mp4
+  ffmpeg -i master.mp4 -vf scale=1280:-2 -c:v libvpx-vp9 -crf 36 -b:v 0 \
+         -row-mt 1 -an hero-freight.webm
+  ```
 - The clip is `muted` and `playsInline`, which is what allows mobile browsers
   to autoplay it at all
 - It is suppressed entirely under `prefers-reduced-motion`; those visitors get

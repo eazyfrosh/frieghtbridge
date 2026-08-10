@@ -1,8 +1,9 @@
 'use client';
 
-import { motion, useReducedMotion, type Variants } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import type { ReactNode } from 'react';
 import { fadeUp, motionSafe, stagger, viewportOnce } from '@/lib/motion';
+import { useReducedMotion } from '@/lib/use-reduced-motion';
 
 /**
  * Tags a reveal can render as. Kept as a static map so the motion component

@@ -1,12 +1,13 @@
 'use client';
 
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Cpu, Eye, Gauge, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { fadeUp, motionSafe } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 import { Reveal, StaggerGroup } from './ui/Reveal';
+import { useReducedMotion } from '@/lib/use-reduced-motion';
 
 const BENEFITS = [
   {

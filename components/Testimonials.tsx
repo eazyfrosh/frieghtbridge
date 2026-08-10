@@ -1,12 +1,13 @@
 'use client';
 
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Quote, Star } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { EASE_PREMIUM } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 import { Reveal } from './ui/Reveal';
 import { SectionHeading } from './ui/SectionHeading';
+import { useReducedMotion } from '@/lib/use-reduced-motion';
 
 const TESTIMONIALS = [
   {

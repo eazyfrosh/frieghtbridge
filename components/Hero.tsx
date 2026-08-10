@@ -1,10 +1,11 @@
 'use client';
 
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowRight, Boxes, MoveRight, Radar, ShieldCheck } from 'lucide-react';
 import { EASE_PREMIUM } from '@/lib/motion';
 import { HeroMedia } from './HeroMedia';
 import { Button } from './ui/Button';
+import { useReducedMotion } from '@/lib/use-reduced-motion';
 
 const HEADLINE = ['Freight', 'That', 'Moves', 'Your', 'Business', 'Forward.'];
 

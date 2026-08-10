@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Globe2, Plane, Ship, Truck } from 'lucide-react';
 import { useState } from 'react';
 import { EASE_PREMIUM, viewportOnce } from '@/lib/motion';
@@ -8,6 +8,7 @@ import { LANES, REGIONS } from '@/lib/site';
 import { cn } from '@/lib/utils';
 import { Reveal } from './ui/Reveal';
 import { SectionHeading } from './ui/SectionHeading';
+import { useReducedMotion } from '@/lib/use-reduced-motion';
 
 const VIEW_W = 860;
 const VIEW_H = 420;

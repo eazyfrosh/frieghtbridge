@@ -1,12 +1,13 @@
 'use client';
 
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, CheckCircle2, Loader2, MapPin, PackageCheck, ShieldCheck, Truck } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { EASE_PREMIUM } from '@/lib/motion';
 import { cn, sleep } from '@/lib/utils';
 import { Button } from './ui/Button';
 import { SegmentedField, SelectField, TextField } from './ui/Field';
+import { useReducedMotion } from '@/lib/use-reduced-motion';
 
 const COUNTRIES = [
   'United States',

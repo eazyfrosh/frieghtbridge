@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   AlertTriangle,
   ArrowRight,
@@ -28,6 +28,7 @@ import {
   type TrackingResult,
 } from '@/lib/tracking';
 import { cn, formatDate, formatDateTime, timeAgo } from '@/lib/utils';
+import { useReducedMotion } from '@/lib/use-reduced-motion';
 
 type Status = 'idle' | 'loading' | 'done';
 

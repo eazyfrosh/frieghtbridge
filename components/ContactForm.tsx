@@ -1,12 +1,13 @@
 'use client';
 
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { CheckCircle2, Loader2, Send } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { EASE_PREMIUM } from '@/lib/motion';
 import { sleep } from '@/lib/utils';
 import { Button } from './ui/Button';
 import { SelectField, TextAreaField, TextField } from './ui/Field';
+import { useReducedMotion } from '@/lib/use-reduced-motion';
 
 const TOPICS = [
   { value: 'quote', label: 'New quote or pricing' },

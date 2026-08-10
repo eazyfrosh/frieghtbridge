@@ -1,36 +1,59 @@
 'use client';
 
-import { useReducedMotion } from 'framer-motion';
+
 import { Pause, Play } from 'lucide-react';
 import Image from 'next/image';
-import { useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { HERO_MEDIA } from '@/lib/site';
 import { cn } from '@/lib/utils';
+import { useReducedMotion } from '@/lib/use-reduced-motion';
 
 /**
- * The hero's media frame. Renders, in order of preference:
+ * The hero's media frame.
  *
- *   1. `HERO_MEDIA.video.src` — an autoplaying, muted, looping background clip
- *   2. `HERO_MEDIA.src`       — a still photograph
- *   3. `HERO_MEDIA.fallbackSrc` — the bundled illustration
+ * The still image is always the base layer and is server-rendered, so it is
+ * the LCP candidate and there is never an empty frame. When a clip is
+ * configured and motion is allowed, the video layers over the image after
+ * mount and fades in once it can play. Anything that fails simply reveals the
+ * layer beneath: video -> photograph -> bundled illustration.
  *
- * Each step degrades to the next if the asset is missing or fails to load, so
- * swapping media can never leave a broken hero.
+ * Video selection is deliberately deferred until after mount. The server
+ * cannot know the visitor's motion preference, so branching the render tree on
+ * `useReducedMotion` during SSR produces a hydration mismatch.
  *
- * The video is suppressed entirely under `prefers-reduced-motion` (the poster
- * shows instead), and when it does play it carries a pause control — WCAG
- * 2.2.2 requires a way to stop motion that auto-starts and runs past five
- * seconds.
+ * WCAG 2.2.2 requires a way to stop motion that auto-starts and runs past five
+ * seconds, hence the pause control.
  */
 export function HeroMedia() {
   const reduced = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
   const [photoFailed, setPhotoFailed] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-  const [playing, setPlaying] = useState(true);
+  const [photoLoaded, setPhotoLoaded] = useState(false);
+  // Driven by the element's own events, never assumed — autoplay can be
+  // refused, and the control must not claim the clip is running when it is not.
+  const [playing, setPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const videoSrc = HERO_MEDIA.video?.src;
+  useEffect(() => setMounted(true), []);
+
+  /**
+   * Prefer webm only when the browser is confident about it; otherwise fall
+   * through to the mp4 and let `onError` catch an unplayable file. `onError`
+   * is reliable here because the source is set via `src` — an error on a
+   * `<source>` child fires on that child and does not bubble to the video.
+   */
+  const videoSrc = useMemo(() => {
+    if (!mounted) return null;
+    const src = HERO_MEDIA.video?.src ?? '';
+    const webm = HERO_MEDIA.video?.webm ?? '';
+    if (webm && document.createElement('video').canPlayType('video/webm; codecs="vp9"') === 'probably') {
+      return webm;
+    }
+    return src || null;
+  }, [mounted]);
+
   const showVideo = Boolean(videoSrc) && !videoFailed && !reduced;
 
   const photoSrc = photoFailed ? HERO_MEDIA.fallbackSrc : HERO_MEDIA.src;
@@ -39,13 +62,8 @@ export function HeroMedia() {
   function togglePlayback() {
     const el = videoRef.current;
     if (!el) return;
-    if (el.paused) {
-      void el.play();
-      setPlaying(true);
-    } else {
-      el.pause();
-      setPlaying(false);
-    }
+    if (el.paused) void el.play();
+    else el.pause();
   }
 
   return (
@@ -56,9 +74,26 @@ export function HeroMedia() {
         className="absolute inset-0 bg-[linear-gradient(150deg,#1B2740_0%,#3A2318_55%,#0B1524_100%)]"
       />
 
-      {showVideo ? (
+      <Image
+        key={photoSrc}
+        src={photoSrc}
+        alt={photoAlt}
+        width={1600}
+        height={1200}
+        priority
+        sizes="(min-width: 1024px) 42vw, 100vw"
+        onError={() => setPhotoFailed(true)}
+        onLoad={() => setPhotoLoaded(true)}
+        className={cn(
+          'relative h-[320px] w-full object-cover transition-opacity duration-700 ease-premium sm:h-[440px] lg:h-[540px]',
+          photoLoaded ? 'opacity-100' : 'opacity-0',
+        )}
+      />
+
+      {showVideo && videoSrc && (
         <video
           ref={videoRef}
+          src={videoSrc}
           // Muted + playsInline are what make autoplay legal on mobile Safari
           // and Chrome; without both, the clip silently never starts.
           autoPlay
@@ -66,32 +101,14 @@ export function HeroMedia() {
           loop
           playsInline
           preload="metadata"
-          poster={HERO_MEDIA.video?.poster}
           aria-label={HERO_MEDIA.video?.description}
-          onCanPlay={() => setLoaded(true)}
+          onCanPlay={() => setVideoReady(true)}
+          onPlay={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
           onError={() => setVideoFailed(true)}
           className={cn(
-            'relative h-[320px] w-full object-cover transition-opacity duration-700 ease-premium sm:h-[440px] lg:h-[540px]',
-            loaded ? 'opacity-100' : 'opacity-0',
-          )}
-        >
-          {HERO_MEDIA.video?.webm && <source src={HERO_MEDIA.video.webm} type="video/webm" />}
-          {videoSrc && <source src={videoSrc} type="video/mp4" />}
-        </video>
-      ) : (
-        <Image
-          key={photoSrc}
-          src={photoSrc}
-          alt={photoAlt}
-          width={1600}
-          height={1200}
-          priority
-          sizes="(min-width: 1024px) 42vw, 100vw"
-          onError={() => setPhotoFailed(true)}
-          onLoad={() => setLoaded(true)}
-          className={cn(
-            'relative h-[320px] w-full object-cover transition-opacity duration-700 ease-premium sm:h-[440px] lg:h-[540px]',
-            loaded ? 'opacity-100' : 'opacity-0',
+            'absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-premium',
+            videoReady ? 'opacity-100' : 'opacity-0',
           )}
         />
       )}
@@ -107,7 +124,7 @@ export function HeroMedia() {
         className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-transparent to-brand-600/20 mix-blend-soft-light"
       />
 
-      {showVideo && (
+      {showVideo && videoReady && (
         <button
           type="button"
           onClick={togglePlayback}

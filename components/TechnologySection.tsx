@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   Activity,
   BarChart3,
@@ -19,6 +19,7 @@ import { EASE_PREMIUM } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 import { Reveal } from './ui/Reveal';
 import { SectionHeading } from './ui/SectionHeading';
+import { useReducedMotion } from '@/lib/use-reduced-motion';
 
 const KPIS = [
   { label: 'Active shipments', value: '128', delta: '+12 this week', icon: Package, tone: 'brand' },

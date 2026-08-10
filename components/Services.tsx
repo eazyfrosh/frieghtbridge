@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 import { fadeUp, motionSafe } from '@/lib/motion';
@@ -8,6 +8,7 @@ import { SERVICES } from '@/lib/site';
 import { Button } from './ui/Button';
 import { StaggerGroup } from './ui/Reveal';
 import { SectionHeading } from './ui/SectionHeading';
+import { useReducedMotion } from '@/lib/use-reduced-motion';
 
 export function Services() {
   const reduced = useReducedMotion();

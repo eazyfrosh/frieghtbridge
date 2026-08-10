@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, ChevronDown, Menu, Phone, X } from 'lucide-react';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -8,6 +8,7 @@ import { NAV_ITEMS, SITE, type NavItem } from '@/lib/site';
 import { cn } from '@/lib/utils';
 import { Button } from './ui/Button';
 import { Logo } from './ui/Logo';
+import { useReducedMotion } from '@/lib/use-reduced-motion';
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);

@@ -53,8 +53,8 @@ export const HERO_MEDIA = {
    * pause control.
    */
   video: {
-    src: '',
-    webm: '',
+    src: '/video/hero-freight.mp4',
+    webm: '/video/hero-freight.webm',
     poster: '/images/hero-freight.svg',
     description: 'Freight moving through a FreightBridge distribution network',
   },

@@ -1,11 +1,12 @@
 'use client';
 
-import { animate, motion, useInView, useReducedMotion } from 'framer-motion';
+import { animate, motion, useInView } from 'framer-motion';
 import { ArrowRight, Building2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { EASE_PREMIUM, fadeUp, motionSafe } from '@/lib/motion';
 import { Button } from './ui/Button';
 import { Reveal, StaggerGroup } from './ui/Reveal';
+import { useReducedMotion } from '@/lib/use-reduced-motion';
 
 const STATS = [
   { value: 98, suffix: '%', label: 'On-time delivery' },
