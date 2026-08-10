@@ -64,7 +64,7 @@ export function EnterpriseSection() {
         </div>
 
         <Reveal delay={0.1}>
-          <p className="mt-12 text-xs text-white/70">
+          <p className="mt-12 text-xs text-white/80">
             Figures shown are demonstration values for this website prototype.
           </p>
         </Reveal>

@@ -73,17 +73,20 @@ The scheme is **orange and white**. Surfaces are white or near-white, the
 feature bands are deep brand orange, and the greys are untinted so nothing
 reads as a third colour.
 
-- `ink` — true neutral grey for text and the few near-black surfaces (footer,
-  the coverage map panel). `ink-400` is the lightest step used for body text on
+- `ink` — true neutral grey for text and the coverage map panel, the one
+  surface left near-black. `ink-400` is the lightest step used for body text on
   white and clears 4.5:1
 - `brand` — primary orange. `brand-600` is the darkest step used behind white
   text and clears 4.5:1; `brand-700` is the full-bleed band colour
 - `signal` — warm gold, used only for highlights on the orange bands where a
   lighter orange would disappear
 
-On an orange band, primary buttons switch to the `onDark` (white) variant and
-small print goes to `text-white/70` — brand orange on brand orange has almost
-no contrast.
+On an orange band: primary buttons switch to the `onDark` (white) variant,
+body and small print use `text-white/80`, and the logo mark inverts to a white
+tile. Those are contrast floors, not preferences — measured against
+`brand-700`, white at 70% is only 3.96:1 and fails AA, while 80% reaches
+4.71:1 and `signal-200` reaches 5.03:1. Brand orange on brand orange has
+almost no contrast at all.
 
 Semantic status colours stay outside the brand ramp so a status never reads as
 decoration: emerald for delivered, rose for delayed/exception. "In transit" and

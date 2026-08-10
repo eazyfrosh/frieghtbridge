@@ -41,7 +41,7 @@ export function CTA() {
                 </Button>
               </div>
 
-              <p className="mt-8 text-sm text-white/70">
+              <p className="mt-8 text-sm text-white/80">
                 No obligation · Most quotes returned within one business hour
               </p>
             </div>

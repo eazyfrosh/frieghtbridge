@@ -14,30 +14,41 @@ interface LogoProps {
  * Original FreightBridge wordmark: an abstract bridge span carrying a freight
  * line across two piers, drawn from the brand's own geometry.
  */
-export function LogoMark({ className }: { className?: string }) {
+/**
+ * On white the mark is an orange tile with a white bridge; on orange or dark
+ * grounds it inverts to a white tile, because an orange tile on an orange band
+ * all but disappears.
+ */
+export function LogoMark({ tone = 'dark', className }: { tone?: 'dark' | 'light'; className?: string }) {
+  const inverted = tone === 'light';
+  const stroke = inverted ? '#D1450A' : '#FFFFFF';
+
   return (
     <span
       className={cn(
-        'relative inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 shadow-[0_6px_18px_-8px_rgba(209,69,10,0.9)]',
+        'relative inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl',
+        inverted
+          ? 'bg-white shadow-[0_6px_18px_-8px_rgba(0,0,0,0.5)]'
+          : 'bg-gradient-to-br from-brand-500 to-brand-700 shadow-[0_6px_18px_-8px_rgba(209,69,10,0.9)]',
         className,
       )}
     >
       <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
         {/* Bridge deck */}
-        <path d="M2.5 14h19" stroke="white" strokeWidth="2" strokeLinecap="round" />
+        <path d="M2.5 14h19" stroke={stroke} strokeWidth="2" strokeLinecap="round" />
         {/* Suspension span */}
         <path
           d="M3 14c3.2-6.2 14.8-6.2 18 0"
-          stroke="white"
+          stroke={stroke}
           strokeWidth="1.7"
           strokeLinecap="round"
           fill="none"
           opacity="0.75"
         />
         {/* Piers */}
-        <path d="M7 14v5M17 14v5" stroke="white" strokeWidth="1.7" strokeLinecap="round" opacity="0.55" />
+        <path d="M7 14v5M17 14v5" stroke={stroke} strokeWidth="1.7" strokeLinecap="round" opacity="0.55" />
         {/* Freight unit crossing the span */}
-        <rect x="9.5" y="8.6" width="5" height="3.6" rx="1" fill="#121212" />
+        <rect x="9.5" y="8.6" width="5" height="3.6" rx="1" fill={inverted ? '#121212' : '#121212'} />
       </svg>
     </span>
   );
@@ -46,7 +57,7 @@ export function LogoMark({ className }: { className?: string }) {
 export function Logo({ tone = 'dark', className, href = '/', showWordmark = true, onClick }: LogoProps) {
   const content = (
     <span className={cn('inline-flex items-center gap-2.5', className)}>
-      <LogoMark />
+      <LogoMark tone={tone} />
       {showWordmark && (
         <span
           className={cn(
@@ -55,7 +66,7 @@ export function Logo({ tone = 'dark', className, href = '/', showWordmark = true
           )}
         >
           Freight
-          <span className={tone === 'light' ? 'text-brand-300' : 'text-brand-600'}>Bridge</span>
+          <span className={tone === 'light' ? 'text-signal-200' : 'text-brand-600'}>Bridge</span>
         </span>
       )}
     </span>

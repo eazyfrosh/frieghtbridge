@@ -32,7 +32,7 @@ export function PageHero({ eyebrow, title, description, breadcrumb, children, ov
       <div className="on-dark container">
         <Reveal>
           <nav aria-label="Breadcrumb" className="mb-7">
-            <ol className="flex items-center gap-1.5 text-sm text-white/70">
+            <ol className="flex items-center gap-1.5 text-sm text-white/80">
               <li>
                 <Link href="/" className="transition-colors hover:text-white">
                   Home
