@@ -83,7 +83,7 @@ Reusable text/layout classes (`.section`, `.display-1`, `.display-2`, `.lead`,
 
 ## Imagery
 
-### Hero photograph
+### Hero media (video or photograph)
 
 The hero frame is photographic and configured in one place — `HERO_MEDIA` in
 `lib/site.ts`:
@@ -109,6 +109,32 @@ photo you have rights to before going live.**
 Aim for landscape, 1600×1200 or wider. The frame crops with `object-cover` and
 a scrim covers the lower third, so keep the subject clear of the bottom-left
 corner where the shipment card overlaps.
+
+#### Using a background video instead
+
+Drop an MP4 in `public/video/` and point `HERO_MEDIA.video.src` at it:
+
+```ts
+video: {
+  src: '/video/hero-freight.mp4',
+  webm: '',                            // optional, served first when present
+  poster: '/images/hero-freight.jpg',  // shown while the clip loads
+  description: 'Freight moving through a FreightBridge distribution network',
+},
+```
+
+Leave `src` empty to use the still image. Guidance for the clip:
+
+- 6–10 seconds, silently looping, compressed to **under ~3 MB** — it is the
+  first thing on the page and competes with the hero copy for bandwidth
+- The clip is `muted` and `playsInline`, which is what allows mobile browsers
+  to autoplay it at all
+- It is suppressed entirely under `prefers-reduced-motion`; those visitors get
+  the poster image
+- It renders with a pause control, since WCAG 2.2.2 requires a way to stop
+  motion that auto-starts and runs beyond five seconds
+- If the video fails to load it falls back to the still, and then to the
+  illustration
 
 ### Everything else
 

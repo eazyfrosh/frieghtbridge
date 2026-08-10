@@ -3,7 +3,7 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Boxes, MoveRight, Radar, ShieldCheck } from 'lucide-react';
 import { EASE_PREMIUM } from '@/lib/motion';
-import { HeroPhoto } from './HeroPhoto';
+import { HeroMedia } from './HeroMedia';
 import { Button } from './ui/Button';
 
 const HEADLINE = ['Freight', 'That', 'Moves', 'Your', 'Business', 'Forward.'];
@@ -97,7 +97,7 @@ export function Hero() {
             animate={reduced ? undefined : { opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.9, ease: EASE_PREMIUM, delay: 0.3 }}
           >
-            <HeroPhoto />
+            <HeroMedia />
 
             {/* Floating status card */}
             <motion.div

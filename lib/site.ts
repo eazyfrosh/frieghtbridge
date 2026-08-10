@@ -42,6 +42,24 @@ export const SITE = {
  * out of the bottom-left corner, where the shipment card overlaps.
  */
 export const HERO_MEDIA = {
+  /**
+   * Set `video.src` to show a looping background clip instead of the still.
+   * Drop an MP4 in `public/video/` and reference it as `/video/<name>.mp4`.
+   * Leave it empty to use the still image below.
+   *
+   * Keep it short (6–10s), silent, and compressed — under ~3 MB. It is
+   * muted and `playsInline` so mobile browsers will autoplay it, it is
+   * suppressed entirely under `prefers-reduced-motion`, and it carries a
+   * pause control.
+   */
+  video: {
+    src: '',
+    webm: '',
+    poster: '/images/hero-freight.svg',
+    description: 'Freight moving through a FreightBridge distribution network',
+  },
+
+  /** Still image — the poster for the video, and the hero when there is none. */
   src: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1600&q=75',
   alt: 'A freight truck on the highway at dusk, hauling goods for a FreightBridge customer',
   fallbackSrc: '/images/hero-freight.svg',
