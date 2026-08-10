@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 import { ArrowRight, Boxes, Check, Globe2, ShieldCheck, Warehouse } from 'lucide-react';
-import Image from 'next/image';
 import { CTA } from '@/components/CTA';
 import { HowItWorks } from '@/components/HowItWorks';
 import { PageHero } from '@/components/PageHero';
 import { Button } from '@/components/ui/Button';
 import { Reveal, RevealItem, StaggerGroup } from '@/components/ui/Reveal';
 import { SectionHeading } from '@/components/ui/SectionHeading';
-import { SERVICES } from '@/lib/site';
+import { IMAGERY, SERVICES } from '@/lib/site';
+import { Figure } from '@/components/ui/Figure';
 
 export const metadata: Metadata = {
   title: 'Freight & Logistics Services',
@@ -162,14 +162,7 @@ export default function ServicesPage() {
           <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
             <Reveal>
               <div className="overflow-hidden rounded-4xl border border-ink-100 shadow-card">
-                <Image
-                  src="/images/warehouse-ops.svg"
-                  alt="Inside a FreightBridge fulfillment warehouse with pallet racking, a forklift, and loading bays"
-                  width={1000}
-                  height={760}
-                  loading="lazy"
-                  className="h-72 w-full object-cover sm:h-96"
-                />
+                <Figure media={IMAGERY.warehouse} className="h-72 w-full object-cover sm:h-96" />
               </div>
             </Reveal>
 

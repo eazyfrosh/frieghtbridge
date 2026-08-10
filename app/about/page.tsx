@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 import { ArrowRight, Compass, Handshake, HeartHandshake, MapPin, Radar, Users } from 'lucide-react';
-import Image from 'next/image';
 import { CTA } from '@/components/CTA';
 import { EnterpriseSection } from '@/components/EnterpriseSection';
 import { PageHero } from '@/components/PageHero';
 import { Button } from '@/components/ui/Button';
+import { IMAGERY } from '@/lib/site';
+import { Figure } from '@/components/ui/Figure';
 import { Reveal, RevealItem, StaggerGroup } from '@/components/ui/Reveal';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 
@@ -106,14 +107,7 @@ export default function AboutPage() {
 
             <Reveal delay={0.1}>
               <div className="overflow-hidden rounded-4xl border border-ink-100 shadow-card">
-                <Image
-                  src="/images/port-terminal.svg"
-                  alt="Container ship being loaded by gantry cranes at a FreightBridge port terminal"
-                  width={1000}
-                  height={760}
-                  loading="lazy"
-                  className="h-72 w-full object-cover sm:h-96"
-                />
+                <Figure media={IMAGERY.port} className="h-72 w-full object-cover sm:h-96" />
               </div>
             </Reveal>
           </div>

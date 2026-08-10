@@ -179,12 +179,31 @@ Leave `src` empty to use the still image. Guidance for the clip:
 - If the video fails to load it falls back to the still, and then to the
   illustration
 
-### Everything else
+### Section imagery
 
-The remaining artwork in `public/images/` is original SVG authored for this
-project — no third-party or stock assets. Those can be swapped for photography
-the same way, by changing the `src` of the `next/image` calls in
-`WhyFreightBridge`, `ServicesPage`, and `AboutPage`.
+The three section images are configured in one place — `IMAGERY` in
+`lib/site.ts`:
+
+```ts
+export const IMAGERY = {
+  road:      { src: '/images/hero-freight.svg',  alt: '…', fallbackSrc: '…' },
+  port:      { src: '/images/port-terminal.svg', alt: '…', fallbackSrc: '…' },
+  warehouse: { src: '/images/warehouse-ops.svg', alt: '…', fallbackSrc: '…' },
+};
+```
+
+To use photographs: drop the files in `public/images/`, change each `src`, and
+update the `alt` to describe your photo. That is the whole change — those three
+entries feed the Why section, the services and about pages, and all three
+carousel slides.
+
+Landscape, 1600px wide or more; each is cropped with `object-cover`. If a `src`
+is missing or mistyped the bundled illustration renders instead, so a typo
+degrades rather than breaking the page.
+
+The shipped illustrations are original SVG authored for this project — no
+third-party or stock assets. They keep their own scene colours and sit outside
+the brand palette on purpose.
 
 ## Accessibility & motion
 

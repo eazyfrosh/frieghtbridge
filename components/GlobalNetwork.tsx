@@ -56,10 +56,10 @@ export function GlobalNetwork() {
         />
 
         <Reveal delay={0.1} className="mt-14">
-          <div className="relative overflow-hidden rounded-4xl border border-ink-100 bg-ink-950 p-4 shadow-lift sm:p-6 lg:p-8">
+          <div className="relative overflow-hidden rounded-4xl border border-brand-800/40 bg-brand-700 p-4 shadow-lift sm:p-6 lg:p-8">
             {/* Ambient field */}
             <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-              <div className="absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_0%,#7A2E0C_0%,transparent_60%)] opacity-60" />
+              <div className="absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_0%,#7A2E0C_0%,transparent_62%)] opacity-70" />
               <div className="absolute inset-0 bg-grid-dark bg-[size:44px_44px] opacity-40" />
             </div>
 
@@ -73,16 +73,16 @@ export function GlobalNetwork() {
                 >
                   <defs>
                     <linearGradient id="laneStroke" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#D1450A" stopOpacity="0.15" />
-                      <stop offset="50%" stopColor="#FF9E67" stopOpacity="0.95" />
-                      <stop offset="100%" stopColor="#FFC078" stopOpacity="0.5" />
+                      <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.15" />
+                      <stop offset="50%" stopColor="#FFFFFF" stopOpacity="0.95" />
+                      <stop offset="100%" stopColor="#FFDF9C" stopOpacity="0.65" />
                     </linearGradient>
                     <radialGradient id="nodeGlow">
-                      <stop offset="0%" stopColor="#FF9E67" stopOpacity="0.55" />
-                      <stop offset="100%" stopColor="#FF9E67" stopOpacity="0" />
+                      <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.45" />
+                      <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
                     </radialGradient>
                     <pattern id="dots" width="18" height="18" patternUnits="userSpaceOnUse">
-                      <circle cx="2" cy="2" r="1.5" fill="#FFC078" fillOpacity="0.45" />
+                      <circle cx="2" cy="2" r="1.5" fill="#FFFFFF" fillOpacity="0.42" />
                     </pattern>
                   </defs>
 
@@ -98,7 +98,7 @@ export function GlobalNetwork() {
                   </g>
 
                   {/* Meridian sweep for a globe-like read */}
-                  <g stroke="#F5A623" strokeOpacity="0.16" fill="none">
+                  <g stroke="#FFFFFF" strokeOpacity="0.18" fill="none">
                     <ellipse cx="430" cy="210" rx="410" ry="196" />
                     <ellipse cx="430" cy="210" rx="290" ry="196" />
                     <ellipse cx="430" cy="210" rx="150" ry="196" />
@@ -117,7 +117,7 @@ export function GlobalNetwork() {
 
                     return (
                       <g key={`${fromCode}-${toCode}`}>
-                        <path d={d} fill="none" stroke="#F5A623" strokeOpacity="0.16" strokeWidth="1.2" />
+                        <path d={d} fill="none" stroke="#FFFFFF" strokeOpacity="0.18" strokeWidth="1.2" />
                         <motion.path
                           d={d}
                           fill="none"
@@ -130,7 +130,7 @@ export function GlobalNetwork() {
                           transition={{ duration: 1.5, ease: EASE_PREMIUM, delay: 0.15 + index * 0.12 }}
                         />
                         {!reduced && (
-                          <circle r="3.4" fill="#FFB37A">
+                          <circle r="3.4" fill="#FFFFFF">
                             <animateMotion
                               dur={`${7 + index}s`}
                               repeatCount="indefinite"
@@ -162,14 +162,14 @@ export function GlobalNetwork() {
                             cy={region.y}
                             r="10"
                             fill="none"
-                            stroke="#FF9E67"
+                            stroke="#FFFFFF"
                             strokeWidth="1.5"
                             className="animate-pulse-ring"
                             style={{ transformOrigin: `${region.x}px ${region.y}px`, animationDelay: `${index * 0.4}s` }}
                           />
                         )}
                         <circle cx={region.x} cy={region.y} r={active ? 8 : 6.5} fill="#FFFFFF" />
-                        <circle cx={region.x} cy={region.y} r={active ? 4 : 3} fill="#FA5B0A" />
+                        <circle cx={region.x} cy={region.y} r={active ? 4 : 3} fill="#A93706" />
                       </motion.g>
                     );
                   })}
@@ -183,8 +183,8 @@ export function GlobalNetwork() {
                       className={cn(
                         'pointer-events-auto absolute whitespace-nowrap rounded-full border px-2.5 py-1 text-[0.72rem] font-semibold backdrop-blur transition-colors duration-300 ease-premium',
                         hovered === region.code
-                          ? 'border-white/40 bg-white text-ink-900'
-                          : 'border-white/15 bg-ink-900/70 text-ink-100',
+                          ? 'border-white bg-white text-brand-800'
+                          : 'border-white/25 bg-brand-800/70 text-white',
                       )}
                       style={{
                         left: `${(region.x / VIEW_W) * 100}%`,
@@ -205,14 +205,14 @@ export function GlobalNetwork() {
               <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-5">
                 <ul className="flex flex-wrap gap-x-5 gap-y-2">
                   {MODES.map((mode) => (
-                    <li key={mode.label} className="flex items-center gap-2 text-sm text-ink-300">
-                      <mode.icon className="h-4 w-4 text-brand-300" aria-hidden="true" />
+                    <li key={mode.label} className="flex items-center gap-2 text-sm text-white/80">
+                      <mode.icon className="h-4 w-4 text-signal-200" aria-hidden="true" />
                       {mode.label}
                     </li>
                   ))}
                 </ul>
-                <p className="flex items-center gap-2 text-sm text-ink-400">
-                  <Globe2 className="h-4 w-4 text-brand-300" aria-hidden="true" />
+                <p className="flex items-center gap-2 text-sm text-white/80">
+                  <Globe2 className="h-4 w-4 text-signal-200" aria-hidden="true" />
                   Stylised network view — regions shown are illustrative of our service coverage.
                 </p>
               </div>

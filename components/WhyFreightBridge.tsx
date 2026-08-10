@@ -2,10 +2,11 @@
 
 import { motion } from 'framer-motion';
 import { Cpu, Eye, Gauge, ShieldCheck } from 'lucide-react';
-import Image from 'next/image';
 import { useState } from 'react';
 import { motionSafe, slideInRight } from '@/lib/motion';
 import { cn } from '@/lib/utils';
+import { IMAGERY } from '@/lib/site';
+import { Figure } from './ui/Figure';
 import { Reveal, StaggerGroup } from './ui/Reveal';
 import { useReducedMotion } from '@/lib/use-reduced-motion';
 
@@ -87,12 +88,9 @@ export function WhyFreightBridge() {
 
             <Reveal delay={0.2} from="left">
               <div className="relative mt-10 overflow-hidden rounded-4xl border border-ink-100 bg-white shadow-card">
-                <Image
-                  src="/images/port-terminal.svg"
-                  alt="Gantry cranes loading containers onto a cargo ship at a FreightBridge port terminal"
-                  width={1000}
-                  height={760}
-                  loading="lazy"
+                <Figure
+                  media={IMAGERY.port}
+                  sizes="(min-width: 1024px) 38vw, 100vw"
                   className="h-56 w-full object-cover sm:h-72 lg:h-[17rem]"
                 />
                 <div className="flex items-center gap-3 border-t border-ink-100 px-5 py-4">

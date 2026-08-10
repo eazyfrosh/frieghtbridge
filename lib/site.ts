@@ -67,6 +67,46 @@ export const HERO_MEDIA = {
     'Illustration of a FreightBridge semi-truck travelling a highway at dusk past a container yard and gantry cranes',
 } as const;
 
+/**
+ * A swappable image. `src` is what renders; `fallbackSrc` is the bundled
+ * illustration used if that file cannot be loaded.
+ */
+export interface MediaAsset {
+  src: string;
+  alt: string;
+  fallbackSrc: string;
+  fallbackAlt?: string;
+}
+
+/**
+ * Section imagery.
+ *
+ * Every entry ships pointing at its bundled illustration. To use photographs,
+ * drop the files in `public/images/` and change `src` — one line per image,
+ * nothing else. Alt text lives here too, so update it to describe your photo.
+ * If a `src` is missing or mistyped the illustration renders instead, so a
+ * typo degrades rather than breaking the page.
+ *
+ * Landscape, 1600px wide or more. Each is cropped with `object-cover`.
+ */
+export const IMAGERY: Record<'road' | 'port' | 'warehouse', MediaAsset> = {
+  road: {
+    src: '/images/hero-freight.svg',
+    alt: 'A FreightBridge truck on the highway at dusk beside a container yard',
+    fallbackSrc: '/images/hero-freight.svg',
+  },
+  port: {
+    src: '/images/port-terminal.svg',
+    alt: 'Gantry cranes loading containers onto a cargo ship at a FreightBridge port terminal',
+    fallbackSrc: '/images/port-terminal.svg',
+  },
+  warehouse: {
+    src: '/images/warehouse-ops.svg',
+    alt: 'Inside a FreightBridge fulfillment warehouse with pallet racking, a forklift and loading bays',
+    fallbackSrc: '/images/warehouse-ops.svg',
+  },
+};
+
 export interface NavLink {
   label: string;
   href: string;

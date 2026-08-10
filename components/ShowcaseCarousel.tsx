@@ -2,12 +2,13 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
-import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { EASE_PREMIUM } from '@/lib/motion';
+import { IMAGERY, type MediaAsset } from '@/lib/site';
 import { useReducedMotion } from '@/lib/use-reduced-motion';
 import { cn } from '@/lib/utils';
 import { Button } from './ui/Button';
+import { Figure } from './ui/Figure';
 import { Reveal } from './ui/Reveal';
 import { SectionHeading } from './ui/SectionHeading';
 
@@ -15,8 +16,8 @@ interface Slide {
   eyebrow: string;
   title: string;
   copy: string;
-  image: string;
-  alt: string;
+  /** Pulled from IMAGERY so slides swap to photographs with the rest. */
+  media: MediaAsset;
   stats: Array<{ value: string; label: string }>;
   href: string;
   cta: string;
@@ -27,8 +28,7 @@ const SLIDES: Slide[] = [
     eyebrow: 'Road freight',
     title: 'Lanes that hold their promise',
     copy: 'FTL and LTL capacity across a vetted carrier network, priced on the lane rather than the day, with dispatch that answers on the first ring.',
-    image: '/images/hero-freight.svg',
-    alt: 'A FreightBridge truck on the highway at dusk beside a container yard',
+    media: IMAGERY.road,
     stats: [
       { value: '2.4 days', label: 'Avg. domestic transit' },
       { value: '98%', label: 'On-time delivery' },
@@ -40,8 +40,7 @@ const SLIDES: Slide[] = [
     eyebrow: 'Ocean & air',
     title: 'Border paperwork, handled up front',
     copy: 'Customs documentation is prepared before the container gates in, which is the single biggest reason freight clears instead of sitting on a quay.',
-    image: '/images/port-terminal.svg',
-    alt: 'Gantry cranes loading containers onto a cargo ship at a FreightBridge terminal',
+    media: IMAGERY.port,
     stats: [
       { value: '7 regions', label: 'Direct coverage' },
       { value: 'FCL & LCL', label: 'Consolidation' },
@@ -53,8 +52,7 @@ const SLIDES: Slide[] = [
     eyebrow: 'Warehousing',
     title: 'Storage that flexes with your season',
     copy: 'Overflow space for a peak or a permanent fulfillment base, with inventory counts your own systems can read in real time.',
-    image: '/images/warehouse-ops.svg',
-    alt: 'Inside a FreightBridge fulfillment warehouse with pallet racking and a forklift',
+    media: IMAGERY.warehouse,
     stats: [
       { value: 'Same-day', label: 'Pick & pack cutoff' },
       { value: 'Real-time', label: 'Inventory sync' },
@@ -187,15 +185,10 @@ export function ShowcaseCarousel() {
                   </div>
 
                   <div className="overflow-hidden rounded-3xl border border-white/10 shadow-[0_40px_90px_-40px_rgba(0,0,0,0.9)]">
-                    <Image
-                      src={slide.image}
-                      alt={slide.alt}
-                      width={1200}
-                      height={900}
-                      loading="lazy"
-                      draggable={false}
+                    <Figure
+                      media={slide.media}
                       sizes="(min-width: 1024px) 48vw, 100vw"
-                      className="h-56 w-full select-none object-cover sm:h-72 lg:h-[22rem]"
+                      className="pointer-events-none h-56 w-full select-none object-cover sm:h-72 lg:h-[22rem]"
                     />
                   </div>
                 </motion.div>
