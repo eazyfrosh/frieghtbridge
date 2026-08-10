@@ -58,7 +58,7 @@ export function GlobalNetwork() {
           <div className="relative overflow-hidden rounded-4xl border border-ink-100 bg-ink-950 p-4 shadow-lift sm:p-6 lg:p-8">
             {/* Ambient field */}
             <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-              <div className="absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_0%,#152FB8_0%,transparent_60%)] opacity-60" />
+              <div className="absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_0%,#7A2E0C_0%,transparent_60%)] opacity-60" />
               <div className="absolute inset-0 bg-grid-dark bg-[size:44px_44px] opacity-40" />
             </div>
 
@@ -72,13 +72,13 @@ export function GlobalNetwork() {
                 >
                   <defs>
                     <linearGradient id="laneStroke" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#2F5BFF" stopOpacity="0.15" />
-                      <stop offset="50%" stopColor="#8DAAFF" stopOpacity="0.9" />
-                      <stop offset="100%" stopColor="#FF7A38" stopOpacity="0.5" />
+                      <stop offset="0%" stopColor="#D1450A" stopOpacity="0.15" />
+                      <stop offset="50%" stopColor="#FF9E67" stopOpacity="0.95" />
+                      <stop offset="100%" stopColor="#8DAAFF" stopOpacity="0.5" />
                     </linearGradient>
                     <radialGradient id="nodeGlow">
-                      <stop offset="0%" stopColor="#8DAAFF" stopOpacity="0.55" />
-                      <stop offset="100%" stopColor="#8DAAFF" stopOpacity="0" />
+                      <stop offset="0%" stopColor="#FF9E67" stopOpacity="0.55" />
+                      <stop offset="100%" stopColor="#FF9E67" stopOpacity="0" />
                     </radialGradient>
                     <pattern id="dots" width="18" height="18" patternUnits="userSpaceOnUse">
                       <circle cx="2" cy="2" r="1.5" fill="#8DAAFF" fillOpacity="0.45" />
@@ -161,14 +161,14 @@ export function GlobalNetwork() {
                             cy={region.y}
                             r="10"
                             fill="none"
-                            stroke="#8DAAFF"
+                            stroke="#FF9E67"
                             strokeWidth="1.5"
                             className="animate-pulse-ring"
                             style={{ transformOrigin: `${region.x}px ${region.y}px`, animationDelay: `${index * 0.4}s` }}
                           />
                         )}
                         <circle cx={region.x} cy={region.y} r={active ? 8 : 6.5} fill="#FFFFFF" />
-                        <circle cx={region.x} cy={region.y} r={active ? 4 : 3} fill="#FF5C0A" />
+                        <circle cx={region.x} cy={region.y} r={active ? 4 : 3} fill="#FA5B0A" />
                       </motion.g>
                     );
                   })}

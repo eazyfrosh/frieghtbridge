@@ -10,7 +10,7 @@ const controlBase =
 const controlState = (invalid: boolean) =>
   invalid
     ? 'border-red-400 focus:border-red-500 focus:shadow-[0_0_0_4px_rgba(248,113,113,0.18)]'
-    : 'border-ink-200 hover:border-ink-300 focus:border-brand-500 focus:shadow-[0_0_0_4px_rgba(47,91,255,0.14)]';
+    : 'border-ink-200 hover:border-ink-300 focus:border-brand-500 focus:shadow-[0_0_0_4px_rgba(250,91,10,0.14)]';
 
 interface FieldShellProps {
   id: string;
@@ -28,7 +28,7 @@ export function FieldShell({ id, label, hint, error, required, className, childr
       <label htmlFor={id} className="text-sm font-medium text-ink-700">
         {label}
         {required && (
-          <span className="ml-1 text-signal-500" aria-hidden="true">
+          <span className="ml-1 text-brand-500" aria-hidden="true">
             *
           </span>
         )}
@@ -180,7 +180,7 @@ export function SegmentedField({ legend, name, value, options, onChange, error }
               className={cn(
                 'group flex cursor-pointer flex-col items-center justify-center gap-0.5 rounded-xl border px-3 py-3 text-center transition-all duration-200 ease-premium',
                 active
-                  ? 'border-brand-500 bg-brand-50/70 shadow-[0_0_0_3px_rgba(47,91,255,0.12)]'
+                  ? 'border-brand-500 bg-brand-50/70 shadow-[0_0_0_3px_rgba(250,91,10,0.12)]'
                   : 'border-ink-200 bg-white hover:border-ink-300 hover:bg-ink-50',
               )}
             >

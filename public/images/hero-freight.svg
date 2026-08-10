@@ -25,8 +25,8 @@
       <stop offset="100%" stop-color="#C3CFE4"/>
     </linearGradient>
     <linearGradient id="cab" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#2F5BFF"/>
-      <stop offset="100%" stop-color="#152FB8"/>
+      <stop offset="0%" stop-color="#FA5B0A"/>
+      <stop offset="100%" stop-color="#A93706"/>
     </linearGradient>
     <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#BBD1FF"/>
@@ -98,7 +98,7 @@
 
   <!-- Ground -->
   <rect y="648" width="1200" height="352" fill="url(#ground)"/>
-  <rect y="646" width="1200" height="3" fill="#2F5BFF" opacity="0.45"/>
+  <rect y="646" width="1200" height="3" fill="#FA5B0A" opacity="0.5"/>
 
   <!-- Road -->
   <rect y="742" width="1200" height="176" fill="url(#road)"/>
@@ -137,18 +137,18 @@
     </g>
     <!-- brand mark on the trailer -->
     <g transform="translate(300 640)">
-      <path d="M0 34h140" stroke="#152FB8" stroke-width="9" stroke-linecap="round"/>
-      <path d="M4 34C28-12 112-12 136 34" stroke="#2F5BFF" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.8"/>
-      <rect x="52" y="2" width="36" height="22" rx="5" fill="#FF7A38"/>
+      <path d="M0 34h140" stroke="#A93706" stroke-width="9" stroke-linecap="round"/>
+      <path d="M4 34C28-12 112-12 136 34" stroke="#FA5B0A" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.8"/>
+      <rect x="52" y="2" width="36" height="22" rx="5" fill="#0B1524"/>
     </g>
     <!-- underride bar -->
     <rect x="264" y="750" width="150" height="10" rx="5" fill="#1B2942"/>
 
     <!-- cab -->
     <path d="M772 640h74c10 0 19 5 24 14l40 66c4 7 6 14 6 22v6h-144z" fill="url(#cab)"/>
-    <rect x="768" y="596" width="34" height="152" rx="8" fill="#1A3EE8"/>
+    <rect x="768" y="596" width="34" height="152" rx="8" fill="#D1450A"/>
     <path d="M852 660h22l30 52h-52z" fill="url(#glass)"/>
-    <rect x="806" y="736" width="110" height="12" rx="6" fill="#0F1F52"/>
+    <rect x="806" y="736" width="110" height="12" rx="6" fill="#5A1E06"/>
     <rect x="904" y="700" width="14" height="26" rx="4" fill="#FFD9A8"/>
     <path d="M918 706l180 -22v56l-180 -18z" fill="url(#beam)"/>
     <!-- exhaust stack -->

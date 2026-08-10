@@ -25,7 +25,7 @@ export function PageHero({ eyebrow, title, description, breadcrumb, children, ov
       }`}
     >
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(100%_80%_at_20%_-20%,#152FB8_0%,transparent_58%),radial-gradient(70%_60%_at_95%_0%,#2F5BFF_0%,transparent_55%)] opacity-65" />
+        <div className="absolute inset-0 bg-[radial-gradient(100%_80%_at_20%_-20%,#7A2E0C_0%,transparent_58%),radial-gradient(70%_60%_at_95%_0%,#C7420A_0%,transparent_55%)] opacity-65" />
         <div className="absolute inset-0 bg-grid-dark bg-[size:60px_60px] opacity-40 mask-fade-b" />
       </div>
 
@@ -50,7 +50,7 @@ export function PageHero({ eyebrow, title, description, breadcrumb, children, ov
 
         <Reveal delay={0.05}>
           <span className="eyebrow-dark">
-            <span className="h-1.5 w-1.5 rounded-full bg-signal-500" aria-hidden="true" />
+            <span className="h-1.5 w-1.5 rounded-full bg-brand-500" aria-hidden="true" />
             {eyebrow}
           </span>
         </Reveal>

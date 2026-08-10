@@ -362,14 +362,14 @@ export function statusTone(status: ShipmentStatus): {
     case 'Exception':
       return {
         label: 'Delay reported',
-        className: 'bg-amber-50 text-amber-800 ring-amber-600/20',
-        dot: 'bg-amber-500',
+        className: 'bg-rose-50 text-rose-700 ring-rose-600/20',
+        dot: 'bg-rose-500',
       };
     case 'Out for Delivery':
       return {
         label: 'Out for delivery',
-        className: 'bg-brand-50 text-brand-700 ring-brand-600/20',
-        dot: 'bg-brand-500',
+        className: 'bg-signal-50 text-signal-700 ring-signal-600/20',
+        dot: 'bg-signal-500',
       };
     default:
       return {

@@ -70,8 +70,10 @@ This is a front-end prototype: there is no backend.
 Tokens live in `tailwind.config.ts`:
 
 - `ink` — neutral navy scale used for text and dark surfaces
-- `brand` — primary blue (CTAs, links, active states)
-- `signal` — orange accent (eyebrow dots, highlights, freight units)
+- `brand` — primary orange (CTAs, links, active states, brand accents).
+  `brand-600` is the darkest step used behind white text and clears 4.5:1
+- `signal` — cool blue accent, used sparingly against the warm primary
+  (the coverage map's world layer, depth glows, the "out for delivery" state)
 - `font-display` (Sora) for headings, `font-sans` (Inter) for body
 - `shadow-soft` / `shadow-card` / `shadow-lift` for the card elevation ladder
 - `ease-premium` for the shared easing curve

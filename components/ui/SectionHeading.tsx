@@ -36,7 +36,7 @@ export function SectionHeading({
         {eyebrow && (
           <Reveal>
             <span className={light ? 'eyebrow-dark' : 'eyebrow'}>
-              <span className="h-1.5 w-1.5 rounded-full bg-signal-500" aria-hidden="true" />
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-500" aria-hidden="true" />
               {eyebrow}
             </span>
           </Reveal>

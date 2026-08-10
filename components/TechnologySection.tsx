@@ -23,7 +23,7 @@ import { SectionHeading } from './ui/SectionHeading';
 const KPIS = [
   { label: 'Active shipments', value: '128', delta: '+12 this week', icon: Package, tone: 'brand' },
   { label: 'On-time delivery', value: '98%', delta: '+1.4% vs last month', icon: TrendingUp, tone: 'emerald' },
-  { label: 'Open exceptions', value: '2', delta: '2 being worked', icon: CircleAlert, tone: 'amber' },
+  { label: 'Open exceptions', value: '2', delta: '2 being worked', icon: CircleAlert, tone: 'rose' },
 ];
 
 const SHIPMENTS = [
@@ -42,15 +42,15 @@ const ACTIVITY = [
 
 const STATUS_STYLES: Record<string, string> = {
   'In transit': 'bg-brand-50 text-brand-700 ring-brand-600/20',
-  'Out for delivery': 'bg-indigo-50 text-indigo-700 ring-indigo-600/20',
+  'Out for delivery': 'bg-signal-50 text-signal-700 ring-signal-600/20',
   Delivered: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
-  Delayed: 'bg-amber-50 text-amber-800 ring-amber-600/20',
+  Delayed: 'bg-rose-50 text-rose-700 ring-rose-600/20',
 };
 
 const KPI_TONES: Record<string, string> = {
   brand: 'bg-brand-50 text-brand-600',
   emerald: 'bg-emerald-50 text-emerald-600',
-  amber: 'bg-amber-50 text-amber-600',
+  rose: 'bg-rose-50 text-rose-600',
 };
 
 export function TechnologySection() {
@@ -60,7 +60,7 @@ export function TechnologySection() {
     <section id="technology" className="section relative overflow-hidden bg-ink-50/70">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-[radial-gradient(60%_100%_at_50%_0%,rgba(47,91,255,0.12)_0%,transparent_70%)]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-[radial-gradient(60%_100%_at_50%_0%,rgba(250,91,10,0.14)_0%,transparent_70%)]"
       />
 
       <div className="container relative">
@@ -83,7 +83,7 @@ export function TechnologySection() {
           >
             {/* Floating callouts */}
             <FloatingBadge
-              className="-left-12 top-28 hidden xl:flex"
+              className="-left-8 -top-6 hidden xl:flex"
               delay={0.2}
               icon={Bell}
               title="Exception alert"
@@ -91,7 +91,7 @@ export function TechnologySection() {
               reduced={Boolean(reduced)}
             />
             <FloatingBadge
-              className="-right-12 bottom-28 hidden xl:flex"
+              className="-right-8 -bottom-6 hidden xl:flex"
               delay={0.45}
               icon={Map}
               title="Live location"
@@ -190,7 +190,7 @@ export function TechnologySection() {
                                   className={cn(
                                     'h-full rounded-full',
                                     shipment.status === 'Delayed'
-                                      ? 'bg-amber-400'
+                                      ? 'bg-rose-400'
                                       : shipment.status === 'Delivered'
                                         ? 'bg-emerald-500'
                                         : 'bg-brand-500',
@@ -224,15 +224,15 @@ export function TechnologySection() {
                             <path
                               d="M24 96 Q 96 34 168 62 T 282 40"
                               fill="none"
-                              stroke="#2F5BFF"
+                              stroke="#FA5B0A"
                               strokeWidth="2"
                               strokeDasharray="4 6"
                               strokeLinecap="round"
                               opacity="0.85"
                             />
-                            <circle cx="24" cy="96" r="5" fill="#8DAAFF" />
-                            <circle cx="168" cy="62" r="6" fill="#FF5C0A" />
-                            <circle cx="282" cy="40" r="5" fill="#8DAAFF" />
+                            <circle cx="24" cy="96" r="5" fill="#FFC5A3" />
+                            <circle cx="168" cy="62" r="6" fill="#FFFFFF" />
+                            <circle cx="282" cy="40" r="5" fill="#FFC5A3" />
                             {!reduced && (
                               <circle r="3.5" fill="#FFFFFF">
                                 <animateMotion
@@ -273,8 +273,8 @@ export function TechnologySection() {
                   </div>
 
                   {/* Alert */}
-                  <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50/70 px-4 py-3">
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-amber-700">
+                  <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl border border-rose-200 bg-rose-50/70 px-4 py-3">
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-rose-100 text-rose-700">
                       <CircleAlert className="h-4 w-4" aria-hidden="true" />
                     </span>
                     <p className="text-[0.85rem] text-ink-700">
@@ -299,7 +299,7 @@ export function TechnologySection() {
 }
 
 function Sparkline({ tone }: { tone: string }) {
-  const stroke = tone === 'emerald' ? '#059669' : tone === 'amber' ? '#D97706' : '#2F5BFF';
+  const stroke = tone === 'emerald' ? '#059669' : tone === 'rose' ? '#E11D48' : '#D1450A';
   return (
     <svg viewBox="0 0 64 24" className="h-6 w-16" aria-hidden="true">
       <path

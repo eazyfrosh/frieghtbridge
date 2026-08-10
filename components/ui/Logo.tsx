@@ -18,7 +18,7 @@ export function LogoMark({ className }: { className?: string }) {
   return (
     <span
       className={cn(
-        'relative inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 shadow-[0_6px_18px_-8px_rgba(26,62,232,0.9)]',
+        'relative inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 shadow-[0_6px_18px_-8px_rgba(209,69,10,0.9)]',
         className,
       )}
     >
@@ -37,7 +37,7 @@ export function LogoMark({ className }: { className?: string }) {
         {/* Piers */}
         <path d="M7 14v5M17 14v5" stroke="white" strokeWidth="1.7" strokeLinecap="round" opacity="0.55" />
         {/* Freight unit crossing the span */}
-        <rect x="9.5" y="8.6" width="5" height="3.6" rx="1" fill="#FF7A38" />
+        <rect x="9.5" y="8.6" width="5" height="3.6" rx="1" fill="#0B1524" />
       </svg>
     </span>
   );

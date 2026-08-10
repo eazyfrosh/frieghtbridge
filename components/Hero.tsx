@@ -30,9 +30,9 @@ export function Hero() {
     <section className="relative isolate overflow-hidden bg-ink-950 pb-40 pt-[128px] text-white sm:pb-48 lg:pb-56 lg:pt-[150px]">
       {/* Ambient background */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_15%_-10%,#152FB8_0%,transparent_55%),radial-gradient(90%_70%_at_92%_8%,#2F5BFF_0%,transparent_52%)] opacity-70" />
+        <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_15%_-10%,#7A2E0C_0%,transparent_55%),radial-gradient(90%_70%_at_92%_8%,#C7420A_0%,transparent_52%)] opacity-70" />
         <div className="absolute inset-0 bg-grid-dark bg-[size:64px_64px] mask-fade-b opacity-[0.55]" />
-        <div className="absolute -left-40 top-1/3 h-[26rem] w-[26rem] rounded-full bg-signal-500/15 blur-[110px]" />
+        <div className="absolute -left-40 top-1/3 h-[26rem] w-[26rem] rounded-full bg-signal-700/25 blur-[110px]" />
         <div className="absolute bottom-0 left-1/2 h-64 w-[140%] -translate-x-1/2 bg-gradient-to-t from-ink-950 to-transparent" />
       </div>
 
@@ -43,8 +43,8 @@ export function Hero() {
             <motion.div {...rise(0)}>
               <span className="eyebrow-dark">
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-pulse-ring rounded-full bg-signal-400" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal-400" />
+                  <span className="absolute inline-flex h-full w-full animate-pulse-ring rounded-full bg-brand-400" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand-400" />
                 </span>
                 Move Freight. Build Connections.
               </span>
@@ -132,7 +132,7 @@ export function Hero() {
                 <p className="mt-2 font-display text-[0.98rem] font-semibold text-white">Chicago → Dallas</p>
                 <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
                   <motion.div
-                    className="h-full rounded-full bg-gradient-to-r from-brand-400 to-signal-400"
+                    className="h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-300"
                     initial={reduced ? { width: '62%' } : { width: 0 }}
                     animate={{ width: '62%' }}
                     transition={{ duration: 1.4, ease: EASE_PREMIUM, delay: 1.1 }}

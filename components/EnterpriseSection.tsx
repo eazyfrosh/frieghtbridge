@@ -18,7 +18,7 @@ export function EnterpriseSection() {
   return (
     <section id="enterprise" className="section relative overflow-hidden bg-ink-950 text-white">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(90%_70%_at_10%_0%,#152FB8_0%,transparent_55%),radial-gradient(70%_60%_at_95%_100%,#C73206_0%,transparent_55%)] opacity-60" />
+        <div className="absolute inset-0 bg-[radial-gradient(90%_70%_at_10%_0%,#8A3410_0%,transparent_55%),radial-gradient(70%_60%_at_95%_100%,#152FB8_0%,transparent_55%)] opacity-60" />
         <div className="absolute inset-0 bg-grid-dark bg-[size:56px_56px] opacity-40" />
       </div>
 

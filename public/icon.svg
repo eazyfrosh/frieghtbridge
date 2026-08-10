@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="FreightBridge">
   <defs>
     <linearGradient id="fbIcon" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#2F5BFF"/>
-      <stop offset="100%" stop-color="#152FB8"/>
+      <stop offset="0%" stop-color="#FA5B0A"/>
+      <stop offset="100%" stop-color="#C7420A"/>
     </linearGradient>
   </defs>
   <rect width="64" height="64" rx="16" fill="url(#fbIcon)"/>
   <path d="M12 38h40" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
   <path d="M13 38c8.5-16.5 29.5-16.5 38 0" stroke="#FFFFFF" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.75"/>
   <path d="M23 38v13M41 38v13" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
-  <rect x="25" y="21" width="14" height="10" rx="3" fill="#FF7A38"/>
+  <rect x="25" y="21" width="14" height="10" rx="3" fill="#0B1524"/>
 </svg>

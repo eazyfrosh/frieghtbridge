@@ -136,14 +136,14 @@ export function TrackingWidget({ variant = 'page', initialQuery = '', className 
                 'h-14 w-full rounded-2xl border bg-white pl-11 pr-4 text-[1rem] font-medium text-ink-900 transition-[border-color,box-shadow] duration-200 placeholder:font-normal placeholder:text-ink-300 focus:outline-none',
                 error
                   ? 'border-red-400 focus:border-red-500 focus:shadow-[0_0_0_4px_rgba(248,113,113,0.16)]'
-                  : 'border-ink-200 hover:border-ink-300 focus:border-brand-500 focus:shadow-[0_0_0_4px_rgba(47,91,255,0.14)]',
+                  : 'border-ink-200 hover:border-ink-300 focus:border-brand-500 focus:shadow-[0_0_0_4px_rgba(250,91,10,0.14)]',
               )}
             />
           </div>
           <button
             type="submit"
             disabled={status === 'loading'}
-            className="group inline-flex h-14 shrink-0 items-center justify-center gap-2 rounded-2xl bg-brand-600 px-7 text-[0.98rem] font-semibold text-white shadow-[0_12px_32px_-14px_rgba(26,62,232,0.95)] transition-all duration-300 ease-premium hover:bg-brand-700 hover:shadow-[0_18px_40px_-16px_rgba(26,62,232,0.9)] disabled:cursor-progress disabled:opacity-80"
+            className="group inline-flex h-14 shrink-0 items-center justify-center gap-2 rounded-2xl bg-brand-600 px-7 text-[0.98rem] font-semibold text-white shadow-[0_12px_32px_-14px_rgba(209,69,10,0.95)] transition-all duration-300 ease-premium hover:bg-brand-700 hover:shadow-[0_18px_40px_-16px_rgba(209,69,10,0.9)] disabled:cursor-progress disabled:opacity-80"
           >
             {status === 'loading' ? (
               <>
@@ -201,10 +201,10 @@ export function TrackingWidget({ variant = 'page', initialQuery = '', className 
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3, ease: EASE_PREMIUM }}
-              className="mt-6 rounded-3xl border border-amber-200 bg-amber-50/70 p-5 sm:p-6"
+              className="mt-6 rounded-3xl border border-rose-200 bg-rose-50/70 p-5 sm:p-6"
             >
               <div className="flex gap-3.5">
-                <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
+                <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-rose-100 text-rose-700">
                   <AlertTriangle className="h-[1.1rem] w-[1.1rem]" aria-hidden="true" />
                 </span>
                 <div>
@@ -392,10 +392,12 @@ function TrackingResultPanel({ result, reduced }: { result: TrackingResult; redu
 
                 <span
                   className={cn(
-                    'relative z-10 mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 bg-white',
+                    // No shared `bg-*` here: a base background would collide with
+                    // the filled `complete` state and hide its white checkmark.
+                    'relative z-10 mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2',
                     event.state === 'complete' && 'border-brand-500 bg-brand-500 text-white',
-                    event.state === 'current' && 'border-brand-500 text-brand-600',
-                    event.state === 'upcoming' && 'border-ink-200 text-ink-300',
+                    event.state === 'current' && 'border-brand-500 bg-white text-brand-600',
+                    event.state === 'upcoming' && 'border-ink-200 bg-white text-ink-300',
                   )}
                 >
                   {event.state === 'complete' ? (

@@ -11,7 +11,7 @@ export default function NotFound() {
   return (
     <section className="relative isolate flex min-h-[80vh] items-center overflow-hidden bg-ink-950 px-5 py-32 text-white">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(90%_70%_at_50%_-10%,#152FB8_0%,transparent_60%)] opacity-70" />
+        <div className="absolute inset-0 bg-[radial-gradient(90%_70%_at_50%_-10%,#8A3410_0%,transparent_60%)] opacity-70" />
         <div className="absolute inset-0 bg-grid-dark bg-[size:60px_60px] opacity-35 mask-fade-b" />
       </div>
 

@@ -48,7 +48,7 @@
     <path d="M726 470V240"/>
     <path d="M866 470V186"/>
   </g>
-  <g stroke="#2F5BFF" stroke-width="5" stroke-linecap="round">
+  <g stroke="#FA5B0A" stroke-width="5" stroke-linecap="round">
     <path d="M420 258v96"/>
     <path d="M800 240v72"/>
   </g>
@@ -63,7 +63,7 @@
 
   <!-- Yard containers on the quay -->
   <g>
-    <rect x="30" y="404" width="118" height="30" rx="3" fill="#1A3EE8"/>
+    <rect x="30" y="404" width="118" height="30" rx="3" fill="#D1450A"/>
     <rect x="30" y="436" width="118" height="30" rx="3" fill="#152FB8"/>
     <rect x="156" y="436" width="118" height="30" rx="3" fill="#C73206"/>
     <rect x="920" y="404" width="76" height="30" rx="3" fill="#0F6E5A"/>
@@ -91,17 +91,17 @@
       <rect x="654" y="406" width="20" height="14" rx="2"/>
       <rect x="682" y="406" width="20" height="14" rx="2"/>
     </g>
-    <rect x="672" y="332" width="12" height="38" rx="4" fill="#FF5C0A"/>
+    <rect x="672" y="332" width="12" height="38" rx="4" fill="#FA5B0A"/>
 
     <!-- deck containers -->
     <g>
-      <rect x="240" y="422" width="110" height="30" rx="3" fill="#1A3EE8"/>
+      <rect x="240" y="422" width="110" height="30" rx="3" fill="#D1450A"/>
       <rect x="240" y="390" width="110" height="30" rx="3" fill="#C73206"/>
       <rect x="358" y="422" width="110" height="30" rx="3" fill="#0F6E5A"/>
       <rect x="358" y="390" width="110" height="30" rx="3" fill="#152FB8"/>
       <rect x="358" y="358" width="110" height="30" rx="3" fill="#22334C"/>
       <rect x="476" y="422" width="110" height="30" rx="3" fill="#152134"/>
-      <rect x="476" y="390" width="110" height="30" rx="3" fill="#1A3EE8"/>
+      <rect x="476" y="390" width="110" height="30" rx="3" fill="#A93706"/>
       <rect x="594" y="422" width="40" height="30" rx="3" fill="#C73206"/>
       <g stroke="#050B15" stroke-opacity="0.28" stroke-width="2">
         <path d="M266 358v94M292 358v94M318 358v94M384 358v94M410 358v94M436 358v94M502 390v62M528 390v62M554 390v62"/>

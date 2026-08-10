@@ -34,7 +34,22 @@ const config: Config = {
           900: '#0B1524',
           950: '#050B15',
         },
+        // Primary. `brand-600` is the darkest step still used behind white
+        // text — it clears 4.5:1, so buttons stay readable at body size.
         brand: {
+          50: '#FFF3EC',
+          100: '#FFE3D2',
+          200: '#FFC5A3',
+          300: '#FF9E67',
+          400: '#FF7733',
+          500: '#FA5B0A',
+          600: '#D1450A',
+          700: '#A93706',
+          800: '#87300B',
+          900: '#6E290C',
+        },
+        // Cool complementary accent, used sparingly against the warm primary.
+        signal: {
           50: '#EEF3FF',
           100: '#DCE6FF',
           200: '#BACDFF',
@@ -45,18 +60,6 @@ const config: Config = {
           700: '#152FB8',
           800: '#152A91',
           900: '#172973',
-        },
-        signal: {
-          50: '#FFF4ED',
-          100: '#FFE5D4',
-          200: '#FFC7A8',
-          300: '#FFA170',
-          400: '#FF7A38',
-          500: '#FF5C0A',
-          600: '#F04405',
-          700: '#C73206',
-          800: '#9E2A0E',
-          900: '#7F250F',
         },
       },
       fontFamily: {
@@ -75,7 +78,7 @@ const config: Config = {
         soft: '0 1px 2px rgba(11,21,36,0.04), 0 8px 24px -12px rgba(11,21,36,0.12)',
         card: '0 2px 4px rgba(11,21,36,0.03), 0 18px 40px -20px rgba(11,21,36,0.22)',
         lift: '0 8px 12px -6px rgba(11,21,36,0.08), 0 32px 64px -28px rgba(11,21,36,0.35)',
-        glow: '0 24px 70px -30px rgba(47,91,255,0.65)',
+        glow: '0 24px 70px -30px rgba(209,69,10,0.6)',
       },
       backgroundImage: {
         'grid-light':

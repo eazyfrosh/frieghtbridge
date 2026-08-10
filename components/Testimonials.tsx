@@ -105,7 +105,7 @@ export function Testimonials() {
                   >
                     <div className="flex gap-1" aria-label="Rated 5 out of 5">
                       {[0, 1, 2, 3, 4].map((star) => (
-                        <Star key={star} className="h-4 w-4 fill-signal-400 text-signal-400" aria-hidden="true" />
+                        <Star key={star} className="h-4 w-4 fill-amber-400 text-amber-400" aria-hidden="true" />
                       ))}
                     </div>
 

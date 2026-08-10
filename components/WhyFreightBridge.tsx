@@ -68,7 +68,7 @@ export function WhyFreightBridge() {
           <div className="lg:sticky lg:top-28 lg:self-start">
             <Reveal>
               <span className="eyebrow">
-                <span className="h-1.5 w-1.5 rounded-full bg-signal-500" aria-hidden="true" />
+                <span className="h-1.5 w-1.5 rounded-full bg-brand-500" aria-hidden="true" />
                 Why FreightBridge
               </span>
             </Reveal>
@@ -127,7 +127,7 @@ export function WhyFreightBridge() {
                       className={cn(
                         'mt-1 inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border transition-all duration-400 ease-premium sm:h-14 sm:w-14',
                         isActive
-                          ? 'border-brand-500 bg-brand-600 text-white shadow-[0_16px_36px_-18px_rgba(26,62,232,0.95)]'
+                          ? 'border-brand-500 bg-brand-600 text-white shadow-[0_16px_36px_-18px_rgba(209,69,10,0.95)]'
                           : 'border-ink-200 bg-white text-ink-500',
                       )}
                     >
