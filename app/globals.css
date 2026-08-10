@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --header-height: 72px;
+  }
+
+  * {
+    @apply border-ink-100;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--header-height) + 24px);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-white text-ink-700 antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'ss01';
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display text-ink-900;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    @apply bg-brand-500/20 text-ink-900;
+  }
+
+  /* Visible, consistent keyboard focus across the whole site. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-white;
+    border-radius: 6px;
+  }
+
+  .on-dark :focus-visible {
+    @apply ring-white ring-offset-ink-950;
+  }
+}
+
+@layer components {
+  .section {
+    @apply py-20 sm:py-24 lg:py-32;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full border border-ink-200/70 bg-white/70 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-ink-600 backdrop-blur;
+  }
+
+  .eyebrow-dark {
+    @apply inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-ink-100 backdrop-blur;
+  }
+
+  .display-1 {
+    @apply font-display text-[2.6rem] font-semibold leading-[1.05] tracking-[-0.035em] sm:text-[3.4rem] lg:text-[3.6rem] xl:text-[4.25rem];
+  }
+
+  .display-2 {
+    @apply font-display text-[2.1rem] font-semibold leading-[1.08] tracking-[-0.03em] sm:text-5xl lg:text-[3.5rem];
+  }
+
+  .lead {
+    @apply text-base leading-relaxed text-ink-500 sm:text-lg;
+  }
+
+  .card-surface {
+    @apply rounded-3xl border border-ink-100 bg-white shadow-soft;
+  }
+
+  .link-underline {
+    @apply relative font-medium text-brand-600 underline decoration-brand-500/30 decoration-2 underline-offset-4 transition-colors hover:text-brand-700 hover:decoration-brand-500;
+  }
+}
+
+@layer utilities {
+  /* Keeps highlighted words a consistent brand blue on dark backgrounds — a
+     gradient running to white reads unevenly across different line lengths. */
+  .text-gradient {
+    @apply bg-gradient-to-r from-brand-300 to-brand-200 bg-clip-text text-transparent;
+  }
+
+  .mask-fade-b {
+    -webkit-mask-image: linear-gradient(to bottom, black 65%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 65%, transparent 100%);
+  }
+
+  .mask-fade-x {
+    -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Honour the OS-level motion preference for CSS-driven motion. Framer Motion
+   variants are gated separately through `useReducedMotion`. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

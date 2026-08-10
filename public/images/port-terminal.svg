@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 760" width="1000" height="760" role="img" aria-label="Illustration of a container ship being loaded by gantry cranes at a FreightBridge port terminal">
+  <defs>
+    <linearGradient id="pSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#EEF3FF"/>
+      <stop offset="55%" stop-color="#DCE6FF"/>
+      <stop offset="100%" stop-color="#C3D2F7"/>
+    </linearGradient>
+    <linearGradient id="pWater" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8DAAFF"/>
+      <stop offset="100%" stop-color="#2F5BFF"/>
+    </linearGradient>
+    <linearGradient id="pHull" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#152134"/>
+      <stop offset="100%" stop-color="#0B1524"/>
+    </linearGradient>
+    <linearGradient id="pQuay" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E6EBF3"/>
+      <stop offset="100%" stop-color="#C9D3E4"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1000" height="760" fill="url(#pSky)"/>
+  <circle cx="812" cy="150" r="66" fill="#FFFFFF" opacity="0.85"/>
+  <g fill="#FFFFFF" opacity="0.7">
+    <ellipse cx="180" cy="120" rx="86" ry="26"/>
+    <ellipse cx="238" cy="104" rx="58" ry="22"/>
+    <ellipse cx="600" cy="86" rx="70" ry="20"/>
+  </g>
+
+  <!-- Skyline -->
+  <g fill="#9FAFC9" opacity="0.55">
+    <rect x="40" y="286" width="40" height="140"/>
+    <rect x="92" y="316" width="26" height="110"/>
+    <rect x="130" y="262" width="48" height="164"/>
+    <rect x="880" y="300" width="38" height="126"/>
+    <rect x="928" y="272" width="46" height="154"/>
+  </g>
+
+  <!-- Gantry cranes -->
+  <g stroke="#334765" stroke-width="9" fill="none" stroke-linecap="round">
+    <path d="M250 470V196h300"/>
+    <path d="M250 258h300"/>
+    <path d="M340 470V258"/>
+    <path d="M550 196l60 40"/>
+    <path d="M560 470V206"/>
+    <path d="M640 470V176h250"/>
+    <path d="M640 240h250"/>
+    <path d="M726 470V240"/>
+    <path d="M866 470V186"/>
+  </g>
+  <g stroke="#2F5BFF" stroke-width="5" stroke-linecap="round">
+    <path d="M420 258v96"/>
+    <path d="M800 240v72"/>
+  </g>
+  <g fill="#FF5C0A">
+    <rect x="392" y="352" width="58" height="26" rx="4"/>
+    <rect x="772" y="310" width="58" height="26" rx="4"/>
+  </g>
+
+  <!-- Quay -->
+  <rect y="470" width="1000" height="70" fill="url(#pQuay)"/>
+  <rect y="466" width="1000" height="6" fill="#9FAFC9"/>
+
+  <!-- Yard containers on the quay -->
+  <g>
+    <rect x="30" y="404" width="118" height="30" rx="3" fill="#1A3EE8"/>
+    <rect x="30" y="436" width="118" height="30" rx="3" fill="#152FB8"/>
+    <rect x="156" y="436" width="118" height="30" rx="3" fill="#C73206"/>
+    <rect x="920" y="404" width="76" height="30" rx="3" fill="#0F6E5A"/>
+    <rect x="900" y="436" width="96" height="30" rx="3" fill="#152134"/>
+    <g stroke="#050B15" stroke-opacity="0.25" stroke-width="2">
+      <path d="M56 404v62M82 404v62M108 404v62M134 404v62"/>
+      <path d="M182 436v30M208 436v30M234 436v30M260 436v30"/>
+    </g>
+  </g>
+
+  <!-- Water -->
+  <rect y="540" width="1000" height="220" fill="url(#pWater)"/>
+  <g stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="4" stroke-linecap="round">
+    <path d="M60 604h90M190 634h130M420 596h100M600 646h150M820 610h120M120 686h180M520 700h140"/>
+  </g>
+
+  <!-- Ship -->
+  <g>
+    <path d="M212 470h520l-42 108c-6 15-21 24-37 24H272c-16 0-31-9-37-24z" fill="url(#pHull)"/>
+    <rect x="212" y="452" width="520" height="20" rx="6" fill="#22334C"/>
+    <rect x="640" y="366" width="86" height="88" rx="8" fill="#E6EBF3"/>
+    <g fill="#4A5F80">
+      <rect x="654" y="382" width="20" height="14" rx="2"/>
+      <rect x="682" y="382" width="20" height="14" rx="2"/>
+      <rect x="654" y="406" width="20" height="14" rx="2"/>
+      <rect x="682" y="406" width="20" height="14" rx="2"/>
+    </g>
+    <rect x="672" y="332" width="12" height="38" rx="4" fill="#FF5C0A"/>
+
+    <!-- deck containers -->
+    <g>
+      <rect x="240" y="422" width="110" height="30" rx="3" fill="#1A3EE8"/>
+      <rect x="240" y="390" width="110" height="30" rx="3" fill="#C73206"/>
+      <rect x="358" y="422" width="110" height="30" rx="3" fill="#0F6E5A"/>
+      <rect x="358" y="390" width="110" height="30" rx="3" fill="#152FB8"/>
+      <rect x="358" y="358" width="110" height="30" rx="3" fill="#22334C"/>
+      <rect x="476" y="422" width="110" height="30" rx="3" fill="#152134"/>
+      <rect x="476" y="390" width="110" height="30" rx="3" fill="#1A3EE8"/>
+      <rect x="594" y="422" width="40" height="30" rx="3" fill="#C73206"/>
+      <g stroke="#050B15" stroke-opacity="0.28" stroke-width="2">
+        <path d="M266 358v94M292 358v94M318 358v94M384 358v94M410 358v94M436 358v94M502 390v62M528 390v62M554 390v62"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- Container being lifted -->
+  <g>
+    <path d="M420 354v-96" stroke="#334765" stroke-width="4"/>
+    <rect x="384" y="352" width="72" height="26" rx="3" fill="#FF5C0A"/>
+  </g>
+</svg>
