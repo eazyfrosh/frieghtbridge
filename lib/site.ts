@@ -27,6 +27,28 @@ export const SITE = {
   address: '210 Harbor Point Drive, Suite 900, Chicago, IL 60601',
 } as const;
 
+/**
+ * Hero photography.
+ *
+ * To use your own shot, drop it in `public/images/` and point `src` at it —
+ * e.g. `/images/hero-freight.jpg`. No other change is needed. For a hosted
+ * image, add the host to `images.remotePatterns` in `next.config.mjs` first.
+ *
+ * The default below is a stock placeholder. If it fails to load, the hero
+ * renders `fallbackSrc` instead of breaking.
+ *
+ * Aim for a landscape shot around 1600×1200 or wider. The frame crops to
+ * `object-cover`, and a scrim sits over the lower third — keep the subject
+ * out of the bottom-left corner, where the shipment card overlaps.
+ */
+export const HERO_MEDIA = {
+  src: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1600&q=75',
+  alt: 'A freight truck on the highway at dusk, hauling goods for a FreightBridge customer',
+  fallbackSrc: '/images/hero-freight.svg',
+  fallbackAlt:
+    'Illustration of a FreightBridge semi-truck travelling a highway at dusk past a container yard and gantry cranes',
+} as const;
+
 export interface NavLink {
   label: string;
   href: string;

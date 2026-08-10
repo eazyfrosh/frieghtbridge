@@ -83,11 +83,39 @@ Reusable text/layout classes (`.section`, `.display-1`, `.display-2`, `.lead`,
 
 ## Imagery
 
-All artwork in `public/images/` is original SVG authored for this project — no
-third-party or stock assets. Photography can be dropped in by adding the host to
-`images.remotePatterns` in `next.config.mjs` and pointing the `src` of the
-`next/image` calls in `Hero`, `WhyFreightBridge`, `ServicesPage`, and `AboutPage`
-at the new URLs.
+### Hero photograph
+
+The hero frame is photographic and configured in one place — `HERO_MEDIA` in
+`lib/site.ts`:
+
+```ts
+export const HERO_MEDIA = {
+  src: '/images/hero-freight.jpg',   // your photo
+  alt: '…',
+  fallbackSrc: '/images/hero-freight.svg',
+  fallbackAlt: '…',
+};
+```
+
+To use your own shot, drop the file in `public/images/` and point `src` at it.
+For a hosted image, add the host to `images.remotePatterns` in
+`next.config.mjs` first (`images.unsplash.com` is already allowed).
+
+`HeroPhoto` falls back to `fallbackSrc` if the photo cannot be loaded, so a
+wrong path or a dead URL degrades to the illustration instead of leaving a
+broken hero. **The shipped `src` is a stock placeholder — replace it with a
+photo you have rights to before going live.**
+
+Aim for landscape, 1600×1200 or wider. The frame crops with `object-cover` and
+a scrim covers the lower third, so keep the subject clear of the bottom-left
+corner where the shipment card overlaps.
+
+### Everything else
+
+The remaining artwork in `public/images/` is original SVG authored for this
+project — no third-party or stock assets. Those can be swapped for photography
+the same way, by changing the `src` of the `next/image` calls in
+`WhyFreightBridge`, `ServicesPage`, and `AboutPage`.
 
 ## Accessibility & motion
 

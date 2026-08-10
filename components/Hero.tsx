@@ -2,8 +2,8 @@
 
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Boxes, MoveRight, Radar, ShieldCheck } from 'lucide-react';
-import Image from 'next/image';
 import { EASE_PREMIUM } from '@/lib/motion';
+import { HeroPhoto } from './HeroPhoto';
 import { Button } from './ui/Button';
 
 const HEADLINE = ['Freight', 'That', 'Moves', 'Your', 'Business', 'Forward.'];
@@ -97,20 +97,7 @@ export function Hero() {
             animate={reduced ? undefined : { opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.9, ease: EASE_PREMIUM, delay: 0.3 }}
           >
-            <div className="relative overflow-hidden rounded-4xl border border-white/10 bg-ink-900 shadow-[0_50px_120px_-40px_rgba(0,0,0,0.9)]">
-              <Image
-                src="/images/hero-freight.svg"
-                alt="A FreightBridge semi-truck travelling a highway at dusk past a container yard and gantry cranes"
-                width={1200}
-                height={1000}
-                priority
-                className="h-[320px] w-full object-cover sm:h-[420px] lg:h-[520px]"
-              />
-              <div
-                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-950/45 via-transparent to-transparent"
-                aria-hidden="true"
-              />
-            </div>
+            <HeroPhoto />
 
             {/* Floating status card */}
             <motion.div

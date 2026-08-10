@@ -4,9 +4,9 @@ const nextConfig = {
   poweredByHeader: false,
   images: {
     formats: ['image/avif', 'image/webp'],
-    // Illustrations ship from /public/images. Swap in photography by adding a
-    // remote host here and pointing the `src` at it — the components take any URL.
-    remotePatterns: [],
+    // Hosts allowed to serve optimised images. Add your own here if the hero
+    // photo (see `HERO_MEDIA` in lib/site.ts) is served from somewhere else.
+    remotePatterns: [{ protocol: 'https', hostname: 'images.unsplash.com' }],
   },
 };
 
