@@ -4,9 +4,9 @@ const nextConfig = {
   poweredByHeader: false,
   images: {
     formats: ['image/avif', 'image/webp'],
-    // Hosts allowed to serve optimised images. Add your own here if the hero
-    // photo (see `HERO_MEDIA` in lib/site.ts) is served from somewhere else.
-    remotePatterns: [{ protocol: 'https', hostname: 'images.unsplash.com' }],
+    // All imagery is local. Add a host here if you later serve photos from a
+    // CDN and point `HERO_MEDIA`/`IMAGERY` in lib/site.ts at it.
+    remotePatterns: [],
   },
 };
 

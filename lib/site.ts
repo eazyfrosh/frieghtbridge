@@ -55,13 +55,13 @@ export const HERO_MEDIA = {
   video: {
     src: '/video/hero-freight.mp4',
     webm: '/video/hero-freight.webm',
-    poster: '/images/hero-freight.svg',
+    poster: '/images/hero-freight.png',
     description: 'Freight moving through a FreightBridge distribution network',
   },
 
   /** Still image — the poster for the video, and the hero when there is none. */
-  src: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1600&q=75',
-  alt: 'A freight truck on the highway at dusk, hauling goods for a FreightBridge customer',
+  src: '/images/hero-freight.png',
+  alt: 'An articulated lorry hauling a shipping container along a multi-lane highway',
   fallbackSrc: '/images/hero-freight.svg',
   fallbackAlt:
     'Illustration of a FreightBridge semi-truck travelling a highway at dusk past a container yard and gantry cranes',
@@ -91,19 +91,22 @@ export interface MediaAsset {
  */
 export const IMAGERY: Record<'road' | 'port' | 'warehouse', MediaAsset> = {
   road: {
-    src: '/images/hero-freight.svg',
-    alt: 'A FreightBridge truck on the highway at dusk beside a container yard',
+    src: '/images/hero-freight.png',
+    alt: 'An articulated lorry hauling a shipping container along a multi-lane highway',
     fallbackSrc: '/images/hero-freight.svg',
+    fallbackAlt: 'Illustration of a FreightBridge truck on the highway beside a container yard',
   },
   port: {
-    src: '/images/port-terminal.svg',
-    alt: 'Gantry cranes loading containers onto a cargo ship at a FreightBridge port terminal',
+    src: '/images/port-terminal.png',
+    alt: 'Shipping containers stacked in rows beneath gantry cranes at a busy port terminal',
     fallbackSrc: '/images/port-terminal.svg',
+    fallbackAlt: 'Illustration of gantry cranes loading containers onto a cargo ship',
   },
   warehouse: {
-    src: '/images/warehouse-ops.svg',
-    alt: 'Inside a FreightBridge fulfillment warehouse with pallet racking, a forklift and loading bays',
+    src: '/images/warehouse-ops.png',
+    alt: 'Two warehouse workers walking between tall pallet racks, one carrying a box',
     fallbackSrc: '/images/warehouse-ops.svg',
+    fallbackAlt: 'Illustration of a FreightBridge fulfillment warehouse with pallet racking and a forklift',
   },
 };
 
