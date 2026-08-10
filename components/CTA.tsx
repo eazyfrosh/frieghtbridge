@@ -11,7 +11,7 @@ export function CTA() {
         <Reveal>
           <div className="relative overflow-hidden rounded-[2.5rem] bg-ink-950 px-6 py-16 text-center sm:px-12 sm:py-24 lg:py-28">
             <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-              <div className="absolute inset-0 bg-[radial-gradient(70%_80%_at_50%_-10%,#C7420A_0%,transparent_60%),radial-gradient(50%_60%_at_85%_110%,#152FB8_0%,transparent_60%)] opacity-55" />
+              <div className="absolute inset-0 bg-[radial-gradient(70%_80%_at_50%_-10%,#C7420A_0%,transparent_60%),radial-gradient(50%_60%_at_85%_110%,#8A3410_0%,transparent_60%)] opacity-55" />
               <div className="absolute inset-0 bg-grid-dark bg-[size:52px_52px] opacity-30" />
               <div className="absolute -left-24 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-brand-600/25 blur-[100px]" />
             </div>

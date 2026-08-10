@@ -4,6 +4,7 @@ import { GlobalNetwork } from '@/components/GlobalNetwork';
 import { Hero } from '@/components/Hero';
 import { HowItWorks } from '@/components/HowItWorks';
 import { Services } from '@/components/Services';
+import { ShowcaseCarousel } from '@/components/ShowcaseCarousel';
 import { TechnologySection } from '@/components/TechnologySection';
 import { Testimonials } from '@/components/Testimonials';
 import { TrackingWidget } from '@/components/TrackingWidget';
@@ -26,6 +27,7 @@ export default function HomePage() {
       </section>
 
       <Services />
+      <ShowcaseCarousel />
       <WhyFreightBridge />
       <HowItWorks />
 

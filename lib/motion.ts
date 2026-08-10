@@ -23,6 +23,23 @@ export const fadeIn: Variants = {
   visible: { opacity: 1, transition },
 };
 
+/** Horizontal entrances. Distance is modest on purpose — a long travel reads
+ *  as jitter on wide screens and forces a horizontal scrollbar on narrow ones. */
+export const slideInLeft: Variants = {
+  hidden: { opacity: 0, x: -48 },
+  visible: { opacity: 1, x: 0, transition },
+};
+
+export const slideInRight: Variants = {
+  hidden: { opacity: 0, x: 48 },
+  visible: { opacity: 1, x: 0, transition },
+};
+
+/** Picks a horizontal variant by index, for alternating rows. */
+export function slideFrom(direction: 'left' | 'right'): Variants {
+  return direction === 'left' ? slideInLeft : slideInRight;
+}
+
 export const scaleIn: Variants = {
   hidden: { opacity: 0, scale: 0.96 },
   visible: { opacity: 1, scale: 1, transition: { ...transition, duration: 0.7 } },

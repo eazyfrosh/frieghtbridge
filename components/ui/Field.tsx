@@ -5,7 +5,7 @@ import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTML
 import { cn } from '@/lib/utils';
 
 const controlBase =
-  'w-full rounded-xl border bg-white px-4 text-[0.95rem] text-ink-900 shadow-[0_1px_2px_rgba(11,21,36,0.04)] transition-[border-color,box-shadow,background-color] duration-200 placeholder:text-ink-300 focus:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:bg-ink-50';
+  'w-full rounded-xl border bg-white px-4 text-[0.95rem] text-ink-900 shadow-[0_1px_2px_rgba(23,17,14,0.04)] transition-[border-color,box-shadow,background-color] duration-200 placeholder:text-ink-300 focus:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:bg-ink-50';
 
 const controlState = (invalid: boolean) =>
   invalid

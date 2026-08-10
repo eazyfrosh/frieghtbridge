@@ -3,7 +3,7 @@
 import { animate, motion, useInView } from 'framer-motion';
 import { ArrowRight, Building2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { EASE_PREMIUM, fadeUp, motionSafe } from '@/lib/motion';
+import { EASE_PREMIUM, motionSafe, slideInRight } from '@/lib/motion';
 import { Button } from './ui/Button';
 import { Reveal, StaggerGroup } from './ui/Reveal';
 import { useReducedMotion } from '@/lib/use-reduced-motion';
@@ -19,7 +19,7 @@ export function EnterpriseSection() {
   return (
     <section id="enterprise" className="section relative overflow-hidden bg-ink-950 text-white">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(90%_70%_at_10%_0%,#8A3410_0%,transparent_55%),radial-gradient(70%_60%_at_95%_100%,#152FB8_0%,transparent_55%)] opacity-60" />
+        <div className="absolute inset-0 bg-[radial-gradient(90%_70%_at_10%_0%,#8A3410_0%,transparent_55%),radial-gradient(70%_60%_at_95%_100%,#8A3410_0%,transparent_55%)] opacity-60" />
         <div className="absolute inset-0 bg-grid-dark bg-[size:56px_56px] opacity-40" />
       </div>
 
@@ -95,7 +95,7 @@ function StatCard({ value, suffix, label }: { value: number; suffix: string; lab
   return (
     <motion.div
       ref={ref}
-      variants={motionSafe(Boolean(reduced), fadeUp)}
+      variants={motionSafe(Boolean(reduced), slideInRight)}
       className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur transition-colors duration-400 ease-premium hover:border-white/25 hover:bg-white/[0.07] sm:p-7"
     >
       <span

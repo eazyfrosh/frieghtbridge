@@ -21,18 +21,21 @@ const config: Config = {
     },
     extend: {
       colors: {
+        // Warm neutral. Deliberately brown-tinted rather than navy so nothing
+        // on the page reads as blue. `ink-400` is the lightest step used for
+        // body text on white and clears 4.5:1.
         ink: {
-          50: '#F4F6FA',
-          100: '#E6EBF3',
-          200: '#C9D3E4',
-          300: '#9FAFC9',
-          400: '#6C81A1',
-          500: '#4A5F80',
-          600: '#334765',
-          700: '#22334C',
-          800: '#152134',
-          900: '#0B1524',
-          950: '#050B15',
+          50: '#FBF8F6',
+          100: '#F3ECE7',
+          200: '#E4D9D1',
+          300: '#CBBBAF',
+          400: '#7E6B5F',
+          500: '#64544A',
+          600: '#4C3F37',
+          700: '#382E28',
+          800: '#261F1A',
+          900: '#17110E',
+          950: '#0C0806',
         },
         // Primary. `brand-600` is the darkest step still used behind white
         // text — it clears 4.5:1, so buttons stay readable at body size.
@@ -48,18 +51,19 @@ const config: Config = {
           800: '#87300B',
           900: '#6E290C',
         },
-        // Cool complementary accent, used sparingly against the warm primary.
+        // Warm gold secondary. Lifts the primary without introducing a second
+        // hue family — used for highlights, glows and rating marks.
         signal: {
-          50: '#EEF3FF',
-          100: '#DCE6FF',
-          200: '#BACDFF',
-          300: '#8DAAFF',
-          400: '#5B80FF',
-          500: '#2F5BFF',
-          600: '#1A3EE8',
-          700: '#152FB8',
-          800: '#152A91',
-          900: '#172973',
+          50: '#FFF9EC',
+          100: '#FFF0CE',
+          200: '#FFDF9C',
+          300: '#FFC961',
+          400: '#FBB03B',
+          500: '#EE9412',
+          600: '#CC7409',
+          700: '#A2530C',
+          800: '#844210',
+          900: '#6E3711',
         },
       },
       fontFamily: {
@@ -75,14 +79,14 @@ const config: Config = {
         '5xl': '2.75rem',
       },
       boxShadow: {
-        soft: '0 1px 2px rgba(11,21,36,0.04), 0 8px 24px -12px rgba(11,21,36,0.12)',
-        card: '0 2px 4px rgba(11,21,36,0.03), 0 18px 40px -20px rgba(11,21,36,0.22)',
-        lift: '0 8px 12px -6px rgba(11,21,36,0.08), 0 32px 64px -28px rgba(11,21,36,0.35)',
+        soft: '0 1px 2px rgba(23,17,14,0.05), 0 8px 24px -12px rgba(23,17,14,0.13)',
+        card: '0 2px 4px rgba(23,17,14,0.04), 0 18px 40px -20px rgba(23,17,14,0.20)',
+        lift: '0 8px 12px -6px rgba(23,17,14,0.09), 0 32px 64px -28px rgba(23,17,14,0.30)',
         glow: '0 24px 70px -30px rgba(209,69,10,0.6)',
       },
       backgroundImage: {
         'grid-light':
-          'linear-gradient(to right, rgba(11,21,36,0.055) 1px, transparent 1px), linear-gradient(to bottom, rgba(11,21,36,0.055) 1px, transparent 1px)',
+          'linear-gradient(to right, rgba(23,17,14,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(23,17,14,0.06) 1px, transparent 1px)',
         'grid-dark':
           'linear-gradient(to right, rgba(255,255,255,0.055) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.055) 1px, transparent 1px)',
       },

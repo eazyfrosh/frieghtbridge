@@ -84,7 +84,7 @@ export function Navbar() {
         className={cn(
           'fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,border-color,backdrop-filter] duration-500 ease-premium',
           scrolled
-            ? 'border-b border-ink-100 bg-white/85 shadow-[0_1px_24px_-12px_rgba(11,21,36,0.4)] backdrop-blur-xl supports-[backdrop-filter]:bg-white/70'
+            ? 'border-b border-ink-100 bg-white/85 shadow-[0_1px_24px_-12px_rgba(23,17,14,0.4)] backdrop-blur-xl supports-[backdrop-filter]:bg-white/70'
             : 'border-b border-transparent bg-transparent',
         )}
       >

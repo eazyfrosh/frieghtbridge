@@ -69,17 +69,40 @@ This is a front-end prototype: there is no backend.
 
 Tokens live in `tailwind.config.ts`:
 
-- `ink` — neutral navy scale used for text and dark surfaces
+The palette is deliberately all-warm — there is no blue anywhere in the UI.
+
+- `ink` — warm, brown-tinted neutral for text and dark surfaces (not navy).
+  `ink-400` is the lightest step used for body text on white and clears 4.5:1
 - `brand` — primary orange (CTAs, links, active states, brand accents).
   `brand-600` is the darkest step used behind white text and clears 4.5:1
-- `signal` — cool blue accent, used sparingly against the warm primary
-  (the coverage map's world layer, depth glows, the "out for delivery" state)
+- `signal` — warm gold secondary for highlights and glows
+
+Semantic status colours stay outside the brand ramp so a status never reads as
+decoration: emerald for delivered, rose for delayed/exception. "In transit" and
+"out for delivery" are both brand orange and are told apart by **intensity** —
+a light chip versus a solid one — because gold and orange sit too close to
+carry that distinction by hue.
 - `font-display` (Sora) for headings, `font-sans` (Inter) for body
 - `shadow-soft` / `shadow-card` / `shadow-lift` for the card elevation ladder
 - `ease-premium` for the shared easing curve
 
 Reusable text/layout classes (`.section`, `.display-1`, `.display-2`, `.lead`,
 `.eyebrow`, `.card-surface`) are defined in `app/globals.css`.
+
+### Motion
+
+`lib/motion.ts` holds the shared variants: `fadeUp` plus `slideInLeft` /
+`slideInRight` for lateral entrances. `Reveal` and `RevealItem` take a
+`from="left" | "right" | "up"` prop, which is how the editorial sections
+alternate their entrance direction.
+
+`ShowcaseCarousel` is the slideshow between Services and Why FreightBridge:
+autoplaying, drag/swipe, arrow-key navigable, with a progress bar on the active
+dot and a pause control. Autoplay stops on hover and on focus, and never starts
+under `prefers-reduced-motion`.
+
+All motion resolves through `lib/use-reduced-motion.ts` rather than Framer's
+hook directly — see the note in that file on why.
 
 ## Imagery
 

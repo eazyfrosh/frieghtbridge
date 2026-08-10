@@ -75,14 +75,14 @@ export function GlobalNetwork() {
                     <linearGradient id="laneStroke" x1="0" y1="0" x2="1" y2="0">
                       <stop offset="0%" stopColor="#D1450A" stopOpacity="0.15" />
                       <stop offset="50%" stopColor="#FF9E67" stopOpacity="0.95" />
-                      <stop offset="100%" stopColor="#8DAAFF" stopOpacity="0.5" />
+                      <stop offset="100%" stopColor="#FFC078" stopOpacity="0.5" />
                     </linearGradient>
                     <radialGradient id="nodeGlow">
                       <stop offset="0%" stopColor="#FF9E67" stopOpacity="0.55" />
                       <stop offset="100%" stopColor="#FF9E67" stopOpacity="0" />
                     </radialGradient>
                     <pattern id="dots" width="18" height="18" patternUnits="userSpaceOnUse">
-                      <circle cx="2" cy="2" r="1.5" fill="#8DAAFF" fillOpacity="0.45" />
+                      <circle cx="2" cy="2" r="1.5" fill="#FFC078" fillOpacity="0.45" />
                     </pattern>
                   </defs>
 
@@ -98,7 +98,7 @@ export function GlobalNetwork() {
                   </g>
 
                   {/* Meridian sweep for a globe-like read */}
-                  <g stroke="#5B80FF" strokeOpacity="0.16" fill="none">
+                  <g stroke="#F5A623" strokeOpacity="0.16" fill="none">
                     <ellipse cx="430" cy="210" rx="410" ry="196" />
                     <ellipse cx="430" cy="210" rx="290" ry="196" />
                     <ellipse cx="430" cy="210" rx="150" ry="196" />
@@ -117,7 +117,7 @@ export function GlobalNetwork() {
 
                     return (
                       <g key={`${fromCode}-${toCode}`}>
-                        <path d={d} fill="none" stroke="#5B80FF" strokeOpacity="0.16" strokeWidth="1.2" />
+                        <path d={d} fill="none" stroke="#F5A623" strokeOpacity="0.16" strokeWidth="1.2" />
                         <motion.path
                           d={d}
                           fill="none"
@@ -221,7 +221,7 @@ export function GlobalNetwork() {
         </Reveal>
 
         {/* Region list — the mobile-friendly version of the map */}
-        <Reveal delay={0.16}>
+        <Reveal delay={0.16} from="right">
           <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {REGIONS.map((region) => (
               <li

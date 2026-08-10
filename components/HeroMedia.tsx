@@ -71,7 +71,7 @@ export function HeroMedia() {
       {/* Ground colour so the fade-in resolves from something warm. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[linear-gradient(150deg,#1B2740_0%,#3A2318_55%,#0B1524_100%)]"
+        className="absolute inset-0 bg-[linear-gradient(150deg,#2E1C12_0%,#3A2318_55%,#17110E_100%)]"
       />
 
       <Image

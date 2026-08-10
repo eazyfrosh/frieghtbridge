@@ -53,7 +53,7 @@ export function Services() {
 
               <div className="relative flex h-full flex-col">
                 <div className="flex items-start justify-between">
-                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-ink-900 text-white shadow-[0_10px_24px_-14px_rgba(11,21,36,0.9)] transition-colors duration-400 ease-premium group-hover:bg-brand-600">
+                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-ink-900 text-white shadow-[0_10px_24px_-14px_rgba(23,17,14,0.9)] transition-colors duration-400 ease-premium group-hover:bg-brand-600">
                     <service.icon className="h-[1.35rem] w-[1.35rem]" aria-hidden="true" />
                   </span>
                   <span className="font-mono text-xs font-semibold text-ink-300">

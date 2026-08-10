@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Cpu, Eye, Gauge, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
-import { fadeUp, motionSafe } from '@/lib/motion';
+import { motionSafe, slideInRight } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 import { Reveal, StaggerGroup } from './ui/Reveal';
 import { useReducedMotion } from '@/lib/use-reduced-motion';
@@ -67,25 +67,25 @@ export function WhyFreightBridge() {
         <div className="grid gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
           {/* Editorial column */}
           <div className="lg:sticky lg:top-28 lg:self-start">
-            <Reveal>
+            <Reveal from="left">
               <span className="eyebrow">
                 <span className="h-1.5 w-1.5 rounded-full bg-brand-500" aria-hidden="true" />
                 Why FreightBridge
               </span>
             </Reveal>
-            <Reveal delay={0.06}>
+            <Reveal delay={0.06} from="left">
               <h2 className="display-2 mt-5">
                 Built for the way freight <span className="text-brand-600">moves today.</span>
               </h2>
             </Reveal>
-            <Reveal delay={0.12}>
+            <Reveal delay={0.12} from="left">
               <p className="lead mt-5 max-w-md">
                 Supply chains stopped being predictable a long time ago. FreightBridge is designed for the version of
                 logistics you actually work in — fast, visible, and accountable at every handoff.
               </p>
             </Reveal>
 
-            <Reveal delay={0.2}>
+            <Reveal delay={0.2} from="left">
               <div className="relative mt-10 overflow-hidden rounded-4xl border border-ink-100 bg-white shadow-card">
                 <Image
                   src="/images/port-terminal.svg"
@@ -114,7 +114,7 @@ export function WhyFreightBridge() {
               return (
                 <motion.div
                   key={benefit.id}
-                  variants={motionSafe(reduced, fadeUp)}
+                  variants={motionSafe(reduced, slideInRight)}
                   onMouseEnter={() => setActive(benefit.id)}
                   onFocus={() => setActive(benefit.id)}
                   tabIndex={0}

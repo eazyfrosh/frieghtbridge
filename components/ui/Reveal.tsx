@@ -2,7 +2,7 @@
 
 import { motion, type Variants } from 'framer-motion';
 import type { ReactNode } from 'react';
-import { fadeUp, motionSafe, stagger, viewportOnce } from '@/lib/motion';
+import { fadeUp, motionSafe, slideInLeft, slideInRight, stagger, viewportOnce } from '@/lib/motion';
 import { useReducedMotion } from '@/lib/use-reduced-motion';
 
 /**
@@ -25,6 +25,15 @@ const MOTION_TAGS = {
 
 export type RevealTag = keyof typeof MOTION_TAGS;
 
+/** Entrance direction. `up` is the default; `left`/`right` slide in laterally. */
+export type RevealFrom = 'up' | 'left' | 'right';
+
+const FROM: Record<RevealFrom, Variants> = {
+  up: fadeUp,
+  left: slideInLeft,
+  right: slideInRight,
+};
+
 interface RevealProps {
   children: ReactNode;
   className?: string;
@@ -32,15 +41,17 @@ interface RevealProps {
   delay?: number;
   as?: RevealTag;
   variants?: Variants;
+  from?: RevealFrom;
 }
 
 /**
  * Scroll-triggered entrance wrapper. Animates once, and collapses to a no-op
  * when the visitor prefers reduced motion.
  */
-export function Reveal({ children, className, delay = 0, as = 'div', variants = fadeUp }: RevealProps) {
+export function Reveal({ children, className, delay = 0, as = 'div', variants, from = 'up' }: RevealProps) {
   const reduced = useReducedMotion();
   const Component = MOTION_TAGS[as];
+  const resolved = variants ?? FROM[from];
 
   return (
     <Component
@@ -48,7 +59,7 @@ export function Reveal({ children, className, delay = 0, as = 'div', variants = 
       initial="hidden"
       whileInView="visible"
       viewport={viewportOnce}
-      variants={motionSafe(reduced, variants)}
+      variants={motionSafe(reduced, resolved)}
       transition={reduced ? undefined : { delay }}
     >
       {children}
@@ -87,14 +98,16 @@ interface ItemProps {
   className?: string;
   as?: RevealTag;
   variants?: Variants;
+  from?: RevealFrom;
 }
 
-export function RevealItem({ children, className, as = 'div', variants = fadeUp }: ItemProps) {
+export function RevealItem({ children, className, as = 'div', variants, from = 'up' }: ItemProps) {
   const reduced = useReducedMotion();
   const Component = MOTION_TAGS[as];
+  const resolved = variants ?? FROM[from];
 
   return (
-    <Component className={className} variants={motionSafe(reduced, variants)}>
+    <Component className={className} variants={motionSafe(reduced, resolved)}>
       {children}
     </Component>
   );

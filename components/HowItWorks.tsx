@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { ClipboardList, MapPinned, PackageCheck, Route } from 'lucide-react';
-import { fadeUp, motionSafe, viewportOnce } from '@/lib/motion';
+import { motionSafe, slideInLeft, viewportOnce } from '@/lib/motion';
 import { Button } from './ui/Button';
 import { StaggerGroup } from './ui/Reveal';
 import { SectionHeading } from './ui/SectionHeading';
@@ -69,7 +69,7 @@ export function HowItWorks() {
             {STEPS.map((step) => (
               <motion.div
                 key={step.number}
-                variants={motionSafe(reduced, fadeUp)}
+                variants={motionSafe(reduced, slideInLeft)}
                 className="group relative flex flex-col items-start lg:items-center lg:text-center"
               >
                 <span className="relative z-10 inline-flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-3xl border border-ink-100 bg-white text-ink-900 shadow-soft transition-all duration-400 ease-premium group-hover:-translate-y-1 group-hover:border-brand-200 group-hover:bg-brand-600 group-hover:text-white group-hover:shadow-glow">

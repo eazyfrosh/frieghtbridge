@@ -43,7 +43,7 @@ const ACTIVITY = [
 
 const STATUS_STYLES: Record<string, string> = {
   'In transit': 'bg-brand-50 text-brand-700 ring-brand-600/20',
-  'Out for delivery': 'bg-signal-50 text-signal-700 ring-signal-600/20',
+  'Out for delivery': 'bg-brand-600 text-white ring-brand-700/30',
   Delivered: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
   Delayed: 'bg-rose-50 text-rose-700 ring-rose-600/20',
 };
