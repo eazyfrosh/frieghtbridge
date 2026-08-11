@@ -54,6 +54,9 @@ const config: Config = {
           800: '#9C3800',
           900: '#7A2D00',
         },
+        // Warm off-white for the hero surface — a touch softer than pure white
+        // so the white floating cards read as raised against it.
+        canvas: '#F7F7F5',
         // Warm gold secondary. Lifts the primary without introducing a second
         // hue family — used for highlights, glows and rating marks.
         signal: {

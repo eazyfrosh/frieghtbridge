@@ -18,6 +18,11 @@ interface VideoFrameProps {
   priority?: boolean;
   /** Darkens the lower edge, for frames with content overlapping the bottom. */
   scrim?: boolean;
+  /**
+   * `dark` is the frame used on the orange bands. `light` drops the dark base
+   * and warm overlay for a plain frame that sits on an off-white surface.
+   */
+  tone?: 'dark' | 'light';
   className?: string;
 }
 
@@ -49,8 +54,10 @@ export function VideoFrame({
   sizes = '(min-width: 1024px) 50vw, 100vw',
   priority,
   scrim = true,
+  tone = 'dark',
   className,
 }: VideoFrameProps) {
+  const light = tone === 'light';
   const reduced = useReducedMotion();
   const [mounted, setMounted] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
@@ -88,14 +95,19 @@ export function VideoFrame({
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-4xl border border-white/10 bg-ink-900 shadow-[0_50px_120px_-40px_rgba(0,0,0,0.9)]',
+        'relative overflow-hidden',
+        light
+          ? 'rounded-3xl bg-ink-100 shadow-[0_2px_6px_rgba(17,17,17,0.04),0_40px_80px_-32px_rgba(17,17,17,0.28)]'
+          : 'rounded-4xl border border-white/10 bg-ink-900 shadow-[0_50px_120px_-40px_rgba(0,0,0,0.9)]',
         className,
       )}
     >
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-[linear-gradient(150deg,#7A2E0C_0%,#A93706_55%,#121212_100%)]"
-      />
+      {!light && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-[linear-gradient(150deg,#7A2E0C_0%,#A93706_55%,#121212_100%)]"
+        />
+      )}
 
       <Image
         key={photoSrc}
@@ -142,10 +154,12 @@ export function VideoFrame({
           className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-950/75 via-ink-950/10 to-transparent"
         />
       )}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-transparent to-brand-600/20 mix-blend-soft-light"
-      />
+      {!light && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-transparent to-brand-600/20 mix-blend-soft-light"
+        />
+      )}
 
       {showVideo && videoReady && (
         <button
