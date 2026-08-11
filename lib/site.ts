@@ -95,7 +95,7 @@ export interface MediaAsset {
  *
  * Landscape, 1600px wide or more. Each is cropped with `object-cover`.
  */
-export const IMAGERY: Record<'road' | 'port' | 'warehouse', MediaAsset> = {
+export const IMAGERY: Record<'road' | 'port' | 'warehouse' | 'lastMile', MediaAsset> = {
   road: {
     src: '/images/hero-freight.png',
     alt: 'An articulated lorry hauling a shipping container along a multi-lane highway',
@@ -107,6 +107,12 @@ export const IMAGERY: Record<'road' | 'port' | 'warehouse', MediaAsset> = {
     alt: 'Shipping containers stacked in rows beneath gantry cranes at a busy port terminal',
     fallbackSrc: '/images/port-terminal.svg',
     fallbackAlt: 'Illustration of gantry cranes loading containers onto a cargo ship',
+  },
+  lastMile: {
+    src: '/images/inside-the-network.jpg',
+    alt: 'A woman smiling as she receives two parcels at her front door',
+    fallbackSrc: '/images/warehouse-ops.svg',
+    fallbackAlt: 'Illustration of a FreightBridge fulfillment warehouse with pallet racking and a forklift',
   },
   warehouse: {
     src: '/images/warehouse-ops.png',
@@ -125,9 +131,9 @@ export const IMAGERY: Record<'road' | 'port' | 'warehouse', MediaAsset> = {
  * is plenty. See the README for the ffmpeg recipe.
  */
 export const STORY_VIDEO: VideoAsset = {
-  src: '',
-  webm: '',
-  description: 'Inside a FreightBridge warehouse as shipments are picked and loaded',
+  src: '/video/inside-the-network.mp4',
+  webm: '/video/inside-the-network.webm',
+  description: 'A FreightBridge delivery being handed over at a customer’s front door',
 };
 
 export interface NavLink {

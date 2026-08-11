@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowRight, Boxes, Clock4, Route } from 'lucide-react';
+import { ArrowRight, Boxes, PackageCheck, Route } from 'lucide-react';
 import { IMAGERY, STORY_VIDEO } from '@/lib/site';
 import { Button } from './ui/Button';
 import { Reveal } from './ui/Reveal';
@@ -18,9 +18,9 @@ const POINTS = [
     body: 'Each transfer adds a timestamped scan, which is what makes the timeline on your dashboard trustworthy.',
   },
   {
-    icon: Clock4,
-    title: 'Exceptions surface early',
-    body: 'When a lane slips we raise it before it reaches your customer, with a revised window already attached.',
+    icon: PackageCheck,
+    title: 'Proof at the doorstep',
+    body: 'A photo or signature is captured on delivery and attached to the shipment record, so nobody has to take it on trust.',
   },
 ];
 
@@ -50,8 +50,8 @@ export function NetworkStory() {
 
             <Reveal delay={0.12} from="left">
               <p className="lead mt-5 max-w-lg">
-                A look inside the terminals, docks and lanes your shipments pass through — and the people who keep
-                them moving.
+                From the loading dock to the doorstep — the journey your shipments make, and the people who
+                complete it.
               </p>
             </Reveal>
 
@@ -88,7 +88,7 @@ export function NetworkStory() {
 
           <Reveal delay={0.1} from="right">
             <VideoFrame
-              media={IMAGERY.warehouse}
+              media={IMAGERY.lastMile}
               video={STORY_VIDEO}
               heightClass="h-[280px] sm:h-[400px] lg:h-[520px]"
               sizes="(min-width: 1024px) 50vw, 100vw"

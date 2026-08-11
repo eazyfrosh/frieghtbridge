@@ -162,13 +162,13 @@ configured through `STORY_VIDEO` in `lib/site.ts`:
 
 ```ts
 export const STORY_VIDEO = {
-  src: '',        // e.g. '/video/inside-the-network.mp4'
-  webm: '',
+  src: '/video/inside-the-network.mp4',
+  webm: '/video/inside-the-network.webm',
   description: '…',
 };
 ```
 
-Leave `src` empty and that section shows `IMAGERY.warehouse` on its own. Both
+Leave `src` empty and that section shows `IMAGERY.lastMile` on its own. Both
 clips share `ui/VideoFrame`, so the guidance below applies to either:
 
 - 6–10 seconds, silently looping, compressed to **under ~3 MB** — it is the
@@ -190,6 +190,9 @@ clips share `ui/VideoFrame`, so the guidance below applies to either:
   motion that auto-starts and runs beyond five seconds
 - If the video fails to load it falls back to the still, and then to the
   illustration
+- Ship the webm only if it actually beats the mp4. VP9 usually wins, but on a
+  high-motion clip it can come out larger, and `VideoFrame` prefers webm where
+  the browser supports it — check the two file sizes before committing both
 
 ### Section imagery
 
