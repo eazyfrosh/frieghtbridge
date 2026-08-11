@@ -31,36 +31,30 @@ export function Hero() {
         <div className="grid items-center gap-14 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16 xl:gap-20">
           {/* Copy */}
           <div className="max-w-[36rem]">
-            <motion.p
-              {...rise(0)}
-              className="text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-ink-500 sm:text-[0.78rem]"
-            >
-              <span className="mr-2.5 inline-block h-1.5 w-1.5 -translate-y-[3px] rounded-full bg-brand-500" aria-hidden="true" />
-              Smarter freight. Better delivery.
-            </motion.p>
-
-            {/* Words rise in sequence; under reduced motion they are simply there. */}
-            <h1 className="mt-6 font-display text-[2.75rem] font-semibold leading-[1.03] tracking-[-0.035em] text-ink-900 sm:text-6xl lg:text-[4.5rem] xl:text-[4.75rem]">
+            {/* Words rise in sequence; under reduced motion they are simply there.
+                The lead-in runs bright orange and the last word stays near-black,
+                so the line still has a fixed point to land on. */}
+            <h1 className="font-display text-[2.75rem] font-semibold leading-[1.03] tracking-[-0.035em] text-ink-900 sm:text-6xl lg:text-[4.5rem] xl:text-[4.75rem]">
               {HEADLINE.map((word, index) => (
                 <motion.span
                   key={word}
-                  className="mr-[0.24em] inline-block"
+                  className={index < 3 ? 'mr-[0.24em] inline-block text-brand-500' : 'mr-[0.24em] inline-block'}
                   initial={reduced ? undefined : { opacity: 0, y: '0.4em' }}
                   animate={reduced ? undefined : { opacity: 1, y: 0 }}
-                  transition={{ duration: 0.65, ease: EASE_PREMIUM, delay: 0.12 + index * 0.07 }}
+                  transition={{ duration: 0.65, ease: EASE_PREMIUM, delay: index * 0.07 }}
                 >
                   {word}
                 </motion.span>
               ))}
             </h1>
 
-            <motion.p {...rise(0.44)} className="mt-7 max-w-[30rem] text-[1.05rem] leading-relaxed text-ink-500 sm:text-lg">
+            <motion.p {...rise(0.32)} className="mt-7 max-w-[30rem] text-[1.05rem] leading-relaxed text-ink-500 sm:text-lg">
               FreightBridge makes shipping, tracking, and managing freight simple from one powerful platform.
             </motion.p>
 
             {/* A plain GET form, so tracking still works before JavaScript
                 loads and the result is a shareable /tracking?number=… URL. */}
-            <motion.form {...rise(0.56)} action="/tracking" method="get" className="mt-10 max-w-[32rem]">
+            <motion.form {...rise(0.44)} action="/tracking" method="get" className="mt-10 max-w-[32rem]">
               <label htmlFor="hero-tracking" className="sr-only">
                 Tracking number
               </label>
