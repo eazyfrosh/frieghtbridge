@@ -41,8 +41,10 @@ app/
 components/
   Navbar, Hero, TrackingWidget, Services, WhyFreightBridge, HowItWorks,
   QuoteForm, GlobalNetwork, EnterpriseSection, TechnologySection,
-  Testimonials, CTA, Footer, PageHero, ContactForm, Accordion, LegalArticle
-  ui/                           Button, Field, Logo, Reveal, SectionHeading
+  Testimonials, CTA, Footer, PageHero, ContactForm, Accordion, LegalArticle,
+  ShowcaseCarousel, NetworkStory
+  ui/                           Button, Field, Figure, Logo, Reveal,
+                                SectionHeading, VideoFrame
 lib/
   tracking.ts                   mock shipment data + lookup API surface
   site.ts                       nav, services, footer and coverage-region data
@@ -61,7 +63,8 @@ This is a front-end prototype: there is no backend.
   `FBX-55620174` (delivered), `FBX-73004466` (delayed). Replacing
   `lookupShipment` with a `fetch` is the only change the UI needs.
 - **Quote and contact forms** validate fully client-side and show a success
-  state; nothing is transmitted.
+  state; nothing is transmitted. The quote form lives at `/quote`; the home
+  page links to it rather than embedding it.
 - **Statistics and dashboard figures** are demonstration values, labelled as
   such on the page.
 
@@ -119,28 +122,23 @@ hook directly — see the note in that file on why.
 
 ### Hero media (video or photograph)
 
-The hero frame is photographic and configured in one place — `HERO_MEDIA` in
-`lib/site.ts`:
+The hero frame is configured in one place — `HERO_MEDIA` in `lib/site.ts`:
 
 ```ts
 export const HERO_MEDIA = {
-  src: '/images/hero-freight.jpg',   // your photo
+  video: { src: '/video/hero-freight.mp4', webm: '/video/hero-freight.webm', description: '…' },
+  src: '/images/hero-freight.png',   // still, and the video's poster
   alt: '…',
   fallbackSrc: '/images/hero-freight.svg',
   fallbackAlt: '…',
 };
 ```
 
-To use your own shot, drop the file in `public/images/` and point `src` at it.
-For a hosted image, add the host to `images.remotePatterns` in
-`next.config.mjs` first (`images.unsplash.com` is already allowed).
+To use a different shot, drop the file in `public/images/` and point `src` at
+it. For a hosted image, add the host to `images.remotePatterns` in
+`next.config.mjs` first — everything is local today, so that list is empty.
 
-`HeroPhoto` falls back to `fallbackSrc` if the photo cannot be loaded, so a
-wrong path or a dead URL degrades to the illustration instead of leaving a
-broken hero. **The shipped `src` is a stock placeholder — replace it with a
-photo you have rights to before going live.**
-
-Aim for landscape, 1600×1200 or wider. The frame crops with `object-cover` and
+Aim for landscape, 1600px wide or more. The frame crops with `object-cover` and
 a scrim covers the lower third, so keep the subject clear of the bottom-left
 corner where the shipment card overlaps.
 
@@ -157,7 +155,21 @@ video: {
 },
 ```
 
-Leave `src` empty to use the still image. Guidance for the clip:
+Leave `src` empty to use the still image.
+
+The same frame powers the **"Inside the network"** section on the home page,
+configured through `STORY_VIDEO` in `lib/site.ts`:
+
+```ts
+export const STORY_VIDEO = {
+  src: '',        // e.g. '/video/inside-the-network.mp4'
+  webm: '',
+  description: '…',
+};
+```
+
+Leave `src` empty and that section shows `IMAGERY.warehouse` on its own. Both
+clips share `ui/VideoFrame`, so the guidance below applies to either:
 
 - 6–10 seconds, silently looping, compressed to **under ~3 MB** — it is the
   first thing on the page and competes with the hero copy for bandwidth.

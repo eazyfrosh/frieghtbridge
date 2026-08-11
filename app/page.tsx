@@ -3,6 +3,7 @@ import { EnterpriseSection } from '@/components/EnterpriseSection';
 import { GlobalNetwork } from '@/components/GlobalNetwork';
 import { Hero } from '@/components/Hero';
 import { HowItWorks } from '@/components/HowItWorks';
+import { NetworkStory } from '@/components/NetworkStory';
 import { Services } from '@/components/Services';
 import { ShowcaseCarousel } from '@/components/ShowcaseCarousel';
 import { TechnologySection } from '@/components/TechnologySection';
@@ -11,8 +12,6 @@ import { TrackingWidget } from '@/components/TrackingWidget';
 import { WhyFreightBridge } from '@/components/WhyFreightBridge';
 import { Button } from '@/components/ui/Button';
 import { Reveal } from '@/components/ui/Reveal';
-import { SectionHeading } from '@/components/ui/SectionHeading';
-import { QuoteForm } from '@/components/QuoteForm';
 
 export default function HomePage() {
   return (
@@ -31,24 +30,7 @@ export default function HomePage() {
       <WhyFreightBridge />
       <HowItWorks />
 
-      {/* Quote */}
-      <section id="quote" className="section bg-ink-50/60">
-        <div className="container">
-          <SectionHeading
-            eyebrow="Request a quote"
-            align="center"
-            title={
-              <>
-                Let&rsquo;s move <span className="text-brand-600">your freight.</span>
-              </>
-            }
-            description="Share the lane and the load. A FreightBridge specialist comes back with options, transit times, and a price you can plan around."
-          />
-          <Reveal delay={0.1} className="mt-12">
-            <QuoteForm />
-          </Reveal>
-        </div>
-      </section>
+      <NetworkStory />
 
       <GlobalNetwork />
       <EnterpriseSection />

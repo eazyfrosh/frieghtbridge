@@ -55,9 +55,8 @@ export const HERO_MEDIA = {
   video: {
     src: '/video/hero-freight.mp4',
     webm: '/video/hero-freight.webm',
-    poster: '/images/hero-freight.png',
     description: 'Freight moving through a FreightBridge distribution network',
-  },
+  } satisfies VideoAsset,
 
   /** Still image — the poster for the video, and the hero when there is none. */
   src: '/images/hero-freight.png',
@@ -66,6 +65,13 @@ export const HERO_MEDIA = {
   fallbackAlt:
     'Illustration of a FreightBridge semi-truck travelling a highway at dusk past a container yard and gantry cranes',
 } as const;
+
+/** A looping background clip. Leave `src` empty to fall back to the still. */
+export interface VideoAsset {
+  src: string;
+  webm?: string;
+  description?: string;
+}
 
 /**
  * A swappable image. `src` is what renders; `fallbackSrc` is the bundled
@@ -108,6 +114,20 @@ export const IMAGERY: Record<'road' | 'port' | 'warehouse', MediaAsset> = {
     fallbackSrc: '/images/warehouse-ops.svg',
     fallbackAlt: 'Illustration of a FreightBridge fulfillment warehouse with pallet racking and a forklift',
   },
+};
+
+/**
+ * The clip in the "Inside the network" section.
+ *
+ * Drop an MP4 in `public/video/` and set `src` to `/video/<name>.mp4`. Leave
+ * it empty and the section shows `IMAGERY.warehouse` on its own — no gap, no
+ * broken frame. Same budget as the hero clip: 6–10s, silent, under ~3 MB, 720p
+ * is plenty. See the README for the ffmpeg recipe.
+ */
+export const STORY_VIDEO: VideoAsset = {
+  src: '',
+  webm: '',
+  description: 'Inside a FreightBridge warehouse as shipments are picked and loaded',
 };
 
 export interface NavLink {

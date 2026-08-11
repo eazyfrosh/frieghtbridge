@@ -3,7 +3,8 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, Boxes, MoveRight, Radar, ShieldCheck } from 'lucide-react';
 import { EASE_PREMIUM } from '@/lib/motion';
-import { HeroMedia } from './HeroMedia';
+import { HERO_MEDIA } from '@/lib/site';
+import { VideoFrame } from './ui/VideoFrame';
 import { Button } from './ui/Button';
 import { useReducedMotion } from '@/lib/use-reduced-motion';
 
@@ -98,7 +99,13 @@ export function Hero() {
             animate={reduced ? undefined : { opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.9, ease: EASE_PREMIUM, delay: 0.3 }}
           >
-            <HeroMedia />
+            <VideoFrame
+              media={HERO_MEDIA}
+              video={HERO_MEDIA.video}
+              heightClass="h-[320px] sm:h-[440px] lg:h-[540px]"
+              sizes="(min-width: 1024px) 42vw, 100vw"
+              priority
+            />
 
             {/* Floating status card */}
             <motion.div

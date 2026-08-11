@@ -1,30 +1,56 @@
 'use client';
 
-
 import { Pause, Play } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { HERO_MEDIA } from '@/lib/site';
-import { cn } from '@/lib/utils';
+import type { MediaAsset, VideoAsset } from '@/lib/site';
 import { useReducedMotion } from '@/lib/use-reduced-motion';
+import { cn } from '@/lib/utils';
+
+interface VideoFrameProps {
+  /** Still shown as the base layer, and whenever the clip cannot play. */
+  media: MediaAsset;
+  /** Optional clip. Leave `src` empty to render the still on its own. */
+  video?: VideoAsset;
+  /** Height/crop classes applied to both layers. */
+  heightClass: string;
+  sizes?: string;
+  priority?: boolean;
+  /** Darkens the lower edge, for frames with content overlapping the bottom. */
+  scrim?: boolean;
+  className?: string;
+}
 
 /**
- * The hero's media frame.
+ * A still image with an optional looping clip layered over it.
  *
- * The still image is always the base layer and is server-rendered, so it is
- * the LCP candidate and there is never an empty frame. When a clip is
- * configured and motion is allowed, the video layers over the image after
- * mount and fades in once it can play. Anything that fails simply reveals the
- * layer beneath: video -> photograph -> bundled illustration.
+ * The still is always the server-rendered base, so it is the LCP candidate and
+ * the frame is never empty. The clip mounts on the client and fades in once it
+ * can play; if it fails, the still is already underneath. The still itself
+ * falls back to its bundled illustration.
  *
- * Video selection is deliberately deferred until after mount. The server
- * cannot know the visitor's motion preference, so branching the render tree on
- * `useReducedMotion` during SSR produces a hydration mismatch.
+ * Three details here are load-bearing and easy to get wrong:
  *
- * WCAG 2.2.2 requires a way to stop motion that auto-starts and runs past five
+ *  - The source is set via `src`, not a `<source>` child. An error on a
+ *    `<source>` fires on that child and does not bubble, so `onError` would
+ *    never run and a broken clip would leave a blank frame.
+ *  - `muted` + `playsInline` are what make autoplay legal on mobile browsers.
+ *  - Video selection waits for mount. The server cannot know the visitor's
+ *    motion preference, so branching the tree on it during SSR mismatches on
+ *    hydration.
+ *
+ * WCAG 2.2.2 wants a way to stop motion that auto-starts and runs past five
  * seconds, hence the pause control.
  */
-export function HeroMedia() {
+export function VideoFrame({
+  media,
+  video,
+  heightClass,
+  sizes = '(min-width: 1024px) 50vw, 100vw',
+  priority,
+  scrim = true,
+  className,
+}: VideoFrameProps) {
   const reduced = useReducedMotion();
   const [mounted, setMounted] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
@@ -38,26 +64,19 @@ export function HeroMedia() {
 
   useEffect(() => setMounted(true), []);
 
-  /**
-   * Prefer webm only when the browser is confident about it; otherwise fall
-   * through to the mp4 and let `onError` catch an unplayable file. `onError`
-   * is reliable here because the source is set via `src` — an error on a
-   * `<source>` child fires on that child and does not bubble to the video.
-   */
   const videoSrc = useMemo(() => {
-    if (!mounted) return null;
-    const src = HERO_MEDIA.video?.src ?? '';
-    const webm = HERO_MEDIA.video?.webm ?? '';
+    if (!mounted || !video) return null;
+    const { src = '', webm = '' } = video;
     if (webm && document.createElement('video').canPlayType('video/webm; codecs="vp9"') === 'probably') {
       return webm;
     }
     return src || null;
-  }, [mounted]);
+  }, [mounted, video]);
 
   const showVideo = Boolean(videoSrc) && !videoFailed && !reduced;
 
-  const photoSrc = photoFailed ? HERO_MEDIA.fallbackSrc : HERO_MEDIA.src;
-  const photoAlt = photoFailed ? HERO_MEDIA.fallbackAlt : HERO_MEDIA.alt;
+  const photoSrc = photoFailed ? media.fallbackSrc : media.src;
+  const photoAlt = photoFailed ? (media.fallbackAlt ?? media.alt) : media.alt;
 
   function togglePlayback() {
     const el = videoRef.current;
@@ -67,8 +86,12 @@ export function HeroMedia() {
   }
 
   return (
-    <div className="relative overflow-hidden rounded-4xl border border-white/10 bg-ink-900 shadow-[0_50px_120px_-40px_rgba(0,0,0,0.9)]">
-      {/* Ground colour so the fade-in resolves from something warm. */}
+    <div
+      className={cn(
+        'relative overflow-hidden rounded-4xl border border-white/10 bg-ink-900 shadow-[0_50px_120px_-40px_rgba(0,0,0,0.9)]',
+        className,
+      )}
+    >
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-[linear-gradient(150deg,#7A2E0C_0%,#A93706_55%,#121212_100%)]"
@@ -80,12 +103,14 @@ export function HeroMedia() {
         alt={photoAlt}
         width={1600}
         height={1200}
-        priority
-        sizes="(min-width: 1024px) 42vw, 100vw"
+        priority={priority}
+        loading={priority ? undefined : 'lazy'}
+        sizes={sizes}
         onError={() => setPhotoFailed(true)}
         onLoad={() => setPhotoLoaded(true)}
         className={cn(
-          'relative h-[320px] w-full object-cover transition-opacity duration-700 ease-premium sm:h-[440px] lg:h-[540px]',
+          'relative w-full object-cover transition-opacity duration-700 ease-premium',
+          heightClass,
           photoLoaded ? 'opacity-100' : 'opacity-0',
         )}
       />
@@ -94,14 +119,12 @@ export function HeroMedia() {
         <video
           ref={videoRef}
           src={videoSrc}
-          // Muted + playsInline are what make autoplay legal on mobile Safari
-          // and Chrome; without both, the clip silently never starts.
           autoPlay
           muted
           loop
           playsInline
           preload="metadata"
-          aria-label={HERO_MEDIA.video?.description}
+          aria-label={video?.description}
           onCanPlay={() => setVideoReady(true)}
           onPlay={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
@@ -113,12 +136,12 @@ export function HeroMedia() {
         />
       )}
 
-      {/* Scrim: keeps the floating shipment card legible over any footage. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-950/75 via-ink-950/10 to-transparent"
-      />
-      {/* A breath of brand warmth so stock media still reads as ours. */}
+      {scrim && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-950/75 via-ink-950/10 to-transparent"
+        />
+      )}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-transparent to-brand-600/20 mix-blend-soft-light"

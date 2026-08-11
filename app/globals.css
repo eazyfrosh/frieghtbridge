@@ -17,11 +17,19 @@
     -webkit-text-size-adjust: 100%;
   }
 
+  /* Slide-in reveals start offset horizontally, which would otherwise widen
+     the page on narrow screens. `clip` contains that without creating a scroll
+     container — `hidden` here would break the `position: sticky` columns. */
+  html,
+  body {
+    overflow-x: hidden;
+    overflow-x: clip;
+  }
+
   body {
     @apply bg-white text-ink-700 antialiased;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'ss01';
     text-rendering: optimizeLegibility;
-    overflow-x: hidden;
   }
 
   h1,
