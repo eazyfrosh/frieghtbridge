@@ -29,7 +29,7 @@ export function LogoMark({ tone = 'dark', className }: { tone?: 'dark' | 'light'
         'relative inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl',
         inverted
           ? 'bg-white shadow-[0_6px_18px_-8px_rgba(0,0,0,0.5)]'
-          : 'bg-gradient-to-br from-brand-500 to-brand-700 shadow-[0_6px_18px_-8px_rgba(209,69,10,0.9)]',
+          : 'bg-gradient-to-br from-brand-500 to-brand-700 shadow-[0_6px_18px_-8px_rgba(226,81,0,0.9)]',
         className,
       )}
     >
@@ -62,11 +62,11 @@ export function Logo({ tone = 'dark', className, href = '/', showWordmark = true
         <span
           className={cn(
             'font-display text-[1.28rem] font-semibold tracking-[-0.03em]',
-            tone === 'light' ? 'text-white' : 'text-ink-900',
+            tone === 'light' ? 'text-ink-950' : 'text-ink-900',
           )}
         >
           Freight
-          <span className={tone === 'light' ? 'text-signal-200' : 'text-brand-600'}>Bridge</span>
+          <span className={tone === 'light' ? 'text-ink-950/65' : 'text-brand-600'}>Bridge</span>
         </span>
       )}
     </span>

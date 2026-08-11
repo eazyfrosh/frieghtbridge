@@ -76,7 +76,7 @@ export function HowItWorks() {
                   <step.icon className="h-7 w-7" aria-hidden="true" />
                 </span>
 
-                <span className="mt-6 font-mono text-sm font-semibold tracking-[0.18em] text-brand-600">
+                <span className="mt-6 font-mono text-sm font-semibold tracking-[0.18em] text-brand-700">
                   {step.number}
                 </span>
                 <h3 className="mt-2 font-display text-xl font-semibold tracking-[-0.02em] text-ink-900">

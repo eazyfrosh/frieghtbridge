@@ -17,10 +17,10 @@ const STATS = [
 
 export function EnterpriseSection() {
   return (
-    <section id="enterprise" className="section relative overflow-hidden bg-brand-700 text-white">
+    <section id="enterprise" className="section relative overflow-hidden bg-brand-500 text-ink-950">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(90%_70%_at_10%_0%,#7A2E0C_0%,transparent_55%),radial-gradient(70%_60%_at_95%_100%,#7A2E0C_0%,transparent_55%)] opacity-60" />
-        <div className="absolute inset-0 bg-grid-dark bg-[size:56px_56px] opacity-40" />
+        <div className="absolute inset-0 bg-[radial-gradient(90%_70%_at_10%_0%,#FF8A22_0%,transparent_55%),radial-gradient(70%_60%_at_95%_100%,#FF8A22_0%,transparent_55%)] opacity-60" />
+        <div className="absolute inset-0 bg-grid-light bg-[size:56px_56px] opacity-40" />
       </div>
 
       <div className="on-dark container relative">
@@ -33,12 +33,12 @@ export function EnterpriseSection() {
               </span>
             </Reveal>
             <Reveal delay={0.06}>
-              <h2 className="display-2 mt-6 text-white">
+              <h2 className="display-2 mt-6 text-ink-950">
                 Logistics built for businesses that are <span className="text-gradient">going places.</span>
               </h2>
             </Reveal>
             <Reveal delay={0.12}>
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-ink-200 sm:text-lg">
+              <p className="mt-6 max-w-xl text-base leading-relaxed text-ink-800 sm:text-lg">
                 From growing businesses to established enterprises, FreightBridge provides flexible logistics
                 solutions designed around your operation.
               </p>
@@ -64,7 +64,7 @@ export function EnterpriseSection() {
         </div>
 
         <Reveal delay={0.1}>
-          <p className="mt-12 text-xs text-white/80">
+          <p className="mt-12 text-xs text-ink-950/80">
             Figures shown are demonstration values for this website prototype.
           </p>
         </Reveal>
@@ -96,17 +96,17 @@ function StatCard({ value, suffix, label }: { value: number; suffix: string; lab
     <motion.div
       ref={ref}
       variants={motionSafe(Boolean(reduced), slideInRight)}
-      className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur transition-colors duration-400 ease-premium hover:border-white/25 hover:bg-white/[0.07] sm:p-7"
+      className="group relative overflow-hidden rounded-3xl border border-ink-950/15 bg-ink-950/[0.04] p-5 backdrop-blur transition-colors duration-400 ease-premium hover:border-ink-950/30 hover:bg-ink-950/[0.07] sm:p-7"
     >
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-white/20 blur-2xl transition-opacity duration-500 group-hover:opacity-100 md:opacity-0"
+        className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-ink-950/20 blur-2xl transition-opacity duration-500 group-hover:opacity-100 md:opacity-0"
       />
-      <p className="relative font-display text-4xl font-semibold tracking-[-0.04em] text-white sm:text-5xl">
+      <p className="relative font-display text-4xl font-semibold tracking-[-0.04em] text-ink-950 sm:text-5xl">
         {display}
-        <span className="text-signal-200">{suffix}</span>
+        <span className="text-brand-900">{suffix}</span>
       </p>
-      <p className="relative mt-2 text-sm font-medium text-ink-300">{label}</p>
+      <p className="relative mt-2 text-sm font-medium text-ink-800">{label}</p>
     </motion.div>
   );
 }

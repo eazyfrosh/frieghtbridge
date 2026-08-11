@@ -78,7 +78,7 @@ export default function ContactPage() {
                   </span>
                   <h2 className="mt-5 font-display text-lg font-semibold text-ink-900">{channel.title}</h2>
                   <p className="mt-1.5 flex-1 text-[0.92rem] leading-relaxed text-ink-500">{channel.body}</p>
-                  <span className="mt-4 text-[0.92rem] font-semibold text-brand-600 underline decoration-brand-500/30 decoration-2 underline-offset-4 transition-colors group-hover:decoration-brand-500">
+                  <span className="mt-4 text-[0.92rem] font-semibold text-brand-700 underline decoration-brand-500/40 decoration-2 underline-offset-4 transition-colors group-hover:decoration-brand-600">
                     {channel.action}
                   </span>
                 </a>

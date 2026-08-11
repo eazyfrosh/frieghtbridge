@@ -368,7 +368,7 @@ export function statusTone(status: ShipmentStatus): {
     case 'Out for Delivery':
       return {
         label: 'Out for delivery',
-        className: 'bg-brand-600 text-white ring-brand-700/30',
+        className: 'bg-brand-800 text-white ring-brand-900/30',
         dot: 'bg-white',
       };
     default:

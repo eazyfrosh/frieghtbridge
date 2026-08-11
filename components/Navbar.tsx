@@ -126,7 +126,7 @@ export function Navbar() {
                 onClick={closeAll}
                 className={cn(
                   'rounded-full px-4 py-2 text-[0.95rem] font-semibold transition-colors duration-300',
-                  scrolled ? 'text-ink-700 hover:bg-ink-50 hover:text-ink-900' : 'text-white/90 hover:text-white',
+                  scrolled ? 'text-ink-700 hover:bg-ink-50 hover:text-ink-900' : 'text-ink-950/80 hover:text-ink-950',
                 )}
               >
                 Sign In
@@ -148,7 +148,7 @@ export function Navbar() {
                 'inline-flex h-11 w-11 items-center justify-center rounded-full border transition-colors duration-300 lg:hidden',
                 scrolled
                   ? 'border-ink-200 bg-white text-ink-800 hover:bg-ink-50'
-                  : 'border-white/25 bg-white/10 text-white backdrop-blur hover:bg-white/20',
+                  : 'border-ink-950/25 bg-ink-950/[0.06] text-ink-950 backdrop-blur hover:bg-ink-950/[0.12]',
               )}
             >
               <Menu className="h-5 w-5" aria-hidden="true" />
@@ -310,8 +310,8 @@ interface DesktopNavItemProps {
 function DesktopNavItem({ item, scrolled, open, reduced, onOpen, onToggle, onClose }: DesktopNavItemProps) {
   const linkClasses = cn(
     'inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[0.95rem] font-medium transition-colors duration-300',
-    scrolled ? 'text-ink-600 hover:bg-ink-50 hover:text-ink-900' : 'text-white/85 hover:bg-white/10 hover:text-white',
-    open && (scrolled ? 'bg-ink-50 text-ink-900' : 'bg-white/10 text-white'),
+    scrolled ? 'text-ink-600 hover:bg-ink-50 hover:text-ink-900' : 'text-ink-950/80 hover:bg-ink-950/[0.07] hover:text-ink-950',
+    open && (scrolled ? 'bg-ink-50 text-ink-900' : 'bg-ink-950/[0.09] text-ink-950'),
   );
 
   if (!item.children) {

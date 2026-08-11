@@ -43,7 +43,7 @@ const ACTIVITY = [
 
 const STATUS_STYLES: Record<string, string> = {
   'In transit': 'bg-brand-50 text-brand-700 ring-brand-600/20',
-  'Out for delivery': 'bg-brand-600 text-white ring-brand-700/30',
+  'Out for delivery': 'bg-brand-800 text-white ring-brand-900/30',
   Delivered: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
   Delayed: 'bg-rose-50 text-rose-700 ring-rose-600/20',
 };
@@ -61,7 +61,7 @@ export function TechnologySection() {
     <section id="technology" className="section relative overflow-hidden bg-ink-50/70">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-[radial-gradient(60%_100%_at_50%_0%,rgba(250,91,10,0.14)_0%,transparent_70%)]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-[radial-gradient(60%_100%_at_50%_0%,rgba(255,106,0,0.14)_0%,transparent_70%)]"
       />
 
       <div className="container relative">

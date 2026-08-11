@@ -98,10 +98,10 @@ export function ShowcaseCarousel() {
   const autoplayOn = !paused && !reduced;
 
   return (
-    <section id="showcase" className="section relative overflow-hidden bg-brand-700 text-white">
+    <section id="showcase" className="section relative overflow-hidden bg-brand-500 text-ink-950">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(85%_70%_at_15%_0%,#7A2E0C_0%,transparent_55%),radial-gradient(60%_60%_at_90%_100%,#CC7409_0%,transparent_55%)] opacity-60" />
-        <div className="absolute inset-0 bg-grid-dark bg-[size:56px_56px] opacity-30" />
+        <div className="absolute inset-0 bg-[radial-gradient(85%_70%_at_15%_0%,#FF8A22_0%,transparent_55%),radial-gradient(60%_60%_at_90%_100%,#FFB055_0%,transparent_55%)] opacity-60" />
+        <div className="absolute inset-0 bg-grid-light bg-[size:56px_56px] opacity-30" />
       </div>
 
       <div className="on-dark container relative">
@@ -128,7 +128,7 @@ export function ShowcaseCarousel() {
             onMouseLeave={() => setPaused(false)}
             onFocusCapture={() => setPaused(true)}
             onBlurCapture={() => setPaused(false)}
-            className="relative rounded-4xl border border-white/10 bg-white/[0.03] p-4 backdrop-blur sm:p-6 lg:p-8"
+            className="relative rounded-4xl border border-ink-950/15 bg-ink-950/[0.04] p-4 backdrop-blur sm:p-6 lg:p-8"
           >
             <div className="relative overflow-hidden">
               <AnimatePresence mode="wait" custom={direction} initial={false}>
@@ -152,13 +152,13 @@ export function ShowcaseCarousel() {
                 >
                   <div className="min-w-0">
                     <span className="eyebrow-dark">
-                      <span className="h-1.5 w-1.5 rounded-full bg-white" aria-hidden="true" />
+                      <span className="h-1.5 w-1.5 rounded-full bg-ink-950" aria-hidden="true" />
                       {slide.eyebrow}
                     </span>
-                    <h3 className="mt-5 font-display text-[1.9rem] font-semibold leading-[1.1] tracking-[-0.03em] text-white sm:text-4xl">
+                    <h3 className="mt-5 font-display text-[1.9rem] font-semibold leading-[1.1] tracking-[-0.03em] text-ink-950 sm:text-4xl">
                       {slide.title}
                     </h3>
-                    <p className="mt-4 max-w-lg text-[0.98rem] leading-relaxed text-ink-200 sm:text-lg">
+                    <p className="mt-4 max-w-lg text-[0.98rem] leading-relaxed text-ink-800 sm:text-lg">
                       {slide.copy}
                     </p>
 
@@ -167,10 +167,10 @@ export function ShowcaseCarousel() {
                         <div key={stat.label}>
                           <dt className="sr-only">{stat.label}</dt>
                           <dd>
-                            <span className="block font-display text-2xl font-semibold text-signal-200">
+                            <span className="block font-display text-2xl font-semibold text-brand-900">
                               {stat.value}
                             </span>
-                            <span className="mt-0.5 block text-xs font-medium uppercase tracking-[0.12em] text-ink-300">
+                            <span className="mt-0.5 block text-xs font-medium uppercase tracking-[0.12em] text-ink-800">
                               {stat.label}
                             </span>
                           </dd>
@@ -184,7 +184,7 @@ export function ShowcaseCarousel() {
                     </Button>
                   </div>
 
-                  <div className="overflow-hidden rounded-3xl border border-white/10 shadow-[0_40px_90px_-40px_rgba(0,0,0,0.9)]">
+                  <div className="overflow-hidden rounded-3xl border border-ink-950/15 shadow-[0_40px_90px_-40px_rgba(0,0,0,0.9)]">
                     <Figure
                       media={slide.media}
                       sizes="(min-width: 1024px) 48vw, 100vw"
@@ -196,7 +196,7 @@ export function ShowcaseCarousel() {
             </div>
 
             {/* Controls */}
-            <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6">
+            <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-ink-950/15 pt-6">
               <div className="flex items-center gap-3">
                 {SLIDES.map((item, dotIndex) => {
                   const active = dotIndex === index;
@@ -212,13 +212,13 @@ export function ShowcaseCarousel() {
                       <span
                         className={cn(
                           'relative block h-1 overflow-hidden rounded-full transition-all duration-400 ease-premium',
-                          active ? 'w-16 bg-white/25' : 'w-6 bg-white/20 group-hover/dot:bg-white/40',
+                          active ? 'w-16 bg-ink-950/20' : 'w-6 bg-ink-950/20 group-hover/dot:bg-white/40',
                         )}
                       >
                         {active && (
                           <motion.span
                             key={`${index}-${paused}-${String(reduced)}`}
-                            className="absolute inset-y-0 left-0 rounded-full bg-white"
+                            className="absolute inset-y-0 left-0 rounded-full bg-ink-950"
                             initial={{ width: autoplayOn ? '0%' : '100%' }}
                             animate={{ width: '100%' }}
                             transition={{
@@ -238,7 +238,7 @@ export function ShowcaseCarousel() {
                   type="button"
                   onClick={() => setPaused((value) => !value)}
                   aria-label={paused ? 'Resume slideshow' : 'Pause slideshow'}
-                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white transition-all duration-300 ease-premium hover:-translate-y-0.5 hover:border-white/45 hover:bg-white/10"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ink-950/25 bg-ink-950/[0.05] text-ink-950 transition-all duration-300 ease-premium hover:-translate-y-0.5 hover:border-ink-950/55 hover:bg-ink-950/[0.08]"
                 >
                   {paused || reduced ? (
                     <Play className="ml-0.5 h-[1.05rem] w-[1.05rem]" aria-hidden="true" />
@@ -250,7 +250,7 @@ export function ShowcaseCarousel() {
                   type="button"
                   onClick={() => go(index - 1, -1)}
                   aria-label="Previous slide"
-                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white transition-all duration-300 ease-premium hover:-translate-y-0.5 hover:border-white/45 hover:bg-white/10"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ink-950/25 bg-ink-950/[0.05] text-ink-950 transition-all duration-300 ease-premium hover:-translate-y-0.5 hover:border-ink-950/55 hover:bg-ink-950/[0.08]"
                 >
                   <ChevronLeft className="h-[1.15rem] w-[1.15rem]" aria-hidden="true" />
                 </button>
@@ -258,7 +258,7 @@ export function ShowcaseCarousel() {
                   type="button"
                   onClick={() => go(index + 1, 1)}
                   aria-label="Next slide"
-                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white transition-all duration-300 ease-premium hover:-translate-y-0.5 hover:border-white/45 hover:bg-white/10"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ink-950/25 bg-ink-950/[0.05] text-ink-950 transition-all duration-300 ease-premium hover:-translate-y-0.5 hover:border-ink-950/55 hover:bg-ink-950/[0.08]"
                 >
                   <ChevronRight className="h-[1.15rem] w-[1.15rem]" aria-hidden="true" />
                 </button>

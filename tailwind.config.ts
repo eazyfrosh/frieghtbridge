@@ -37,19 +37,22 @@ const config: Config = {
           900: '#121212',
           950: '#0A0A0A',
         },
-        // Primary. `brand-600` is the darkest step still used behind white
-        // text — it clears 4.5:1, so buttons stay readable at body size.
+        // Primary — a genuinely bright orange. `brand-500` is the band and
+        // button colour and is paired with near-black text (6.5:1); white text
+        // on it is only 2.9:1, so the bands read dark-on-bright, not the
+        // reverse. `brand-700` is the darker step for accent text on white,
+        // where the bright shade would only reach 2.9:1.
         brand: {
-          50: '#FFF3EC',
-          100: '#FFE3D2',
-          200: '#FFC5A3',
-          300: '#FF9E67',
-          400: '#FF7733',
-          500: '#FA5B0A',
-          600: '#D1450A',
-          700: '#A93706',
-          800: '#87300B',
-          900: '#6E290C',
+          50: '#FFF4EA',
+          100: '#FFE5C9',
+          200: '#FFC894',
+          300: '#FFA758',
+          400: '#FF8A22',
+          500: '#FF6A00',
+          600: '#E25100',
+          700: '#C24500',
+          800: '#9C3800',
+          900: '#7A2D00',
         },
         // Warm gold secondary. Lifts the primary without introducing a second
         // hue family — used for highlights, glows and rating marks.
@@ -82,7 +85,7 @@ const config: Config = {
         soft: '0 1px 2px rgba(18,18,18,0.05), 0 8px 24px -12px rgba(18,18,18,0.13)',
         card: '0 2px 4px rgba(18,18,18,0.04), 0 18px 40px -20px rgba(18,18,18,0.20)',
         lift: '0 8px 12px -6px rgba(18,18,18,0.09), 0 32px 64px -28px rgba(18,18,18,0.30)',
-        glow: '0 24px 70px -30px rgba(209,69,10,0.6)',
+        glow: '0 24px 70px -30px rgba(255,106,0,0.55)',
       },
       backgroundImage: {
         'grid-light':

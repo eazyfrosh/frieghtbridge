@@ -77,7 +77,7 @@ export function Services() {
 
                 <Link
                   href={`/services#${service.slug}`}
-                  className="mt-auto inline-flex items-center gap-1.5 pt-6 text-[0.95rem] font-semibold text-ink-900 transition-colors duration-300 hover:text-brand-600 focus-visible:text-brand-600"
+                  className="mt-auto inline-flex items-center gap-1.5 pt-6 text-[0.95rem] font-semibold text-ink-900 transition-colors duration-300 hover:text-brand-700 focus-visible:text-brand-700"
                 >
                   <span className="relative">
                     Learn more

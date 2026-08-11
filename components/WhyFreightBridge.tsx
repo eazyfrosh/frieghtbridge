@@ -126,7 +126,7 @@ export function WhyFreightBridge() {
                       className={cn(
                         'mt-1 inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border transition-all duration-400 ease-premium sm:h-14 sm:w-14',
                         isActive
-                          ? 'border-brand-500 bg-brand-600 text-white shadow-[0_16px_36px_-18px_rgba(209,69,10,0.95)]'
+                          ? 'border-brand-500 bg-brand-600 text-white shadow-[0_16px_36px_-18px_rgba(226,81,0,0.95)]'
                           : 'border-ink-200 bg-white text-ink-500',
                       )}
                     >
@@ -146,7 +146,7 @@ export function WhyFreightBridge() {
                       <p className="mt-2.5 max-w-xl text-[0.95rem] leading-relaxed text-ink-500">{benefit.detail}</p>
 
                       <div className="mt-5 inline-flex items-baseline gap-2.5 rounded-full bg-white px-4 py-2 shadow-soft ring-1 ring-ink-100">
-                        <span className="font-display text-lg font-semibold text-brand-600">{benefit.metric}</span>
+                        <span className="font-display text-lg font-semibold text-brand-700">{benefit.metric}</span>
                         <span className="text-xs font-medium uppercase tracking-[0.1em] text-ink-400">
                           {benefit.metricLabel}
                         </span>

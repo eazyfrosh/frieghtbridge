@@ -117,7 +117,7 @@ export default function AboutPage() {
             {TIMELINE.map((entry) => (
               <RevealItem key={entry.year} className="relative border-t-2 border-ink-100 pt-6">
                 <span className="absolute -top-[5px] left-0 h-2 w-2 rounded-full bg-brand-600" aria-hidden="true" />
-                <p className="font-mono text-sm font-semibold text-brand-600">{entry.year}</p>
+                <p className="font-mono text-sm font-semibold text-brand-700">{entry.year}</p>
                 <h3 className="mt-2 font-display text-lg font-semibold text-ink-900">{entry.title}</h3>
                 <p className="mt-2 text-[0.92rem] leading-relaxed text-ink-500">{entry.body}</p>
               </RevealItem>

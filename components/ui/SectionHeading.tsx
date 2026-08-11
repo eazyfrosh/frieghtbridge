@@ -36,17 +36,17 @@ export function SectionHeading({
         {eyebrow && (
           <Reveal>
             <span className={light ? 'eyebrow-dark' : 'eyebrow'}>
-              <span className={cn('h-1.5 w-1.5 rounded-full', light ? 'bg-white' : 'bg-brand-500')} aria-hidden="true" />
+              <span className={cn('h-1.5 w-1.5 rounded-full', light ? 'bg-ink-950' : 'bg-brand-500')} aria-hidden="true" />
               {eyebrow}
             </span>
           </Reveal>
         )}
         <Reveal delay={0.06}>
-          <h2 className={cn('display-2 mt-5', light && 'text-white')}>{title}</h2>
+          <h2 className={cn('display-2 mt-5', light && 'text-ink-950')}>{title}</h2>
         </Reveal>
         {description && (
           <Reveal delay={0.12}>
-            <p className={cn('lead mt-5', light && 'text-ink-200')}>{description}</p>
+            <p className={cn('lead mt-5', light && 'text-ink-950/80')}>{description}</p>
           </Reveal>
         )}
       </div>

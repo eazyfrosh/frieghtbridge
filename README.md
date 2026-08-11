@@ -72,30 +72,38 @@ This is a front-end prototype: there is no backend.
 
 Tokens live in `tailwind.config.ts`:
 
-The scheme is **orange and white**. Surfaces are white or near-white, the
-feature bands are deep brand orange, and the greys are untinted so nothing
-reads as a third colour.
+The scheme is **bright orange and white**. Surfaces are white or near-white,
+the feature bands are full-bleed `brand-500`, and the greys are untinted so
+nothing reads as a third colour.
 
-- `ink` — true neutral grey for text and the coverage map panel, the one
-  surface left near-black. `ink-400` is the lightest step used for body text on
-  white and clears 4.5:1
-- `brand` — primary orange. `brand-600` is the darkest step used behind white
-  text and clears 4.5:1; `brand-700` is the full-bleed band colour
-- `signal` — warm gold, used only for highlights on the orange bands where a
-  lighter orange would disappear
+- `ink` — true neutral grey. Carries all body text, and supplies the near-black
+  used *on* the orange bands. `ink-400` is the lightest step used for body text
+  on white and clears 4.5:1
+- `brand` — primary orange. `brand-500` (`#FF6A00`) is the band and button
+  colour; `brand-700` (`#C24500`) is the step used for orange text and orange
+  fills that sit on white
+- `signal` — warm gold, kept as a sparing accent (a gradient hairline, one
+  icon) rather than a band colour
 
-On an orange band: primary buttons switch to the `onDark` (white) variant,
-body and small print use `text-white/80`, and the logo mark inverts to a white
-tile. Those are contrast floors, not preferences — measured against
-`brand-700`, white at 70% is only 3.96:1 and fails AA, while 80% reaches
-4.71:1 and `signal-200` reaches 5.03:1. Brand orange on brand orange has
-almost no contrast at all.
+The bands read **dark on bright**, which is the direction the brightness
+forces: white on `brand-500` measures only 2.87:1 and fails AA at any size,
+while near-black `ink-950` reaches 6.52:1. So on an orange band the text,
+buttons, logo mark and focus ring all go near-black, and `.text-gradient`
+drops to `brand-900` (3.32:1 — display sizes only, where the threshold is 3:1).
+
+The same brightness caps what orange can do on white: `brand-600` reaches
+3.88:1, which is enough for display headings and icons but not for body copy,
+so links, small print, badges and filled controls step down to `brand-700`
+(5.07:1) or `brand-800` (7.05:1 behind white text).
 
 Semantic status colours stay outside the brand ramp so a status never reads as
 decoration: emerald for delivered, rose for delayed/exception. "In transit" and
 "out for delivery" are both brand orange and are told apart by **intensity** —
 a light chip versus a solid one — because gold and orange sit too close to
 carry that distinction by hue.
+
+Type and elevation:
+
 - `font-display` (Sora) for headings, `font-sans` (Inter) for body
 - `shadow-soft` / `shadow-card` / `shadow-lift` for the card elevation ladder
 - `ease-premium` for the shared easing curve

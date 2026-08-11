@@ -137,14 +137,14 @@ export function TrackingWidget({ variant = 'page', initialQuery = '', className 
                 'h-14 w-full rounded-2xl border bg-white pl-11 pr-4 text-[1rem] font-medium text-ink-900 transition-[border-color,box-shadow] duration-200 placeholder:font-normal placeholder:text-ink-300 focus:outline-none',
                 error
                   ? 'border-red-400 focus:border-red-500 focus:shadow-[0_0_0_4px_rgba(248,113,113,0.16)]'
-                  : 'border-ink-200 hover:border-ink-300 focus:border-brand-500 focus:shadow-[0_0_0_4px_rgba(250,91,10,0.14)]',
+                  : 'border-ink-200 hover:border-ink-300 focus:border-brand-500 focus:shadow-[0_0_0_4px_rgba(255,106,0,0.14)]',
               )}
             />
           </div>
           <button
             type="submit"
             disabled={status === 'loading'}
-            className="group inline-flex h-14 shrink-0 items-center justify-center gap-2 rounded-2xl bg-brand-600 px-7 text-[0.98rem] font-semibold text-white shadow-[0_12px_32px_-14px_rgba(209,69,10,0.95)] transition-all duration-300 ease-premium hover:bg-brand-700 hover:shadow-[0_18px_40px_-16px_rgba(209,69,10,0.9)] disabled:cursor-progress disabled:opacity-80"
+            className="group inline-flex h-14 shrink-0 items-center justify-center gap-2 rounded-2xl bg-brand-700 px-7 text-[0.98rem] font-semibold text-white shadow-[0_12px_32px_-14px_rgba(194,69,0,0.95)] transition-all duration-300 ease-premium hover:bg-brand-800 hover:shadow-[0_18px_40px_-16px_rgba(194,69,0,0.9)] disabled:cursor-progress disabled:opacity-80"
           >
             {status === 'loading' ? (
               <>
@@ -173,7 +173,7 @@ export function TrackingWidget({ variant = 'page', initialQuery = '', className 
                 setQuery(number);
                 void runLookup(number);
               }}
-              className="rounded-md font-mono text-[0.82rem] font-semibold text-brand-600 underline decoration-brand-500/30 decoration-2 underline-offset-4 transition-colors hover:text-brand-700 hover:decoration-brand-500"
+              className="rounded-md font-mono text-[0.82rem] font-semibold text-brand-700 underline decoration-brand-500/40 decoration-2 underline-offset-4 transition-colors hover:text-brand-800 hover:decoration-brand-600"
             >
               {number}
             </button>
@@ -396,8 +396,10 @@ function TrackingResultPanel({ result, reduced }: { result: TrackingResult; redu
                     // No shared `bg-*` here: a base background would collide with
                     // the filled `complete` state and hide its white checkmark.
                     'relative z-10 mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2',
-                    event.state === 'complete' && 'border-brand-500 bg-brand-500 text-white',
-                    event.state === 'current' && 'border-brand-500 bg-white text-brand-600',
+                    // Bright `brand-500` only carries white at 2.87:1, so the
+                    // filled node steps down to `brand-700` (5.07:1).
+                    event.state === 'complete' && 'border-brand-700 bg-brand-700 text-white',
+                    event.state === 'current' && 'border-brand-500 bg-white text-brand-700',
                     event.state === 'upcoming' && 'border-ink-200 bg-white text-ink-300',
                   )}
                 >
@@ -453,7 +455,7 @@ function TrackingResultPanel({ result, reduced }: { result: TrackingResult; redu
         </p>
         <Link
           href="/contact"
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 transition-colors hover:text-brand-700"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 transition-colors hover:text-brand-800"
         >
           Questions about this shipment?
           <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

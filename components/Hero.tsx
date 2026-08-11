@@ -29,12 +29,12 @@ export function Hero() {
         };
 
   return (
-    <section className="relative isolate overflow-hidden bg-brand-700 pb-40 pt-[128px] text-white sm:pb-48 lg:pb-56 lg:pt-[150px]">
+    <section className="relative isolate overflow-hidden bg-brand-500 pb-40 pt-[128px] text-ink-950 sm:pb-48 lg:pb-56 lg:pt-[150px]">
       {/* Ambient background */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_15%_-10%,#7A2E0C_0%,transparent_55%),radial-gradient(90%_70%_at_92%_8%,#D1450A_0%,transparent_52%)] opacity-70" />
-        <div className="absolute inset-0 bg-grid-dark bg-[size:64px_64px] mask-fade-b opacity-[0.55]" />
-        <div className="absolute -left-40 top-1/3 h-[26rem] w-[26rem] rounded-full bg-white/10 blur-[110px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_15%_-10%,#FF8A22_0%,transparent_55%),radial-gradient(90%_70%_at_92%_8%,#FFA758_0%,transparent_52%)] opacity-70" />
+        <div className="absolute inset-0 bg-grid-light bg-[size:64px_64px] mask-fade-b opacity-[0.55]" />
+        <div className="absolute -left-40 top-1/3 h-[26rem] w-[26rem] rounded-full bg-ink-950/[0.08] blur-[110px]" />
         <div className="absolute bottom-0 left-1/2 h-64 w-[140%] -translate-x-1/2 bg-gradient-to-t from-brand-800 to-transparent" />
       </div>
 
@@ -52,7 +52,7 @@ export function Hero() {
               </span>
             </motion.div>
 
-            <h1 className="display-1 mt-6 text-white">
+            <h1 className="display-1 mt-6 text-ink-950">
               {HEADLINE.map((word, index) => (
                 <motion.span
                   key={word}
@@ -61,12 +61,12 @@ export function Hero() {
                   animate={reduced ? undefined : { opacity: 1, y: 0 }}
                   transition={{ duration: 0.65, ease: EASE_PREMIUM, delay: 0.12 + index * 0.06 }}
                 >
-                  {index >= 4 ? <span className="text-signal-200">{word}</span> : word}
+                  {index >= 4 ? <span className="text-brand-900">{word}</span> : word}
                 </motion.span>
               ))}
             </h1>
 
-            <motion.p {...rise(0.46)} className="mt-6 max-w-lg text-base leading-relaxed text-ink-200 sm:text-lg">
+            <motion.p {...rise(0.46)} className="mt-6 max-w-lg text-base leading-relaxed text-ink-800 sm:text-lg">
               Reliable freight transportation and logistics solutions built to help businesses move goods faster,
               smarter, and with confidence.
             </motion.p>
@@ -84,8 +84,8 @@ export function Hero() {
 
             <motion.ul {...rise(0.68)} className="mt-10 flex flex-wrap gap-x-6 gap-y-3">
               {TRUST_POINTS.map((point) => (
-                <li key={point.label} className="flex items-center gap-2 text-sm text-ink-300">
-                  <point.icon className="h-4 w-4 text-signal-200" aria-hidden="true" />
+                <li key={point.label} className="flex items-center gap-2 text-sm text-ink-800">
+                  <point.icon className="h-4 w-4 text-brand-900" aria-hidden="true" />
                   {point.label}
                 </li>
               ))}
@@ -109,7 +109,7 @@ export function Hero() {
 
             {/* Floating status card */}
             <motion.div
-              className="absolute -left-3 -bottom-6 w-[15.5rem] rounded-2xl border border-white/12 bg-ink-900/90 p-4 shadow-[0_28px_60px_-24px_rgba(0,0,0,0.9)] backdrop-blur-xl sm:-left-8"
+              className="absolute -left-3 -bottom-6 w-[15.5rem] rounded-2xl border border-white/12 bg-ink-900/95 p-4 shadow-[0_28px_60px_-24px_rgba(0,0,0,0.9)] backdrop-blur-xl sm:-left-8"
               initial={reduced ? undefined : { opacity: 0, x: -18 }}
               animate={reduced ? undefined : { opacity: 1, x: 0 }}
               transition={{ duration: 0.7, ease: EASE_PREMIUM, delay: 0.85 }}
@@ -119,13 +119,13 @@ export function Hero() {
                   <span className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-ink-400">
                     FBX-28473921
                   </span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-500/15 px-2 py-0.5 text-[0.7rem] font-semibold text-brand-200">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-500/20 px-2 py-0.5 text-[0.7rem] font-semibold text-brand-300">
                     <span className="h-1.5 w-1.5 rounded-full bg-brand-300" aria-hidden="true" />
                     In transit
                   </span>
                 </div>
                 <p className="mt-2 font-display text-[0.98rem] font-semibold text-white">Chicago → Dallas</p>
-                <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+                <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/15">
                   <motion.div
                     className="h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-300"
                     initial={reduced ? { width: '62%' } : { width: 0 }}
@@ -139,7 +139,7 @@ export function Hero() {
 
             {/* Floating metric card */}
             <motion.div
-              className="absolute -right-2 -top-5 rounded-2xl border border-white/12 bg-white/95 px-4 py-3 shadow-[0_24px_50px_-22px_rgba(0,0,0,0.6)] sm:-right-6"
+              className="absolute -right-2 -top-5 rounded-2xl border border-white/60 bg-white/95 px-4 py-3 shadow-[0_24px_50px_-22px_rgba(0,0,0,0.6)] sm:-right-6"
               initial={reduced ? undefined : { opacity: 0, y: -16 }}
               animate={reduced ? undefined : { opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: EASE_PREMIUM, delay: 1 }}

@@ -137,7 +137,7 @@ export default function ShippingGuidePage() {
             <StaggerGroup className="grid gap-4 sm:grid-cols-2" gap={0.08}>
               {PACKING.map((tip, index) => (
                 <RevealItem key={tip.title} className="rounded-3xl border border-ink-100 bg-white p-6 shadow-soft">
-                  <span className="font-mono text-xs font-semibold text-brand-600">
+                  <span className="font-mono text-xs font-semibold text-brand-700">
                     {String(index + 1).padStart(2, '0')}
                   </span>
                   <h3 className="mt-3 font-display text-lg font-semibold text-ink-900">{tip.title}</h3>
