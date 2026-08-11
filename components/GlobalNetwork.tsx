@@ -69,7 +69,7 @@ export function GlobalNetwork() {
                   viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
                   className="absolute inset-0 h-full w-full"
                   role="img"
-                  aria-label="Abstract network diagram connecting FreightBridge service regions: United States, Canada, United Kingdom, Europe, UAE, Nigeria and Ghana"
+                  aria-label="Abstract network diagram connecting FreightBridge service regions: United States, Canada, United Kingdom, Europe and the UAE"
                 >
                   <defs>
                     <linearGradient id="laneStroke" x1="0" y1="0" x2="1" y2="0">

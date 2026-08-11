@@ -18,9 +18,6 @@ const COUNTRIES = [
   'France',
   'Spain',
   'United Arab Emirates',
-  'Nigeria',
-  'Ghana',
-  'South Africa',
   'Other',
 ].map((country) => ({ value: country, label: country }));
 

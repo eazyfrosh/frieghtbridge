@@ -42,7 +42,7 @@ const SLIDES: Slide[] = [
     copy: 'Customs documentation is prepared before the container gates in, which is the single biggest reason freight clears instead of sitting on a quay.',
     media: IMAGERY.port,
     stats: [
-      { value: '7 regions', label: 'Direct coverage' },
+      { value: '5 regions', label: 'Direct coverage' },
       { value: 'FCL & LCL', label: 'Consolidation' },
     ],
     href: '/services#freight-forwarding',

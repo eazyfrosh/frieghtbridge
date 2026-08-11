@@ -42,15 +42,15 @@ const VALUES = [
 const TIMELINE = [
   { year: '2019', title: 'Founded in Chicago', body: 'Two freight brokers and one engineer, working a handful of Midwest lanes.' },
   { year: '2021', title: 'Tracking console launched', body: 'The first version of the connected view our customers now run their day from.' },
-  { year: '2023', title: 'Cross-border network', body: 'Forwarding, customs support, and partner coverage across Europe and West Africa.' },
-  { year: '2026', title: 'Seven regions live', body: 'Road, ocean, and air coordinated through a single account team on every shipment.' },
+  { year: '2023', title: 'Cross-border network', body: 'Forwarding, customs support, and partner coverage across Europe and the Gulf.' },
+  { year: '2026', title: 'Five regions live', body: 'Road, ocean, and air coordinated through a single account team on every shipment.' },
 ];
 
 const ROLES = [
   { title: 'Senior Logistics Specialist', location: 'Chicago, IL', type: 'Full-time' },
   { title: 'Carrier Operations Manager', location: 'Dallas, TX', type: 'Full-time' },
   { title: 'Frontend Engineer, Console', location: 'Remote (US / UK)', type: 'Full-time' },
-  { title: 'Customs Documentation Analyst', location: 'Lagos, Nigeria', type: 'Full-time' },
+  { title: 'Customs Documentation Analyst', location: 'Rotterdam, NL', type: 'Full-time' },
   { title: 'Last-Mile Dispatch Lead', location: 'London, UK', type: 'Full-time' },
 ];
 
@@ -87,7 +87,7 @@ export default function AboutPage() {
               />
               <Reveal delay={0.18}>
                 <p className="mt-6 text-[0.98rem] leading-relaxed text-ink-500">
-                  Today we move parcels, pallets, partial and full truckloads, and containers across seven regions.
+                  Today we move parcels, pallets, partial and full truckloads, and containers across five regions.
                   What has not changed is the operating principle: every shipment has a named owner, and every status
                   is visible without asking for it.
                 </p>

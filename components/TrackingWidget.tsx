@@ -18,7 +18,7 @@ import {
   Truck,
 } from 'lucide-react';
 import Link from 'next/link';
-import { useId, useState } from 'react';
+import { useCallback, useEffect, useId, useState } from 'react';
 import { EASE_PREMIUM } from '@/lib/motion';
 import {
   DEMO_TRACKING_NUMBERS,
@@ -61,13 +61,21 @@ export function TrackingWidget({ variant = 'page', initialQuery = '', className 
   const reduced = useReducedMotion();
   const inputId = useId();
 
-  async function runLookup(value: string) {
+  const runLookup = useCallback(async (value: string) => {
     setStatus('loading');
     setOutcome(null);
     const result = await lookupShipment(value);
     setOutcome(result);
     setStatus('done');
-  }
+  }, []);
+
+  // A number arriving in the URL — from the hero form, or a shared link — has
+  // to resolve on load. Seeding the input alone would leave the visitor
+  // looking at a filled box, having to submit a search they already asked for.
+  useEffect(() => {
+    if (!initialQuery) return;
+    void runLookup(initialQuery);
+  }, [initialQuery, runLookup]);
 
   const floating = variant === 'floating';
   const result = outcome?.ok ? outcome.shipment : null;

@@ -231,7 +231,7 @@ export const SOLUTIONS: NavLink[] = [
   {
     label: 'Cross-Border Trade',
     href: '/services#solutions',
-    description: 'Forwarding and customs support across seven regions.',
+    description: 'Forwarding and customs support across five regions.',
     icon: Globe2,
   },
   {
@@ -351,13 +351,11 @@ export const FOOTER_COLUMNS: Array<{ title: string; links: NavLink[] }> = [
  * a stylised arrangement of our regions, not a geographic projection.
  */
 export const REGIONS = [
-  { name: 'United States', code: 'US', hubs: 18, x: 152, y: 196, anchor: 'below' },
-  { name: 'Canada', code: 'CA', hubs: 6, x: 188, y: 106, anchor: 'above' },
-  { name: 'United Kingdom', code: 'UK', hubs: 5, x: 432, y: 124, anchor: 'above' },
-  { name: 'Europe', code: 'EU', hubs: 12, x: 508, y: 168, anchor: 'right' },
-  { name: 'UAE', code: 'AE', hubs: 4, x: 646, y: 244, anchor: 'right' },
-  { name: 'Nigeria', code: 'NG', hubs: 5, x: 470, y: 298, anchor: 'right' },
-  { name: 'Ghana', code: 'GH', hubs: 3, x: 408, y: 322, anchor: 'below' },
+  { name: 'United States', code: 'US', hubs: 18, x: 158, y: 232, anchor: 'below' },
+  { name: 'Canada', code: 'CA', hubs: 6, x: 196, y: 132, anchor: 'above' },
+  { name: 'United Kingdom', code: 'UK', hubs: 5, x: 438, y: 152, anchor: 'above' },
+  { name: 'Europe', code: 'EU', hubs: 12, x: 530, y: 208, anchor: 'right' },
+  { name: 'UAE', code: 'AE', hubs: 4, x: 654, y: 288, anchor: 'right' },
 ] as const;
 
 export type Region = (typeof REGIONS)[number];
@@ -366,10 +364,8 @@ export type Region = (typeof REGIONS)[number];
 export const LANES: Array<[string, string]> = [
   ['US', 'UK'],
   ['US', 'CA'],
+  ['CA', 'UK'],
   ['UK', 'EU'],
   ['EU', 'AE'],
-  ['UK', 'NG'],
-  ['NG', 'GH'],
-  ['AE', 'NG'],
   ['US', 'EU'],
 ];

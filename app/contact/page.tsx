@@ -47,7 +47,7 @@ const OFFICES = [
   { city: 'Chicago, IL', role: 'Headquarters & Midwest hub', detail: '210 Harbor Point Drive, Suite 900' },
   { city: 'Dallas, TX', role: 'Southern distribution center', detail: '4180 Trinity Freight Way' },
   { city: 'London, UK', role: 'European operations', detail: '18 Wharfside Court, E14' },
-  { city: 'Lagos, Nigeria', role: 'West Africa gateway', detail: '7B Apapa Logistics Park' },
+  { city: 'Rotterdam, Netherlands', role: 'European ocean gateway', detail: 'Waalhaven Terminal, Pier 4' },
 ];
 
 export default function ContactPage() {

@@ -74,7 +74,7 @@ const GROUPS: Array<{ title: string; items: AccordionItem[] }> = [
       {
         question: 'Which regions do you serve?',
         answer:
-          'We operate directly across the United States, Canada, the United Kingdom, Europe, the UAE, Nigeria, and Ghana, with partner coverage beyond those regions. Coverage depth varies by mode — ask us about a specific lane.',
+          'We operate directly across the United States, Canada, the United Kingdom, Europe, and the UAE, with partner coverage beyond those regions. Coverage depth varies by mode — ask us about a specific lane.',
       },
       {
         question: 'Who pays duties and taxes?',

@@ -30,7 +30,7 @@ const KPIS = [
 const SHIPMENTS = [
   { id: 'FBX-28473921', lane: 'Chicago → Dallas', status: 'In transit', progress: 62, eta: 'Tomorrow, 08:00' },
   { id: 'FBX-90112845', lane: 'Manchester → London', status: 'Out for delivery', progress: 88, eta: 'Today, 16:20' },
-  { id: 'FBX-55620174', lane: 'Lagos → Accra', status: 'Delivered', progress: 100, eta: 'Delivered 26h ago' },
+  { id: 'FBX-55620174', lane: 'Rotterdam → Madrid', status: 'Delivered', progress: 100, eta: 'Delivered 26h ago' },
   { id: 'FBX-73004466', lane: 'Jebel Ali → Rotterdam', status: 'Delayed', progress: 44, eta: 'Revised: in 6 days' },
 ];
 
