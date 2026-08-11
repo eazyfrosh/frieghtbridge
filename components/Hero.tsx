@@ -107,36 +107,6 @@ export function Hero() {
               priority
             />
 
-            {/* Floating status card */}
-            <motion.div
-              className="absolute -left-3 -bottom-6 w-[15.5rem] rounded-2xl border border-white/12 bg-ink-900/95 p-4 shadow-[0_28px_60px_-24px_rgba(0,0,0,0.9)] backdrop-blur-xl sm:-left-8"
-              initial={reduced ? undefined : { opacity: 0, x: -18 }}
-              animate={reduced ? undefined : { opacity: 1, x: 0 }}
-              transition={{ duration: 0.7, ease: EASE_PREMIUM, delay: 0.85 }}
-            >
-              <div className={reduced ? '' : 'animate-float'}>
-                <div className="flex items-center justify-between">
-                  <span className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-ink-400">
-                    FBX-28473921
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-500/20 px-2 py-0.5 text-[0.7rem] font-semibold text-brand-300">
-                    <span className="h-1.5 w-1.5 rounded-full bg-brand-300" aria-hidden="true" />
-                    In transit
-                  </span>
-                </div>
-                <p className="mt-2 font-display text-[0.98rem] font-semibold text-white">Chicago → Dallas</p>
-                <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/15">
-                  <motion.div
-                    className="h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-300"
-                    initial={reduced ? { width: '62%' } : { width: 0 }}
-                    animate={{ width: '62%' }}
-                    transition={{ duration: 1.4, ease: EASE_PREMIUM, delay: 1.1 }}
-                  />
-                </div>
-                <p className="mt-2 text-xs text-ink-400">Arriving tomorrow · 08:00–12:00</p>
-              </div>
-            </motion.div>
-
             {/* Floating metric card */}
             <motion.div
               className="absolute -right-2 -top-5 rounded-2xl border border-white/60 bg-white/95 px-4 py-3 shadow-[0_24px_50px_-22px_rgba(0,0,0,0.6)] sm:-right-6"
