@@ -80,12 +80,12 @@ export function Navbar() {
         Skip to content
       </a>
 
+      {/* Solid white at every scroll position — `scrolled` now only drives the
+          shadow and the height shrink, never the colour scheme. */}
       <header
         className={cn(
-          'fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,border-color,backdrop-filter] duration-500 ease-premium',
-          scrolled
-            ? 'border-b border-ink-100 bg-white/85 shadow-[0_1px_24px_-12px_rgba(18,18,18,0.4)] backdrop-blur-xl supports-[backdrop-filter]:bg-white/70'
-            : 'border-b border-transparent bg-transparent',
+          'fixed inset-x-0 top-0 z-50 border-b border-ink-100 bg-white transition-[box-shadow] duration-500 ease-premium',
+          scrolled && 'shadow-[0_1px_24px_-12px_rgba(18,18,18,0.4)]',
         )}
       >
         <div className="container">
@@ -95,9 +95,7 @@ export function Navbar() {
               scrolled ? 'h-[68px]' : 'h-[80px]',
             )}
           >
-            <div className={scrolled ? '' : 'on-dark'}>
-              <Logo tone={scrolled ? 'dark' : 'light'} onClick={closeAll} />
-            </div>
+            <Logo onClick={closeAll} />
 
             {/* Desktop navigation */}
             <nav aria-label="Main" className="hidden lg:block" onMouseLeave={scheduleClose}>
@@ -106,7 +104,6 @@ export function Navbar() {
                   <DesktopNavItem
                     key={item.label}
                     item={item}
-                    scrolled={scrolled}
                     open={openMenu === item.label}
                     reduced={Boolean(reduced)}
                     onOpen={() => {
@@ -124,14 +121,11 @@ export function Navbar() {
               <Link
                 href="/contact"
                 onClick={closeAll}
-                className={cn(
-                  'rounded-full px-4 py-2 text-[0.95rem] font-semibold transition-colors duration-300',
-                  scrolled ? 'text-ink-700 hover:bg-ink-50 hover:text-ink-900' : 'text-ink-950/80 hover:text-ink-950',
-                )}
+                className="rounded-full px-4 py-2 text-[0.95rem] font-semibold text-ink-700 transition-colors duration-300 hover:bg-ink-50 hover:text-ink-900"
               >
                 Sign In
               </Link>
-              <Button href="/quote" size="md" variant={scrolled ? 'primary' : 'onDark'}>
+              <Button href="/quote" size="md" variant="primary">
                 Get Started
                 <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
               </Button>
@@ -144,12 +138,7 @@ export function Navbar() {
               aria-label="Open menu"
               aria-expanded={mobileOpen}
               aria-controls="mobile-menu"
-              className={cn(
-                'inline-flex h-11 w-11 items-center justify-center rounded-full border transition-colors duration-300 lg:hidden',
-                scrolled
-                  ? 'border-ink-200 bg-white text-ink-800 hover:bg-ink-50'
-                  : 'border-ink-950/25 bg-ink-950/[0.06] text-ink-950 backdrop-blur hover:bg-ink-950/[0.12]',
-              )}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ink-200 bg-white text-ink-800 transition-colors duration-300 hover:bg-ink-50 lg:hidden"
             >
               <Menu className="h-5 w-5" aria-hidden="true" />
             </button>
@@ -299,7 +288,6 @@ export function Navbar() {
 
 interface DesktopNavItemProps {
   item: NavItem;
-  scrolled: boolean;
   open: boolean;
   reduced: boolean;
   onOpen: () => void;
@@ -307,11 +295,10 @@ interface DesktopNavItemProps {
   onClose: () => void;
 }
 
-function DesktopNavItem({ item, scrolled, open, reduced, onOpen, onToggle, onClose }: DesktopNavItemProps) {
+function DesktopNavItem({ item, open, reduced, onOpen, onToggle, onClose }: DesktopNavItemProps) {
   const linkClasses = cn(
-    'inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[0.95rem] font-medium transition-colors duration-300',
-    scrolled ? 'text-ink-600 hover:bg-ink-50 hover:text-ink-900' : 'text-ink-950/80 hover:bg-ink-950/[0.07] hover:text-ink-950',
-    open && (scrolled ? 'bg-ink-50 text-ink-900' : 'bg-ink-950/[0.09] text-ink-950'),
+    'inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[0.95rem] font-medium text-ink-600 transition-colors duration-300 hover:bg-ink-50 hover:text-ink-900',
+    open && 'bg-ink-50 text-ink-900',
   );
 
   if (!item.children) {

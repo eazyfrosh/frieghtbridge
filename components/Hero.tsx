@@ -29,12 +29,12 @@ export function Hero() {
         };
 
   return (
-    <section className="relative isolate overflow-hidden bg-brand-500 pb-40 pt-[128px] text-ink-950 sm:pb-48 lg:pb-56 lg:pt-[150px]">
+    <section className="relative isolate overflow-hidden bg-brand-500 pb-40 pt-[128px] text-white sm:pb-48 lg:pb-56 lg:pt-[150px]">
       {/* Ambient background */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_15%_-10%,#FF8A22_0%,transparent_55%),radial-gradient(90%_70%_at_92%_8%,#FFA758_0%,transparent_52%)] opacity-70" />
+        <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_15%_-10%,#C24500_0%,transparent_55%),radial-gradient(90%_70%_at_92%_8%,#9C3800_0%,transparent_52%)] opacity-70" />
         <div className="absolute inset-0 bg-grid-light bg-[size:64px_64px] mask-fade-b opacity-[0.55]" />
-        <div className="absolute -left-40 top-1/3 h-[26rem] w-[26rem] rounded-full bg-ink-950/[0.08] blur-[110px]" />
+        <div className="absolute -left-40 top-1/3 h-[26rem] w-[26rem] rounded-full bg-white/20 blur-[110px]" />
         <div className="absolute bottom-0 left-1/2 h-64 w-[140%] -translate-x-1/2 bg-gradient-to-t from-brand-800 to-transparent" />
       </div>
 
@@ -52,7 +52,7 @@ export function Hero() {
               </span>
             </motion.div>
 
-            <h1 className="display-1 mt-6 text-ink-950">
+            <h1 className="display-1 mt-6 text-white">
               {HEADLINE.map((word, index) => (
                 <motion.span
                   key={word}
@@ -61,12 +61,12 @@ export function Hero() {
                   animate={reduced ? undefined : { opacity: 1, y: 0 }}
                   transition={{ duration: 0.65, ease: EASE_PREMIUM, delay: 0.12 + index * 0.06 }}
                 >
-                  {index >= 4 ? <span className="text-brand-900">{word}</span> : word}
+                  {index >= 4 ? <span className="text-ink-950">{word}</span> : word}
                 </motion.span>
               ))}
             </h1>
 
-            <motion.p {...rise(0.46)} className="mt-6 max-w-lg text-base leading-relaxed text-ink-800 sm:text-lg">
+            <motion.p {...rise(0.46)} className="mt-6 max-w-lg text-base leading-relaxed text-white sm:text-lg">
               Reliable freight transportation and logistics solutions built to help businesses move goods faster,
               smarter, and with confidence.
             </motion.p>
@@ -84,8 +84,8 @@ export function Hero() {
 
             <motion.ul {...rise(0.68)} className="mt-10 flex flex-wrap gap-x-6 gap-y-3">
               {TRUST_POINTS.map((point) => (
-                <li key={point.label} className="flex items-center gap-2 text-sm text-ink-800">
-                  <point.icon className="h-4 w-4 text-brand-900" aria-hidden="true" />
+                <li key={point.label} className="flex items-center gap-2 text-sm text-white">
+                  <point.icon className="h-4 w-4 text-white" aria-hidden="true" />
                   {point.label}
                 </li>
               ))}

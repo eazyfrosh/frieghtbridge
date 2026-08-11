@@ -18,9 +18,9 @@ const variants: Record<Variant, string> = {
   ghost: 'text-ink-700 hover:bg-ink-50 hover:text-ink-900',
   onDark:
     'bg-white text-ink-900 shadow-[0_12px_40px_-16px_rgba(0,0,0,0.7)] hover:-translate-y-0.5 hover:bg-ink-50',
-  // Secondary on a bright orange band — dark, since white text would not carry.
+  // Secondary on a bright orange band.
   outlineDark:
-    'border border-ink-950/30 bg-ink-950/[0.04] text-ink-950 hover:-translate-y-0.5 hover:border-ink-950/55 hover:bg-ink-950/[0.08]',
+    'border border-white/45 bg-white/[0.12] text-white hover:-translate-y-0.5 hover:border-white/70 hover:bg-white/20',
 };
 
 const sizes: Record<Size, string> = {

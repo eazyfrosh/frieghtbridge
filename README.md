@@ -76,25 +76,33 @@ The scheme is **bright orange and white**. Surfaces are white or near-white,
 the feature bands are full-bleed `brand-500`, and the greys are untinted so
 nothing reads as a third colour.
 
-- `ink` — true neutral grey. Carries all body text, and supplies the near-black
-  used *on* the orange bands. `ink-400` is the lightest step used for body text
-  on white and clears 4.5:1
+- `ink` — true neutral grey. Carries all body text on white, and supplies the
+  near-black accent used *on* the orange bands. `ink-400` is the lightest step
+  used for body text on white and clears 4.5:1
 - `brand` — primary orange. `brand-500` (`#FF6A00`) is the band and button
   colour; `brand-700` (`#C24500`) is the step used for orange text and orange
   fills that sit on white
 - `signal` — warm gold, kept as a sparing accent (a gradient hairline, one
   icon) rather than a band colour
 
-The bands read **dark on bright**, which is the direction the brightness
-forces: white on `brand-500` measures only 2.87:1 and fails AA at any size,
-while near-black `ink-950` reaches 6.52:1. So on an orange band the text,
-buttons, logo mark and focus ring all go near-black, and `.text-gradient`
-drops to `brand-900` (3.32:1 — display sizes only, where the threshold is 3:1).
+Copy on the bands is **white**, with `ink-950` reserved for the accent words
+inside display headings (`.text-gradient`) — near-black on bright orange is
+6.52:1, the strongest pairing that surface offers, and the two-tone headline is
+what carries the emphasis.
 
-The same brightness caps what orange can do on white: `brand-600` reaches
-3.88:1, which is enough for display headings and icons but not for body copy,
-so links, small print, badges and filled controls step down to `brand-700`
-(5.07:1) or `brand-800` (7.05:1 behind white text).
+**Known contrast gap:** white on `brand-500` measures 2.87:1, below the 4.5:1
+AA floor for body text and the 3:1 floor for large text. The bands' ambient
+radials deepen toward `brand-700`/`brand-800` to claw some of that back where
+the copy sits, but flat areas stay short. Deepening the band token itself to
+`brand-700` (white at 5.07:1) is the fix if AA matters more than the brightness.
+
+Orange on white is capped from the other side: `brand-600` reaches 3.88:1,
+enough for display headings and icons but not for body copy, so links, small
+print, badges and filled controls step down to `brand-700` (5.07:1) or
+`brand-800` (7.05:1 behind white text).
+
+The header is solid white at every scroll position — it never goes transparent
+over the hero. `scrolled` drives only the drop shadow and the height shrink.
 
 Semantic status colours stay outside the brand ramp so a status never reads as
 decoration: emerald for delivered, rose for delayed/exception. "In transit" and

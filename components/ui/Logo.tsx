@@ -21,7 +21,7 @@ interface LogoProps {
  */
 export function LogoMark({ tone = 'dark', className }: { tone?: 'dark' | 'light'; className?: string }) {
   const inverted = tone === 'light';
-  const stroke = inverted ? '#D1450A' : '#FFFFFF';
+  const stroke = inverted ? '#C24500' : '#FFFFFF';
 
   return (
     <span
@@ -48,7 +48,7 @@ export function LogoMark({ tone = 'dark', className }: { tone?: 'dark' | 'light'
         {/* Piers */}
         <path d="M7 14v5M17 14v5" stroke={stroke} strokeWidth="1.7" strokeLinecap="round" opacity="0.55" />
         {/* Freight unit crossing the span */}
-        <rect x="9.5" y="8.6" width="5" height="3.6" rx="1" fill={inverted ? '#121212' : '#121212'} />
+        <rect x="9.5" y="8.6" width="5" height="3.6" rx="1" fill={inverted ? '#C24500' : '#121212'} />
       </svg>
     </span>
   );
@@ -62,11 +62,11 @@ export function Logo({ tone = 'dark', className, href = '/', showWordmark = true
         <span
           className={cn(
             'font-display text-[1.28rem] font-semibold tracking-[-0.03em]',
-            tone === 'light' ? 'text-ink-950' : 'text-ink-900',
+            tone === 'light' ? 'text-white' : 'text-ink-900',
           )}
         >
           Freight
-          <span className={tone === 'light' ? 'text-ink-950/65' : 'text-brand-600'}>Bridge</span>
+          <span className={tone === 'light' ? 'text-white/75' : 'text-brand-600'}>Bridge</span>
         </span>
       )}
     </span>
