@@ -1,11 +1,10 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowRight, MoveRight, Radar, Timer } from 'lucide-react';
+import { ArrowRight, Radar, Search, Timer } from 'lucide-react';
 import { EASE_PREMIUM } from '@/lib/motion';
 import { HERO_MEDIA } from '@/lib/site';
 import { VideoFrame } from './ui/VideoFrame';
-import { Button } from './ui/Button';
 import { useReducedMotion } from '@/lib/use-reduced-motion';
 
 const HEADLINE = ['Move', 'Freight', 'With', 'Confidence.'];
@@ -59,16 +58,40 @@ export function Hero() {
               FreightBridge makes shipping, tracking, and managing freight simple from one powerful platform.
             </motion.p>
 
-            <motion.div {...rise(0.56)} className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-              <Button href="/quote" size="lg" className="w-full sm:w-auto">
-                Get a Quote
-                <ArrowRight className="h-[1.1rem] w-[1.1rem] transition-transform duration-300 group-hover:translate-x-1" />
-              </Button>
-              <Button href="/tracking" size="lg" variant="secondary" className="w-full sm:w-auto">
-                Track Shipment
-                <MoveRight className="h-[1.1rem] w-[1.1rem] transition-transform duration-300 group-hover:translate-x-1" />
-              </Button>
-            </motion.div>
+            {/* A plain GET form, so tracking still works before JavaScript
+                loads and the result is a shareable /tracking?number=… URL. */}
+            <motion.form {...rise(0.56)} action="/tracking" method="get" className="mt-10 max-w-[32rem]">
+              <label htmlFor="hero-tracking" className="sr-only">
+                Tracking number
+              </label>
+              <div className="flex flex-col gap-2 rounded-2xl border-2 border-ink-200 bg-white p-2 shadow-[0_2px_6px_rgba(17,17,17,0.04),0_18px_44px_-24px_rgba(17,17,17,0.28)] transition-colors duration-300 ease-premium focus-within:border-brand-500 sm:flex-row sm:items-center sm:rounded-full sm:p-1.5">
+                <div className="flex flex-1 items-center gap-2.5 px-3 sm:px-4">
+                  <Search className="h-[1.15rem] w-[1.15rem] shrink-0 text-ink-400" aria-hidden="true" />
+                  <input
+                    id="hero-tracking"
+                    name="number"
+                    type="text"
+                    autoComplete="off"
+                    maxLength={32}
+                    placeholder="Enter Your Tracking Number"
+                    className="h-12 w-full min-w-0 bg-transparent text-[0.98rem] text-ink-900 placeholder:text-ink-400 focus:outline-none"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="group inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-brand-500 px-6 text-[0.98rem] font-semibold text-ink-950 transition-all duration-300 ease-premium hover:bg-brand-400 hover:shadow-[0_14px_30px_-14px_rgba(255,106,0,0.9)] sm:rounded-full"
+                >
+                  Track
+                  <ArrowRight
+                    className="h-[1.05rem] w-[1.05rem] transition-transform duration-300 group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  />
+                </button>
+              </div>
+              <p className="mt-3 pl-1 text-[0.88rem] text-ink-500">
+                Tracking numbers look like <span className="font-mono text-ink-700">FBX-28473921</span>.
+              </p>
+            </motion.form>
           </div>
 
           {/* Visual */}
