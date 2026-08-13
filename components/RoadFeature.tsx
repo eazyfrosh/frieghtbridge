@@ -1,23 +1,23 @@
 'use client';
 
-import { ArrowRight, Fuel, Gauge, ShieldCheck } from 'lucide-react';
+import { ArrowRight, BadgeCheck, Gauge, ShieldCheck } from 'lucide-react';
 import { IMAGERY, ROAD_VIDEO } from '@/lib/site';
 import { Button } from './ui/Button';
 import { Reveal } from './ui/Reveal';
 import { VideoFrame } from './ui/VideoFrame';
 
 const STATS = [
-  { icon: Gauge, value: '2.4 days', label: 'Average domestic transit' },
+  { icon: BadgeCheck, value: '100%', label: 'Deliveries signed for' },
   { icon: ShieldCheck, value: '98%', label: 'On-time delivery' },
-  { icon: Fuel, value: '1,240', label: 'Lanes running weekly' },
+  { icon: Gauge, value: '1,240', label: 'Routes running weekly' },
 ];
 
 /**
- * "On the road" — a media-led band whose clip is `ROAD_VIDEO`.
+ * The driver-network band, built around `ROAD_VIDEO`.
  *
- * The video slot is empty by design: drop `on-the-road.mp4` into
- * `public/video/` and it plays here. Until then `VideoFrame` renders
- * `IMAGERY.road` on its own, so the section looks finished either way.
+ * Copy is written to the footage — a driver collecting a signature — rather
+ * than to the section's original truck framing, and the poster is a frame
+ * lifted from the same clip so the still and the video agree.
  */
 export function RoadFeature() {
   return (
@@ -27,7 +27,7 @@ export function RoadFeature() {
           {/* Media leads on desktop, follows the copy on mobile. */}
           <Reveal from="left" className="order-2 lg:order-1">
             <VideoFrame
-              media={IMAGERY.road}
+              media={IMAGERY.driver}
               video={ROAD_VIDEO}
               heightClass="h-[280px] sm:h-[400px] lg:h-[500px]"
               sizes="(min-width: 1024px) 50vw, 100vw"
@@ -40,20 +40,20 @@ export function RoadFeature() {
             <Reveal from="right">
               <span className="eyebrow">
                 <span className="h-1.5 w-1.5 rounded-full bg-brand-500" aria-hidden="true" />
-                On the road
+                Our driver network
               </span>
             </Reveal>
 
             <Reveal delay={0.06} from="right">
               <h2 className="display-2 mt-5">
-                Capacity that shows up <span className="text-brand-600">when it says it will.</span>
+                Every delivery has <span className="text-brand-600">a name on it.</span>
               </h2>
             </Reveal>
 
             <Reveal delay={0.12} from="right">
               <p className="lead mt-5 max-w-lg">
-                Vetted carriers, scored lane by lane, dispatched by people who know the route. The trucks behind
-                your freight are not an afterthought — they are the product.
+                Vetted drivers, scored route by route, with dispatch behind them. When your freight arrives, the
+                person who handed it over is on the record — not a gap in the tracking.
               </p>
             </Reveal>
 
@@ -81,8 +81,8 @@ export function RoadFeature() {
 
             <Reveal delay={0.24} from="right">
               <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-                <Button href="/services#freight-transportation" size="lg" className="w-full sm:w-auto">
-                  Explore road freight
+                <Button href="/services#last-mile-delivery" size="lg" className="w-full sm:w-auto">
+                  Explore last-mile delivery
                   <ArrowRight className="h-[1.05rem] w-[1.05rem] transition-transform duration-300 group-hover:translate-x-1" />
                 </Button>
                 <Button href="/contact" size="lg" variant="secondary" className="w-full sm:w-auto">

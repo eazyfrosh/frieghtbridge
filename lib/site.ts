@@ -95,7 +95,14 @@ export interface MediaAsset {
  *
  * Landscape, 1600px wide or more. Each is cropped with `object-cover`.
  */
-export const IMAGERY: Record<'road' | 'port' | 'warehouse' | 'lastMile', MediaAsset> = {
+export const IMAGERY: Record<'road' | 'port' | 'warehouse' | 'lastMile' | 'driver', MediaAsset> = {
+  /** Poster for ROAD_VIDEO — a frame from that clip, so the two match. */
+  driver: {
+    src: '/images/on-the-road.jpg',
+    alt: 'A FreightBridge delivery driver holding a clipboard at a customer’s gate',
+    fallbackSrc: '/images/hero-freight.svg',
+    fallbackAlt: 'Illustration of a FreightBridge truck on the highway beside a container yard',
+  },
   road: {
     src: '/images/hero-freight.png',
     alt: 'An articulated lorry hauling a shipping container along a multi-lane highway',
@@ -137,31 +144,24 @@ export const STORY_VIDEO: VideoAsset = {
 };
 
 /**
- * The clip in the "On the road with FreightBridge" section — an empty slot,
- * ready for you to fill.
+ * The clip in the "Every delivery has a name on it" section.
  *
- * To add your video: upload an MP4 to `public/video/` named
- * `on-the-road.mp4`. Nothing else needs changing — the section is already
- * pointing at that path and will start playing it as soon as the file exists.
+ * To replace it, overwrite `public/video/on-the-road.mp4` (and the `.webm`
+ * beside it, or delete that file and drop the `webm` line below). Keep the
+ * poster `IMAGERY.driver` in step with the footage — a mismatched poster
+ * flashes the wrong image before the clip fades in.
  *
- * Until then the section shows `IMAGERY.warehouse` on its own. A missing file
- * is not an error here: no gap, no broken frame, just the photograph.
+ * Budget: 6–10s, silent, under ~3 MB, 720p. The frame renders about 500 px
+ * tall, so a 4K master is many times the bytes for no visible gain. Strip the
+ * audio track too — the clip is muted, so it is dead weight. Recipe:
  *
- * `webm` is deliberately left unset. Supplying one is a bandwidth win, but a
- * single MP4 is all this needs, and pointing `webm` at a file you have not
- * uploaded costs a round trip before the MP4 is tried.
- *
- * Budget: 6–10s, silent, under ~3 MB, 720p is plenty. GitHub's web uploader
- * caps a single file at 25 MB. See the README for an ffmpeg recipe.
- *
- * One known cost of pre-filling the path: until the file exists, the browser
- * console logs a 404 for it on each load. Visitors see nothing wrong — the
- * photograph is already there — and it clears the moment you upload. It buys
- * a one-step change: add the file, no code edit.
+ *   ffmpeg -i master.mp4 -vf scale=1280:-2 -c:v libx264 -crf 26 -preset slow \
+ *          -pix_fmt yuv420p -an -movflags +faststart on-the-road.mp4
  */
 export const ROAD_VIDEO: VideoAsset = {
   src: '/video/on-the-road.mp4',
-  description: 'A FreightBridge truck running a long-haul lane',
+  webm: '/video/on-the-road.webm',
+  description: 'A FreightBridge delivery driver collecting a signature at a customer’s gate',
 };
 
 export interface NavLink {

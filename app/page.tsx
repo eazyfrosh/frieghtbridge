@@ -35,7 +35,7 @@ export default function HomePage() {
 
       <GlobalNetwork />
 
-      {/* Second video slot — see ROAD_VIDEO in lib/site.ts */}
+      {/* Driver-network band — clip configured as ROAD_VIDEO in lib/site.ts */}
       <RoadFeature />
 
       <EnterpriseSection />
