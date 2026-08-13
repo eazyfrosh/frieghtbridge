@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 import { Clock4, FileCheck2, HandCoins, Headphones } from 'lucide-react';
 import { PageHero } from '@/components/PageHero';
-import { QuoteForm } from '@/components/QuoteForm';
+import { QuoteLeadForm } from '@/components/QuoteLeadForm';
 import { Reveal } from '@/components/ui/Reveal';
 
 export const metadata: Metadata = {
   title: 'Get a Freight Quote',
   description:
-    'Request a freight quote from FreightBridge. Share your lane, shipment type, weight, and timing — a logistics specialist responds with options and pricing.',
+    'Request a freight quote from FreightBridge. Share your lane and shipment type — a logistics specialist responds with options and pricing.',
   alternates: { canonical: '/quote' },
 };
 
@@ -29,7 +29,7 @@ export default function QuotePage() {
             Let&rsquo;s move <span className="text-gradient">your freight.</span>
           </>
         }
-        description="Tell us what you're shipping and where it needs to go. We come back with the right mode, realistic transit times, and a price you can plan around."
+        description="Tell us the lane and roughly what you're shipping. A specialist comes back with the right mode, realistic transit times, and a price you can plan around."
       >
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {ASSURANCES.map((item) => (
@@ -45,7 +45,7 @@ export default function QuotePage() {
       <section className="section bg-ink-50/60">
         <div className="container">
           <Reveal>
-            <QuoteForm />
+            <QuoteLeadForm />
           </Reveal>
 
           <Reveal delay={0.1}>

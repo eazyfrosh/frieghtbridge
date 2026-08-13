@@ -1,5 +1,7 @@
 import { Compass, PackageSearch } from 'lucide-react';
 import type { Metadata } from 'next';
+import { Footer } from '@/components/Footer';
+import { Navbar } from '@/components/Navbar';
 import { Button } from '@/components/ui/Button';
 
 export const metadata: Metadata = {
@@ -7,8 +9,15 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+/**
+ * Root-level 404, so it renders outside the (site) group and has to bring the
+ * public chrome with it.
+ */
 export default function NotFound() {
   return (
+    <>
+      <Navbar />
+      <main id="main">
     <section className="relative isolate flex min-h-[80vh] items-center overflow-hidden bg-brand-500 px-5 py-32 text-white">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-[radial-gradient(90%_70%_at_50%_-10%,#C24500_0%,transparent_60%)] opacity-70" />
@@ -42,5 +51,8 @@ export default function NotFound() {
         </div>
       </div>
     </section>
+      </main>
+      <Footer />
+    </>
   );
 }

@@ -59,7 +59,7 @@ export interface TrackingResult extends Omit<Shipment, 'events' | 'etaInDays'> {
   progress: number;
 }
 
-const SHIPMENTS: Shipment[] = [
+export const SHIPMENTS: Shipment[] = [
   {
     trackingNumber: 'FBX-28473921',
     status: 'In Transit',

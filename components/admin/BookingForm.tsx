@@ -5,8 +5,8 @@ import { ArrowRight, CheckCircle2, Loader2, MapPin, PackageCheck, ShieldCheck, T
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { EASE_PREMIUM } from '@/lib/motion';
 import { cn, sleep } from '@/lib/utils';
-import { Button } from './ui/Button';
-import { SegmentedField, SelectField, TextField } from './ui/Field';
+import { Button } from '../ui/Button';
+import { SegmentedField, SelectField, TextField } from '../ui/Field';
 import { useReducedMotion } from '@/lib/use-reduced-motion';
 
 const COUNTRIES = [
@@ -127,7 +127,7 @@ function validate(values: FormState): Errors {
   return errors;
 }
 
-export function QuoteForm({ className }: { className?: string }) {
+export function BookingForm({ className }: { className?: string }) {
   const [values, setValues] = useState<FormState>(INITIAL);
   const [errors, setErrors] = useState<Errors>({});
   const [submitted, setSubmitted] = useState(false);
@@ -174,7 +174,7 @@ export function QuoteForm({ className }: { className?: string }) {
     // pending state is exercised exactly as it would be in production.
     await sleep(1200);
     setPending(false);
-    setSuccess({ reference: `FBQ-${Math.floor(100000 + Math.random() * 899999)}` });
+    setSuccess({ reference: `FBX-${Math.floor(100000 + Math.random() * 899999)}` });
   }
 
   function reset() {
@@ -207,11 +207,11 @@ export function QuoteForm({ className }: { className?: string }) {
             </motion.span>
 
             <h3 className="mt-6 font-display text-2xl font-semibold text-ink-900 sm:text-3xl">
-              Thanks! Your freight request has been received.
+              Shipment booked.
             </h3>
             <p className="mx-auto mt-3 max-w-md text-[1rem] leading-relaxed text-ink-500">
-              Our logistics team will contact you shortly. Most quotes come back within one business hour during
-              operating windows.
+              The booking is on the board and the origin terminal has been notified. Give the reference to the
+              customer so they can track it.
             </p>
 
             <dl className="mx-auto mt-8 grid max-w-lg gap-px overflow-hidden rounded-2xl bg-ink-100 text-left sm:grid-cols-3">
@@ -235,10 +235,10 @@ export function QuoteForm({ className }: { className?: string }) {
 
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
               <Button onClick={reset} variant="secondary" size="lg">
-                Submit another request
+                Book another
               </Button>
-              <Button href="/tracking" size="lg">
-                Track a shipment
+              <Button href="/admin/shipments" size="lg">
+                Back to shipments
                 <ArrowRight className="h-[1.05rem] w-[1.05rem]" />
               </Button>
             </div>

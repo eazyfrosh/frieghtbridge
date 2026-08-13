@@ -26,32 +26,97 @@ npm run typecheck  # tsc --noEmit
 
 ```
 app/
-  layout.tsx                    root layout, fonts, metadata, JSON-LD
-  page.tsx                      home page composition
+  layout.tsx                    root shell only — fonts, metadata, JSON-LD
   globals.css                   design tokens, component classes, reduced-motion rules
-  tracking/                     shipment tracking (accepts ?number=FBX-...)
-  quote/                        freight quote request
-  services/                     services + solutions by industry
-  about/                        company, timeline, careers, partners
-  contact/                      contact channels + message form
-  resources/faq/                grouped FAQ accordion
-  resources/shipping-guide/     practical shipping guidance
-  legal/{privacy,terms,cookies} sample legal copy
+  (site)/                       PUBLIC marketing site
+    layout.tsx                  navbar + footer chrome
+    page.tsx                    home page composition
+    tracking/                   shipment tracking (accepts ?number=FBX-...)
+    quote/                      short quote enquiry (booking lives in admin)
+    services/                   services + solutions by industry
+    about/                      company, timeline, careers, partners
+    contact/                    contact channels + message form
+    resources/faq/              grouped FAQ accordion
+    resources/shipping-guide/   practical shipping guidance
+    legal/{privacy,terms,cookies}
+  admin/                        STAFF operations area, auth-gated
+    login/                      sign-in page (outside the gated group)
+    (dash)/layout.tsx           sidebar shell + server-side session check
+    (dash)/page.tsx             operations dashboard
+    (dash)/shipments/           list, status filters, detail view
+    (dash)/book/                book a shipment
+  api/admin/{login,logout}/     session endpoints (Node runtime)
   not-found.tsx, sitemap.ts, robots.ts
+middleware.ts                   blocks unauthenticated /admin requests
 components/
   Navbar, Hero, TrackingWidget, Services, WhyFreightBridge, HowItWorks,
-  QuoteForm, GlobalNetwork, EnterpriseSection, TechnologySection,
+  QuoteLeadForm, GlobalNetwork, EnterpriseSection, TechnologySection,
   Testimonials, CTA, Footer, PageHero, ContactForm, Accordion, LegalArticle,
-  ShowcaseCarousel, NetworkStory
+  ShowcaseCarousel, NetworkStory, RoadFeature
+  admin/                        AdminShell, LoginForm, BookingForm
   ui/                           Button, Field, Figure, Logo, Reveal,
                                 SectionHeading, VideoFrame
 lib/
   tracking.ts                   mock shipment data + lookup API surface
+  admin.ts                      read helpers and stats for the ops views
+  auth.ts                       session signing/verification (Edge-safe)
+  password.ts                   scrypt hashing (Node only)
   site.ts                       nav, services, footer and coverage-region data
   motion.ts                     shared Framer Motion variants
   utils.ts                      class joiner + date/time formatting
+scripts/hash-password.mjs       generates ADMIN_PASSWORD_HASH
 public/images/                  original SVG freight illustrations
 ```
+
+## Admin section
+
+`/admin` is a staff area, separate from the marketing site. **Booking a
+shipment happens here, not on the public site** — the public `/quote` page is
+only a short enquiry that captures a lane and a contact.
+
+### Setting it up
+
+Admin sign-in needs three environment variables. Copy `.env.example` to
+`.env.local` for development, and set the same three in your host's dashboard
+for production.
+
+```bash
+npm run hash-password     # prompts for a password, prints the hash + a secret
+```
+
+```
+AUTH_SECRET=<32+ random characters>
+ADMIN_EMAIL=ops@freightbridge.com
+ADMIN_PASSWORD_HASH=scrypt:16384:8:1:<salt>:<key>
+```
+
+Without these, `/admin` still refuses every request and the login endpoint
+returns 503 rather than pretending the credentials were wrong.
+
+### How the auth works
+
+Real, not mocked — but deliberately small:
+
+- The password is verified **server-side** against a scrypt hash, in constant
+  time. Email is compared in constant time too, and both checks always run so
+  a valid address is not measurably faster to probe.
+- The session is a **signed JWT in an httpOnly, SameSite=Lax cookie**, marked
+  `Secure` in production, expiring after 8 hours. Nothing about signed-in
+  state is decided by the client.
+- `middleware.ts` verifies the signature on every `/admin` request, so an
+  unauthenticated request never reaches the admin tree. The layout re-checks
+  server-side as defence in depth.
+- Failed sign-ins return one message for both a wrong email and a wrong
+  password.
+
+What it does **not** do: there is no user database, so it is a single operator
+account with no signup, password reset, MFA, rate limiting or audit trail. Add
+a real identity provider before putting genuine customer data behind it.
+
+The hash uses `:` as its separator rather than the conventional `$`. Both
+Next's `.env` loader and most hosting-provider env UIs perform `$VAR`
+expansion, which silently truncates a `$`-delimited hash and makes every
+sign-in fail with no useful error.
 
 ## Prototype behaviour
 
@@ -62,9 +127,12 @@ This is a front-end prototype: there is no backend.
   numbers: `FBX-28473921` (in transit), `FBX-90112845` (out for delivery),
   `FBX-55620174` (delivered), `FBX-73004466` (delayed). Replacing
   `lookupShipment` with a `fetch` is the only change the UI needs.
-- **Quote and contact forms** validate fully client-side and show a success
-  state; nothing is transmitted. The quote form lives at `/quote`; the home
-  page links to it rather than embedding it.
+- **Quote, contact and booking forms** validate fully client-side and show a
+  success state; nothing is transmitted. The public `/quote` page is a short
+  enquiry; the full booking form is staff-only, at `/admin/book`.
+- **Admin sign-in is the one thing that is not mocked.** Credentials are
+  verified server-side and the session is a signed httpOnly cookie. The data
+  behind it is still fixtures, and the ops views are read-only.
 - **Statistics and dashboard figures** are demonstration values, labelled as
   such on the page.
 

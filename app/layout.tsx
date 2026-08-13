@@ -1,8 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter, Sora } from 'next/font/google';
 import type { ReactNode } from 'react';
-import { Footer } from '@/components/Footer';
-import { Navbar } from '@/components/Navbar';
 import { SITE } from '@/lib/site';
 import './globals.css';
 
@@ -102,9 +100,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         </noscript>
       </head>
       <body className="min-h-screen bg-white antialiased">
-        <Navbar />
-        <main id="main">{children}</main>
-        <Footer />
+        {/* Public chrome lives in app/(site)/layout.tsx — the admin section is
+            a sibling with its own shell, so neither inherits the other's. */}
+        {children}
         <script
           type="application/ld+json"
           // Static, developer-authored structured data — no user input reaches this string.

@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, ChevronDown, Menu, Phone, X } from 'lucide-react';
+import { ArrowRight, ChevronDown, Menu, PackageSearch, Phone, X } from 'lucide-react';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { NAV_ITEMS, SITE, type NavItem } from '@/lib/site';
@@ -117,17 +117,12 @@ export function Navbar() {
               </ul>
             </nav>
 
-            <div className="hidden items-center gap-2 lg:flex">
-              <Link
-                href="/contact"
-                onClick={closeAll}
-                className="rounded-full px-4 py-2 text-[0.95rem] font-semibold text-ink-700 transition-colors duration-300 hover:bg-ink-50 hover:text-ink-900"
-              >
-                Sign In
-              </Link>
-              <Button href="/quote" size="md" variant="primary">
-                Get Started
-                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+            {/* One action. Tracking is the thing customers come back for —
+                booking now lives in the operations area, not on this site. */}
+            <div className="hidden items-center lg:flex">
+              <Button href="/tracking" size="md" variant="primary" onClick={closeAll}>
+                <PackageSearch className="h-4 w-4" aria-hidden="true" />
+                Track Shipment
               </Button>
             </div>
 
@@ -260,13 +255,10 @@ export function Navbar() {
                   })}
                 </ul>
 
-                <div className="mt-6 flex flex-col gap-3">
-                  <Button href="/quote" size="lg" fullWidth onClick={closeAll}>
-                    Get Started
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
-                  <Button href="/contact" size="lg" variant="secondary" fullWidth onClick={closeAll}>
-                    Sign In
+                <div className="mt-6">
+                  <Button href="/tracking" size="lg" fullWidth onClick={closeAll}>
+                    <PackageSearch className="h-4 w-4" aria-hidden="true" />
+                    Track Shipment
                   </Button>
                 </div>
 
