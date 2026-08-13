@@ -3,11 +3,30 @@
 import { AlertCircle, ArrowRight, Loader2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, type FormEvent } from 'react';
+import { clientAuth } from '@/lib/firebase/client';
 
-/** Only same-origin paths are honoured, so `?next=` cannot bounce elsewhere. */
+/** Only same-origin admin paths are honoured, so `?next=` cannot bounce elsewhere. */
 function safeNext(raw: string | null): string {
   if (!raw || !raw.startsWith('/admin') || raw.startsWith('//')) return '/admin';
   return raw;
+}
+
+/**
+ * Firebase error codes are useful to us and useless — or worse, informative to
+ * an attacker — to the visitor. Everything that means "those details are
+ * wrong" collapses into one message so valid emails cannot be enumerated.
+ */
+function messageFor(code: string): string {
+  switch (code) {
+    case 'auth/too-many-requests':
+      return 'Too many attempts. Wait a few minutes and try again.';
+    case 'auth/user-disabled':
+      return 'That account has been disabled.';
+    case 'auth/network-request-failed':
+      return 'Could not reach Firebase. Check your connection and try again.';
+    default:
+      return 'Those credentials were not recognised.';
+  }
 }
 
 export function LoginForm() {
@@ -23,12 +42,31 @@ export function LoginForm() {
     setPending(true);
     setError(null);
 
+    const auth = clientAuth();
+    if (!auth) {
+      setError('Firebase is not configured on this deployment.');
+      setPending(false);
+      return;
+    }
+
     try {
-      const response = await fetch('/api/admin/login', {
+      // Imported here rather than at module scope so the Firebase Auth chunk
+      // is fetched when someone actually signs in, not on every page load.
+      const { signInWithEmailAndPassword, signOut } = await import('firebase/auth');
+
+      const credential = await signInWithEmailAndPassword(auth, email.trim(), password);
+      const idToken = await credential.user.getIdToken();
+
+      const response = await fetch('/api/admin/session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ idToken }),
       });
+
+      // The browser-side Firebase session is not what grants access — the
+      // httpOnly cookie is. Drop it either way so a failed exchange does not
+      // leave a half-signed-in client behind.
+      await signOut(auth).catch(() => {});
 
       if (!response.ok) {
         const body = (await response.json().catch(() => ({}))) as { error?: string };
@@ -37,13 +75,11 @@ export function LoginForm() {
         return;
       }
 
-      // The session cookie is httpOnly, so the server has to re-render for the
-      // new state to take effect — `refresh` before `push` avoids landing on a
-      // cached signed-out shell.
       router.refresh();
       router.push(safeNext(params.get('next')));
-    } catch {
-      setError('Could not reach the server. Check your connection and try again.');
+    } catch (caught) {
+      const code = typeof caught === 'object' && caught && 'code' in caught ? String(caught.code) : '';
+      setError(messageFor(code));
       setPending(false);
     }
   }

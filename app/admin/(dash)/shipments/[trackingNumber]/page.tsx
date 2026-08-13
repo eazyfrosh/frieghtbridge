@@ -1,7 +1,8 @@
 import { ArrowLeft, Flag, MapPin, Navigation, Package, Truck } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { adminStatusTone, findShipment } from '@/lib/admin';
+import { adminStatusTone } from '@/lib/admin';
+import { findShipment } from '@/lib/shipments';
 
 interface PageProps {
   params: Promise<{ trackingNumber: string }>;
@@ -14,7 +15,7 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function AdminShipmentDetailPage({ params }: PageProps) {
   const { trackingNumber } = await params;
-  const shipment = findShipment(decodeURIComponent(trackingNumber));
+  const shipment = await findShipment(decodeURIComponent(trackingNumber));
   if (!shipment) notFound();
 
   const facts = [

@@ -1,4 +1,4 @@
-import { sleep } from './utils';
+import { SEED_SHIPMENTS } from './fixtures/shipments';
 
 /**
  * Mock shipment tracking layer.
@@ -59,209 +59,8 @@ export interface TrackingResult extends Omit<Shipment, 'events' | 'etaInDays'> {
   progress: number;
 }
 
-export const SHIPMENTS: Shipment[] = [
-  {
-    trackingNumber: 'FBX-28473921',
-    status: 'In Transit',
-    service: 'LTL Freight — Standard',
-    origin: 'Chicago, IL, United States',
-    destination: 'Dallas, TX, United States',
-    currentLocation: 'Springfield, MO, United States',
-    etaInDays: 1,
-    pieces: 6,
-    weight: '1,240 lb / 562 kg',
-    dimensions: '48 × 40 × 52 in (per pallet)',
-    carrier: 'FreightBridge Linehaul 214',
-    events: [
-      {
-        stage: 'Order Confirmed',
-        title: 'Shipment booked',
-        location: 'Chicago, IL',
-        hoursAgo: 54,
-        description: 'Booking confirmed and pickup scheduled with the origin terminal.',
-      },
-      {
-        stage: 'Picked Up',
-        title: 'Picked up from shipper',
-        location: 'Chicago, IL',
-        hoursAgo: 41,
-        description: '6 pallets collected and scanned at the Chicago consolidation hub.',
-      },
-      {
-        stage: 'In Transit',
-        title: 'Departed sort facility',
-        location: 'Springfield, MO',
-        hoursAgo: 5,
-        description: 'Linehaul 214 is en route to the Dallas distribution center.',
-      },
-      {
-        stage: 'Out for Delivery',
-        title: 'Out for delivery',
-        location: 'Dallas, TX',
-        hoursAgo: -14,
-        description: 'Final-mile driver assignment scheduled for the morning window.',
-      },
-      {
-        stage: 'Delivered',
-        title: 'Delivered',
-        location: 'Dallas, TX',
-        hoursAgo: -22,
-        description: 'Proof of delivery captured at the receiving dock.',
-      },
-    ],
-  },
-  {
-    trackingNumber: 'FBX-90112845',
-    status: 'Out for Delivery',
-    service: 'Last-Mile — Same Day',
-    origin: 'Manchester, United Kingdom',
-    destination: 'London, United Kingdom',
-    currentLocation: 'Camden, London, United Kingdom',
-    etaInDays: 0,
-    pieces: 2,
-    weight: '38 lb / 17 kg',
-    dimensions: '24 × 18 × 14 in',
-    carrier: 'FreightBridge Metro Van 07',
-    events: [
-      {
-        stage: 'Order Confirmed',
-        title: 'Shipment booked',
-        location: 'Manchester, UK',
-        hoursAgo: 20,
-        description: 'Same-day service confirmed with a 2-hour pickup window.',
-      },
-      {
-        stage: 'Picked Up',
-        title: 'Collected from shipper',
-        location: 'Manchester, UK',
-        hoursAgo: 16,
-        description: '2 parcels collected and manifested for the London run.',
-      },
-      {
-        stage: 'In Transit',
-        title: 'Arrived at London depot',
-        location: 'Enfield, London, UK',
-        hoursAgo: 4,
-        description: 'Cross-docked and loaded onto the metro delivery route.',
-      },
-      {
-        stage: 'Out for Delivery',
-        title: 'Out for delivery',
-        location: 'Camden, London, UK',
-        hoursAgo: 1,
-        description: 'Driver is 4 stops away. A delivery window has been sent to the recipient.',
-      },
-      {
-        stage: 'Delivered',
-        title: 'Delivered',
-        location: 'London, UK',
-        hoursAgo: -3,
-        description: 'Signature will be captured on delivery.',
-      },
-    ],
-  },
-  {
-    trackingNumber: 'FBX-55620174',
-    status: 'Delivered',
-    service: 'FTL Freight — Expedited',
-    origin: 'Rotterdam, Netherlands',
-    destination: 'Madrid, Spain',
-    currentLocation: 'Madrid, Spain',
-    etaInDays: -1,
-    pieces: 18,
-    weight: '9,480 lb / 4,300 kg',
-    dimensions: '13.6 m curtainsider (full load)',
-    carrier: 'FreightBridge Cross-Border 41',
-    events: [
-      {
-        stage: 'Order Confirmed',
-        title: 'Shipment booked',
-        location: 'Rotterdam, Netherlands',
-        hoursAgo: 120,
-        description: 'Full truckload booked with customs documentation pre-filed.',
-      },
-      {
-        stage: 'Picked Up',
-        title: 'Loaded at origin',
-        location: 'Waalhaven, Rotterdam, Netherlands',
-        hoursAgo: 108,
-        description: '18 pallets loaded and sealed at the Waalhaven facility.',
-      },
-      {
-        stage: 'In Transit',
-        title: 'Linehaul in progress',
-        location: 'Bordeaux, France',
-        hoursAgo: 62,
-        description: 'Driver change completed in 40m. Continuing to Madrid.',
-      },
-      {
-        stage: 'Out for Delivery',
-        title: 'Out for delivery',
-        location: 'Getafe, Spain',
-        hoursAgo: 30,
-        description: 'Departed the Getafe yard for the consignee warehouse.',
-      },
-      {
-        stage: 'Delivered',
-        title: 'Delivered — signed for',
-        location: 'Madrid, Spain',
-        hoursAgo: 26,
-        description: 'Received by L. Moreau. Proof of delivery available in your dashboard.',
-      },
-    ],
-  },
-  {
-    trackingNumber: 'FBX-73004466',
-    status: 'Exception',
-    service: 'Freight Forwarding — Ocean FCL',
-    origin: 'Jebel Ali, United Arab Emirates',
-    destination: 'Rotterdam, Netherlands',
-    currentLocation: 'Port of Algeciras, Spain',
-    etaInDays: 6,
-    pieces: 1,
-    weight: '38,600 lb / 17,510 kg',
-    dimensions: '1 × 40ft high-cube container',
-    carrier: 'FreightBridge Ocean Partner Service',
-    events: [
-      {
-        stage: 'Order Confirmed',
-        title: 'Booking confirmed',
-        location: 'Jebel Ali, UAE',
-        hoursAgo: 384,
-        description: 'Container booked on the westbound Europe service.',
-      },
-      {
-        stage: 'Picked Up',
-        title: 'Container gated in',
-        location: 'Jebel Ali, UAE',
-        hoursAgo: 360,
-        description: 'Container sealed and gated in at the origin port.',
-      },
-      {
-        stage: 'In Transit',
-        title: 'Transshipment delay',
-        location: 'Algeciras, Spain',
-        hoursAgo: 9,
-        description:
-          'Vessel berthing delayed by port congestion. Revised arrival issued and your account team has been notified.',
-      },
-      {
-        stage: 'Out for Delivery',
-        title: 'Final drayage',
-        location: 'Rotterdam, Netherlands',
-        hoursAgo: -120,
-        description: 'Drayage to the consignee will be scheduled once the container discharges.',
-      },
-      {
-        stage: 'Delivered',
-        title: 'Delivered',
-        location: 'Rotterdam, Netherlands',
-        hoursAgo: -140,
-        description: 'Awaiting delivery.',
-      },
-    ],
-  },
-];
+/** Kept as a named export for the seed script and the no-Firebase fallback. */
+export const SHIPMENTS: Shipment[] = SEED_SHIPMENTS;
 
 export const DEMO_TRACKING_NUMBERS = SHIPMENTS.map((s) => s.trackingNumber);
 
@@ -323,6 +122,22 @@ export type LookupOutcome =
   | { ok: true; shipment: TrackingResult }
   | { ok: false; reason: 'empty' | 'malformed' | 'not-found'; query: string };
 
+/**
+ * Resolve a raw shipment record into the shape the timeline renders.
+ * Exported so the server-side tracking route can use it after a Firestore read.
+ */
+export function resolveShipment(shipment: Shipment): TrackingResult {
+  return resolve(shipment);
+}
+
+/**
+ * Client-side lookup.
+ *
+ * Shipment data lives in Firestore and is only reachable through the Admin
+ * SDK, so this cannot query directly — it calls the server, which owns the
+ * read. Validation still happens here first so an obviously malformed number
+ * never costs a round trip.
+ */
 export async function lookupShipment(rawInput: string): Promise<LookupOutcome> {
   const query = rawInput.trim();
 
@@ -330,21 +145,35 @@ export async function lookupShipment(rawInput: string): Promise<LookupOutcome> {
     return { ok: false, reason: 'empty', query };
   }
 
-  // Simulated network latency so the loading state is real rather than decorative.
-  await sleep(900);
-
   if (!isPlausibleTrackingNumber(query)) {
     return { ok: false, reason: 'malformed', query };
   }
 
   const normalized = normalizeTrackingNumber(query);
-  const match = SHIPMENTS.find((shipment) => shipment.trackingNumber === normalized);
 
-  if (!match) {
+  try {
+    const response = await fetch(`/api/tracking?number=${encodeURIComponent(normalized)}`, {
+      headers: { Accept: 'application/json' },
+    });
+
+    if (response.status === 404) {
+      return { ok: false, reason: 'not-found', query: normalized };
+    }
+    if (!response.ok) {
+      return { ok: false, reason: 'not-found', query: normalized };
+    }
+
+    const body = (await response.json()) as { shipment?: TrackingResult };
+    if (!body.shipment) {
+      return { ok: false, reason: 'not-found', query: normalized };
+    }
+
+    return { ok: true, shipment: body.shipment };
+  } catch {
+    // Offline or the request failed outright. "Not found" is the honest thing
+    // to show — we genuinely could not find it — and the UI offers a retry.
     return { ok: false, reason: 'not-found', query: normalized };
   }
-
-  return { ok: true, shipment: resolve(match) };
 }
 
 export function statusTone(status: ShipmentStatus): {

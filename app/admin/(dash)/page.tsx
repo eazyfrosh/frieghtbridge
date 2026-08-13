@@ -1,11 +1,12 @@
 import { AlertTriangle, ArrowRight, CheckCircle2, PackagePlus, Truck } from 'lucide-react';
 import Link from 'next/link';
-import { adminStatusTone, listShipments, shipmentStats } from '@/lib/admin';
+import { adminStatusTone, shipmentStats } from '@/lib/admin';
+import { listShipments } from '@/lib/shipments';
 
 export const metadata = { title: 'Dashboard' };
 
-export default function AdminDashboardPage() {
-  const shipments = listShipments();
+export default async function AdminDashboardPage() {
+  const shipments = await listShipments();
   const stats = shipmentStats(shipments);
 
   const cards = [

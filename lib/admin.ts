@@ -1,21 +1,12 @@
-import { SHIPMENTS, type Shipment, type ShipmentStatus } from './tracking';
+import type { Shipment, ShipmentStatus } from './tracking';
 
 /**
- * Read helpers for the operations views.
+ * Presentation helpers for the operations views.
  *
- * These run against the same in-memory fixtures the public tracking page uses,
- * so admin and customer views can never disagree about a shipment. When a real
- * backend arrives, this file and `lib/tracking.ts` are the only two that change.
+ * Reads live in `lib/shipments.ts` (Firestore); this file only shapes what has
+ * already been fetched, so it stays free of `server-only` and can be imported
+ * from anywhere.
  */
-
-export function listShipments(): Shipment[] {
-  return SHIPMENTS;
-}
-
-export function findShipment(trackingNumber: string): Shipment | undefined {
-  const wanted = trackingNumber.trim().toUpperCase();
-  return SHIPMENTS.find((shipment) => shipment.trackingNumber.toUpperCase() === wanted);
-}
 
 export interface AdminStats {
   total: number;
@@ -25,7 +16,7 @@ export interface AdminStats {
   onTimeRate: number;
 }
 
-export function shipmentStats(shipments: Shipment[] = SHIPMENTS): AdminStats {
+export function shipmentStats(shipments: Shipment[]): AdminStats {
   const counts = shipments.reduce(
     (acc, shipment) => {
       if (shipment.status === 'Delivered') acc.delivered += 1;

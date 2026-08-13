@@ -1,9 +1,11 @@
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { AdminShell } from '@/components/admin/AdminShell';
-import { SESSION_COOKIE, verifySessionToken } from '@/lib/auth';
+import { getSession } from '@/lib/session';
+
+// Admin output is per-operator and per-session. Never prerender or cache it.
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: { default: 'Operations', template: '%s | FreightBridge Ops' },
@@ -11,13 +13,14 @@ export const metadata: Metadata = {
 };
 
 /**
- * Middleware already blocks unauthenticated requests to /admin. This second
- * check is not redundant: it is what guarantees the page cannot render without
- * a verified session if the matcher is ever changed or a route is added
- * outside it. Defence in depth, and it is also where the email comes from.
+ * The authoritative auth check for the whole admin tree.
+ *
+ * Middleware can only see whether a cookie exists — the Firebase Admin SDK
+ * does not run on the Edge runtime — so this is where the session cookie is
+ * actually verified against Firebase, revocation included.
  */
 export default async function AdminDashLayout({ children }: { children: ReactNode }) {
-  const session = await verifySessionToken((await cookies()).get(SESSION_COOKIE)?.value);
+  const session = await getSession();
   if (!session) redirect('/admin/login');
 
   return <AdminShell email={session.email}>{children}</AdminShell>;

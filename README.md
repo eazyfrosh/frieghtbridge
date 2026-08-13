@@ -45,7 +45,8 @@ app/
     (dash)/page.tsx             operations dashboard
     (dash)/shipments/           list, status filters, detail view
     (dash)/book/                book a shipment
-  api/admin/{login,logout}/     session endpoints (Node runtime)
+  api/admin/session/            sign-in / sign-out (Node runtime)
+  api/tracking/                 public shipment lookup (Node runtime)
   not-found.tsx, sitemap.ts, robots.ts
 middleware.ts                   blocks unauthenticated /admin requests
 components/
@@ -57,14 +58,18 @@ components/
   ui/                           Button, Field, Figure, Logo, Reveal,
                                 SectionHeading, VideoFrame
 lib/
-  tracking.ts                   mock shipment data + lookup API surface
-  admin.ts                      read helpers and stats for the ops views
-  auth.ts                       session signing/verification (Edge-safe)
-  password.ts                   scrypt hashing (Node only)
+  tracking.ts                   shipment types, resolution, client lookup
+  fixtures/shipments.ts         seed data + no-Firebase fallback
+  shipments.ts                  Firestore reads (server only)
+  admin.ts                      stats and status tones for the ops views
+  session.ts                    authoritative session check (server only)
+  firebase/{config,admin,client}.ts
   site.ts                       nav, services, footer and coverage-region data
   motion.ts                     shared Framer Motion variants
   utils.ts                      class joiner + date/time formatting
-scripts/hash-password.mjs       generates ADMIN_PASSWORD_HASH
+scripts/seed-firestore.mjs      seeds the shipments collection
+firestore.rules                 denies all client access (server-only reads)
+firebase.json, .firebaserc      emulator configuration
 public/images/                  original SVG freight illustrations
 ```
 
@@ -76,63 +81,99 @@ only a short enquiry that captures a lane and a contact.
 
 ### Setting it up
 
-Admin sign-in needs three environment variables. Copy `.env.example` to
-`.env.local` for development, and set the same three in your host's dashboard
-for production.
+Create a Firebase project, enable **Authentication → Email/Password**, and
+create **Cloud Firestore**. Then copy `.env.example` to `.env.local`:
+
+```
+NEXT_PUBLIC_FIREBASE_API_KEY=...
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project
+NEXT_PUBLIC_FIREBASE_APP_ID=...
+FIREBASE_SERVICE_ACCOUNT_KEY=<service account JSON, one line or base64>
+```
+
+The `NEXT_PUBLIC_` values are public by design — a Firebase API key identifies
+a project, it does not authorise anything. `FIREBASE_SERVICE_ACCOUNT_KEY` is a
+real secret: it bypasses every Firestore rule, so it is server-only and must
+never be given a `NEXT_PUBLIC_` prefix.
+
+Create the operator in the Firebase console (Authentication → Add user), then
+seed Firestore and deploy the rules:
 
 ```bash
-npm run hash-password     # prompts for a password, prints the hash + a secret
+npm run seed                        # writes the demo shipments
+firebase deploy --only firestore:rules
 ```
 
-```
-AUTH_SECRET=<32+ random characters>
-ADMIN_EMAIL=ops@freightbridge.com
-ADMIN_PASSWORD_HASH=scrypt:16384:8:1:<salt>:<key>
+### Running against the emulators
+
+No Firebase project needed, and nothing touches the network:
+
+```bash
+npm run emulators                   # Auth on :9099, Firestore on :8080
+npm run seed:emulator               # in a second shell
 ```
 
-Without these, `/admin` still refuses every request and the login endpoint
-returns 503 rather than pretending the credentials were wrong.
+Add the two commented lines at the bottom of `.env.example` to `.env.local`,
+and create a user with the Admin SDK or the emulator's REST API.
 
 ### How the auth works
 
-Real, not mocked — but deliberately small:
+1. The browser signs in with the Firebase client SDK and gets an ID token.
+2. That token is posted to `/api/admin/session`, which verifies it server-side
+   and exchanges it for a **Firebase session cookie** — httpOnly, SameSite=Lax,
+   `Secure` in production, 8-hour expiry.
+3. The client's own Firebase session is then discarded. The cookie is the only
+   credential, and JavaScript cannot read it, so an XSS bug cannot lift it.
+4. Every admin page and route handler calls `getSession()`, which verifies the
+   cookie against Firebase **with `checkRevoked`**.
+5. Signing out revokes the account's refresh tokens, so any copy of the cookie
+   stops working immediately rather than lasting until it expires.
 
-- The password is verified **server-side** against a scrypt hash, in constant
-  time. Email is compared in constant time too, and both checks always run so
-  a valid address is not measurably faster to probe.
-- The session is a **signed JWT in an httpOnly, SameSite=Lax cookie**, marked
-  `Secure` in production, expiring after 8 hours. Nothing about signed-in
-  state is decided by the client.
-- `middleware.ts` verifies the signature on every `/admin` request, so an
-  unauthenticated request never reaches the admin tree. The layout re-checks
-  server-side as defence in depth.
-- Failed sign-ins return one message for both a wrong email and a wrong
-  password.
+`middleware.ts` only checks that a cookie is *present* — the Admin SDK cannot
+run on the Edge runtime. It is a redirect for the common case, not the security
+boundary; `getSession()` is.
 
-What it does **not** do: there is no user database, so it is a single operator
-account with no signup, password reset, MFA, rate limiting or audit trail. Add
-a real identity provider before putting genuine customer data behind it.
+ID tokens older than five minutes are refused at exchange, so a captured token
+has a short window.
 
-The hash uses `:` as its separator rather than the conventional `$`. Both
-Next's `.env` loader and most hosting-provider env UIs perform `$VAR`
-expansion, which silently truncates a `$`-delimited hash and makes every
-sign-in fail with no useful error.
+### Firestore
+
+Shipments live in a `shipments` collection, keyed by tracking number, so the
+public lookup is a point read rather than a query.
+
+`firestore.rules` denies **all** client access. Every read goes through the
+Admin SDK on the server, which bypasses rules — so a leaked client config grants
+no access to shipment data. The only way in from outside is
+`GET /api/tracking?number=…`, which answers one exact tracking number and
+offers no listing or prefix search. Add per-IP rate limiting there before real
+traffic, or the numbering scheme can be brute-forced.
+
+With no Firebase configured the app falls back to the seed fixtures so a fresh
+clone still runs. **Data degrades; authentication does not** — `getSession()`
+returns null rather than pretending, and sign-in returns 503.
+
+### What this is not
+
+A single operator account, created by hand in the console. There is no signup,
+no password reset flow, no MFA, no roles and no audit trail — and the ops views
+are read-only, since booking still writes nothing. Firebase gives you all of
+those; none are wired up here.
 
 ## Prototype behaviour
 
 This is a front-end prototype: there is no backend.
 
-- **Tracking** resolves against fixtures in `lib/tracking.ts` after a simulated
-  round trip, so real loading / not-found / error states are exercised. Demo
-  numbers: `FBX-28473921` (in transit), `FBX-90112845` (out for delivery),
-  `FBX-55620174` (delivered), `FBX-73004466` (delayed). Replacing
-  `lookupShipment` with a `fetch` is the only change the UI needs.
+- **Tracking** calls `GET /api/tracking`, which reads Firestore server-side.
+  Demo numbers: `FBX-28473921` (in transit), `FBX-90112845` (out for delivery),
+  `FBX-55620174` (delivered), `FBX-73004466` (delayed).
 - **Quote, contact and booking forms** validate fully client-side and show a
   success state; nothing is transmitted. The public `/quote` page is a short
   enquiry; the full booking form is staff-only, at `/admin/book`.
-- **Admin sign-in is the one thing that is not mocked.** Credentials are
-  verified server-side and the session is a signed httpOnly cookie. The data
-  behind it is still fixtures, and the ops views are read-only.
+- **Admin sign-in and shipment storage are real.** Authentication is Firebase
+  Auth; shipments are read from Cloud Firestore through the Admin SDK. Without
+  Firebase configured, shipment reads fall back to the seed fixtures — sign-in
+  does not fall back, it refuses.
 - **Statistics and dashboard figures** are demonstration values, labelled as
   such on the page.
 

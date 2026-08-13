@@ -4,9 +4,9 @@ import {
   SHIPMENT_FILTERS,
   adminStatusTone,
   filterShipments,
-  listShipments,
   type ShipmentFilter,
 } from '@/lib/admin';
+import { listShipments } from '@/lib/shipments';
 
 export const metadata = { title: 'Shipments' };
 
@@ -22,7 +22,7 @@ function parseFilter(raw: string | undefined): ShipmentFilter {
 export default async function AdminShipmentsPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const active = parseFilter(params.status);
-  const shipments = filterShipments(listShipments(), active);
+  const shipments = filterShipments(await listShipments(), active);
 
   return (
     <div className="mx-auto max-w-6xl">

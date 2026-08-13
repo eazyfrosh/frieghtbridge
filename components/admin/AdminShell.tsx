@@ -29,7 +29,17 @@ export function AdminShell({ email, children }: AdminShellProps) {
 
   async function signOut() {
     setSigningOut(true);
-    await fetch('/api/admin/logout', { method: 'POST' }).catch(() => {});
+    // DELETE revokes the account's refresh tokens server-side as well as
+    // clearing the cookie, so a copied session cookie stops working too.
+    const response = await fetch('/api/admin/session', { method: 'DELETE' }).catch(() => null);
+
+    if (!response?.ok) {
+      // Never strand the operator looking signed in when they are not sure.
+      // A hard reload re-runs the server-side session check either way.
+      window.location.href = '/admin/login';
+      return;
+    }
+
     router.refresh();
     router.push('/admin/login');
   }

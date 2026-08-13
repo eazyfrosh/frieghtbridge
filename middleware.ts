@@ -1,43 +1,35 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { SESSION_COOKIE, verifySessionToken } from '@/lib/auth';
+import { SESSION_COOKIE } from '@/lib/firebase/config';
 
 /**
- * Gate for the admin section.
+ * Cheap gate in front of the admin section.
  *
- * Running the check here rather than in each page means an unauthenticated
- * request never reaches the admin tree at all — no page component runs, no
- * data is assembled, nothing is streamed and then hidden.
+ * This only checks that a session cookie is *present*. It cannot verify one:
+ * middleware runs on the Edge runtime, and the Firebase Admin SDK needs Node.
+ * Verification is done in `lib/session.ts`, which every admin page and route
+ * handler goes through — that is the check that actually decides access.
  *
- * Only the JWT signature is verified here. Middleware runs on the Edge
- * runtime, where Node's scrypt is unavailable, so password checking lives in
- * the login route handler instead.
+ * So treat this as a redirect for the common case, not as security. A forged
+ * cookie gets past here and is rejected a few milliseconds later by the
+ * layout, which redirects to the same place.
  */
-export async function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
+  const hasCookie = Boolean(request.cookies.get(SESSION_COOKIE)?.value);
 
-  const token = request.cookies.get(SESSION_COOKIE)?.value;
-  const session = await verifySessionToken(token);
-
-  // Already signed in and heading for the login page — send them onward.
   if (pathname === '/admin/login') {
-    if (session) {
-      return NextResponse.redirect(new URL('/admin', request.url));
-    }
+    // Do not bounce a *present* cookie away from the login page — it may be
+    // expired, and the login page is where the operator fixes that.
     return NextResponse.next();
   }
 
-  if (!session) {
+  if (!hasCookie) {
     const loginUrl = new URL('/admin/login', request.url);
-    // Remember where they were going, so sign-in lands them there.
     if (pathname !== '/admin') {
       loginUrl.searchParams.set('next', pathname + search);
     }
-    const response = NextResponse.redirect(loginUrl);
-    // An expired or tampered cookie is worse than none — clear it so the next
-    // request does not repeat the failed verification.
-    if (token) response.cookies.delete(SESSION_COOKIE);
-    return response;
+    return NextResponse.redirect(loginUrl);
   }
 
   return NextResponse.next();
