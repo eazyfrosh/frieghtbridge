@@ -4,6 +4,7 @@ import { GlobalNetwork } from '@/components/GlobalNetwork';
 import { Hero } from '@/components/Hero';
 import { HowItWorks } from '@/components/HowItWorks';
 import { NetworkStory } from '@/components/NetworkStory';
+import { RoadFeature } from '@/components/RoadFeature';
 import { Services } from '@/components/Services';
 import { ShowcaseCarousel } from '@/components/ShowcaseCarousel';
 import { TechnologySection } from '@/components/TechnologySection';
@@ -33,6 +34,10 @@ export default function HomePage() {
       <NetworkStory />
 
       <GlobalNetwork />
+
+      {/* Second video slot — see ROAD_VIDEO in lib/site.ts */}
+      <RoadFeature />
+
       <EnterpriseSection />
       <TechnologySection />
       <Testimonials />

@@ -61,6 +61,9 @@ export function VideoFrame({
   const reduced = useReducedMotion();
   const [mounted, setMounted] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
+  // Set when the preferred webm cannot be played, so the next render reaches
+  // for the mp4 instead of dropping straight to the still.
+  const [webmFailed, setWebmFailed] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
   const [photoFailed, setPhotoFailed] = useState(false);
   const [photoLoaded, setPhotoLoaded] = useState(false);
@@ -74,11 +77,25 @@ export function VideoFrame({
   const videoSrc = useMemo(() => {
     if (!mounted || !video) return null;
     const { src = '', webm = '' } = video;
-    if (webm && document.createElement('video').canPlayType('video/webm; codecs="vp9"') === 'probably') {
-      return webm;
+    const preferWebm =
+      webm && !webmFailed && document.createElement('video').canPlayType('video/webm; codecs="vp9"') === 'probably';
+    return preferWebm ? webm : src || null;
+  }, [mounted, video, webmFailed]);
+
+  /**
+   * A missing or broken webm must not cost us the clip entirely — someone
+   * dropping in a single mp4 is the common case, and Chrome reports webm as
+   * `probably` playable long before it discovers the file is not there. Retry
+   * the mp4 once, and only then fall through to the still.
+   */
+  function handleVideoError() {
+    if (videoSrc && video?.webm && videoSrc === video.webm && video.src) {
+      setWebmFailed(true);
+      setVideoReady(false);
+      return;
     }
-    return src || null;
-  }, [mounted, video]);
+    setVideoFailed(true);
+  }
 
   const showVideo = Boolean(videoSrc) && !videoFailed && !reduced;
 
@@ -129,6 +146,8 @@ export function VideoFrame({
 
       {showVideo && videoSrc && (
         <video
+          // Remount on a source switch so the retry actually reloads.
+          key={videoSrc}
           ref={videoRef}
           src={videoSrc}
           autoPlay
@@ -140,7 +159,7 @@ export function VideoFrame({
           onCanPlay={() => setVideoReady(true)}
           onPlay={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
-          onError={() => setVideoFailed(true)}
+          onError={handleVideoError}
           className={cn(
             'absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-premium',
             videoReady ? 'opacity-100' : 'opacity-0',

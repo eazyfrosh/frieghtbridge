@@ -136,6 +136,34 @@ export const STORY_VIDEO: VideoAsset = {
   description: 'A FreightBridge delivery being handed over at a customer’s front door',
 };
 
+/**
+ * The clip in the "On the road with FreightBridge" section — an empty slot,
+ * ready for you to fill.
+ *
+ * To add your video: upload an MP4 to `public/video/` named
+ * `on-the-road.mp4`. Nothing else needs changing — the section is already
+ * pointing at that path and will start playing it as soon as the file exists.
+ *
+ * Until then the section shows `IMAGERY.warehouse` on its own. A missing file
+ * is not an error here: no gap, no broken frame, just the photograph.
+ *
+ * `webm` is deliberately left unset. Supplying one is a bandwidth win, but a
+ * single MP4 is all this needs, and pointing `webm` at a file you have not
+ * uploaded costs a round trip before the MP4 is tried.
+ *
+ * Budget: 6–10s, silent, under ~3 MB, 720p is plenty. GitHub's web uploader
+ * caps a single file at 25 MB. See the README for an ffmpeg recipe.
+ *
+ * One known cost of pre-filling the path: until the file exists, the browser
+ * console logs a 404 for it on each load. Visitors see nothing wrong — the
+ * photograph is already there — and it clears the moment you upload. It buys
+ * a one-step change: add the file, no code edit.
+ */
+export const ROAD_VIDEO: VideoAsset = {
+  src: '/video/on-the-road.mp4',
+  description: 'A FreightBridge truck running a long-haul lane',
+};
+
 export interface NavLink {
   label: string;
   href: string;

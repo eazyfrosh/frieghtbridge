@@ -184,8 +184,31 @@ export const STORY_VIDEO = {
 };
 ```
 
-Leave `src` empty and that section shows `IMAGERY.lastMile` on its own. Both
-clips share `ui/VideoFrame`, so the guidance below applies to either:
+Leave `src` empty and that section shows `IMAGERY.lastMile` on its own.
+
+#### The empty slot: "On the road"
+
+A third home-page section, `components/RoadFeature.tsx`, ships with its video
+slot **deliberately empty**, ready for a clip to be dropped in without touching
+any code. Its config is `ROAD_VIDEO` in `lib/site.ts`, already pointing at
+`/video/on-the-road.mp4`.
+
+To fill it, add a file at that exact path — `public/video/on-the-road.mp4`.
+Through the GitHub web UI: open `public/video/`, **Add file → Upload files**,
+drag the clip in, and commit. The section starts playing it on the next
+deploy. No edit to `lib/site.ts` is needed, so the filename has to match.
+
+Until the file exists the section shows `IMAGERY.road` on its own and looks
+finished — but the browser console does log a 404 for the missing clip on each
+load. That is the price of pre-filling the path so the upload is a one-step
+change; it clears the moment the file lands. To silence it before then, set
+`ROAD_VIDEO.src` to `''`.
+
+GitHub's web uploader caps a single file at 25 MB, well above the ~3 MB this
+should be.
+
+All three clips share `ui/VideoFrame`, so the guidance below applies to any of
+them:
 
 - 6–10 seconds, silently looping, compressed to **under ~3 MB** — it is the
   first thing on the page and competes with the hero copy for bandwidth.
@@ -209,6 +232,9 @@ clips share `ui/VideoFrame`, so the guidance below applies to either:
 - Ship the webm only if it actually beats the mp4. VP9 usually wins, but on a
   high-motion clip it can come out larger, and `VideoFrame` prefers webm where
   the browser supports it — check the two file sizes before committing both
+- A webm that is missing or broken no longer costs the clip: `VideoFrame`
+  retries the mp4 once before falling through to the still. This is why an
+  mp4-only upload works even though Chrome reports webm as playable
 
 ### Section imagery
 
