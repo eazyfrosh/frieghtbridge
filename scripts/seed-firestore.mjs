@@ -18,11 +18,19 @@ import { dirname, join } from 'node:path';
 const here = dirname(fileURLToPath(import.meta.url));
 
 // Load .env.local the way Next does, so one config serves both.
+//
+// `@next/env` is CommonJS. Imported from ESM the named export can arrive
+// undefined depending on interop, so reach through `default` as well —
+// getting this wrong fails silently and looks exactly like a missing key.
 try {
-  const { loadEnvConfig } = await import('@next/env');
+  const mod = await import('@next/env');
+  const loadEnvConfig = mod.loadEnvConfig ?? mod.default?.loadEnvConfig;
+  if (typeof loadEnvConfig !== 'function') {
+    throw new Error('loadEnvConfig not found on @next/env');
+  }
   loadEnvConfig(join(here, '..'), false);
-} catch {
-  // @next/env missing is not fatal — real env vars may already be set.
+} catch (error) {
+  console.warn(`[seed] could not load .env files (${error.message}); relying on the real environment.`);
 }
 
 const usingEmulator = Boolean(process.env.FIRESTORE_EMULATOR_HOST);
