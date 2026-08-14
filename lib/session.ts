@@ -2,7 +2,7 @@ import 'server-only';
 
 import { cookies } from 'next/headers';
 import { adminAuth } from './firebase/admin';
-import { SESSION_COOKIE } from './firebase/config';
+import { SESSION_COOKIE, isAllowedAdmin } from './firebase/config';
 
 export interface AdminSession {
   uid: string;
@@ -33,8 +33,13 @@ export async function getSession(): Promise<AdminSession | null> {
 
   try {
     const claims = await auth.verifySessionCookie(token, true);
-    if (!claims.email) return null;
-    return { uid: claims.uid, email: claims.email };
+
+    // Re-checked on every request, not just at sign-in. Removing someone from
+    // ADMIN_EMAILS then ends their access on their next page load, rather than
+    // whenever their 8-hour cookie happens to expire.
+    if (!isAllowedAdmin(claims.email)) return null;
+
+    return { uid: claims.uid, email: claims.email as string };
   } catch {
     // Expired, revoked or forged — all the same to the caller.
     return null;

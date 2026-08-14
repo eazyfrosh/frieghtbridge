@@ -72,6 +72,33 @@ export function serviceAccountRaw(): string | null {
   return process.env.FIREBASE_SERVICE_ACCOUNT_KEY || null;
 }
 
+/**
+ * Who is allowed into the admin area, as a comma-separated `ADMIN_EMAILS`.
+ *
+ * This is not belt-and-braces — it is load-bearing. Firebase's Email/Password
+ * provider permits public self-signup through the REST API by default, and the
+ * project's API key is in the client bundle by design. Without this list, a
+ * *valid Firebase user* and *an authorised operator* would be the same thing,
+ * and anyone could enrol themselves into the admin area.
+ *
+ * Also disable sign-up in the console (Authentication → Settings → User
+ * actions), so accounts cannot be created at all. Belt and braces there.
+ */
+export function adminEmails(): string[] {
+  return (process.env.ADMIN_EMAILS || '')
+    .split(',')
+    .map((entry) => entry.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+/** Case-insensitive membership. An empty list authorises nobody, never everybody. */
+export function isAllowedAdmin(email: string | undefined | null): boolean {
+  if (!email) return false;
+  const allowed = adminEmails();
+  if (allowed.length === 0) return false;
+  return allowed.includes(email.trim().toLowerCase());
+}
+
 /** Session cookies last 8 hours, matching the previous implementation. */
 export const SESSION_COOKIE = 'fb_admin_session';
 export const SESSION_MAX_AGE_MS = 8 * 60 * 60 * 1000;

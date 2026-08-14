@@ -4,6 +4,7 @@ import { adminAuth } from '@/lib/firebase/admin';
 import {
   SESSION_COOKIE,
   SESSION_MAX_AGE_MS,
+  isAllowedAdmin,
   isAuthConfigured,
   sessionCookieOptions,
 } from '@/lib/firebase/config';
@@ -49,11 +50,13 @@ export async function POST(request: Request) {
     // must not be exchangeable for a fresh session.
     const decoded = await auth.verifyIdToken(idToken, true);
 
-    // Refuse anything older than five minutes. An ID token that has been
-    // sitting around is more likely to have been captured than freshly minted.
-    const ageMs = Date.now() - decoded.auth_time * 1000;
-    if (ageMs > 5 * 60 * 1000) {
-      return NextResponse.json({ error: 'Please sign in again.' }, { status: 401 });
+    // Having a Firebase account is not the same as being an operator. Firebase
+    // permits public self-signup by default and the API key is in the client
+    // bundle, so without this check anyone could enrol themselves into admin.
+    if (!isAllowedAdmin(decoded.email)) {
+      // Same message as a bad password: never confirm that an account exists
+      // but lacks access — that is a useful signal to someone probing.
+      return NextResponse.json({ error: 'Those credentials were not recognised.' }, { status: 401 });
     }
 
     const sessionCookie = await auth.createSessionCookie(idToken, {

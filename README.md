@@ -90,6 +90,7 @@ NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project
 NEXT_PUBLIC_FIREBASE_APP_ID=...
 FIREBASE_SERVICE_ACCOUNT_KEY=<service account JSON, one line or base64>
+ADMIN_EMAILS=ops@example.com
 ```
 
 The `NEXT_PUBLIC_` values are public by design — a Firebase API key identifies
@@ -97,8 +98,9 @@ a project, it does not authorise anything. `FIREBASE_SERVICE_ACCOUNT_KEY` is a
 real secret: it bypasses every Firestore rule, so it is server-only and must
 never be given a `NEXT_PUBLIC_` prefix.
 
-Create the operator in the Firebase console (Authentication → Add user), then
-seed Firestore and deploy the rules:
+There is **no default login**. Create the operator in the Firebase console
+(Authentication → Users → Add user) and put that same address in
+`ADMIN_EMAILS`. Then seed Firestore and deploy the rules:
 
 ```bash
 npm run seed                        # writes the demo shipments
@@ -129,6 +131,19 @@ and create a user with the Admin SDK or the emulator's REST API.
    cookie against Firebase **with `checkRevoked`**.
 5. Signing out revokes the account's refresh tokens, so any copy of the cookie
    stops working immediately rather than lasting until it expires.
+
+**Having a Firebase account is not the same as being an operator.** Firebase's
+Email/Password provider permits public self-signup through its REST API by
+default, and the project's API key is in the client bundle by design — so
+without a gate, anyone could enrol themselves and walk into `/admin`. Every
+sign-in and every subsequent request checks the address against `ADMIN_EMAILS`;
+an empty list authorises nobody. Also switch off sign-up in the console
+(Authentication → Settings → User actions) so accounts cannot be created at
+all. Checking on each request, not just at sign-in, means removing an address
+ends that session on the next page load.
+
+For more than a handful of operators, move this to Firebase custom claims —
+the allowlist is deliberately the simplest thing that closes the hole.
 
 `middleware.ts` only checks that a cookie is *present* — the Admin SDK cannot
 run on the Edge runtime. It is a redirect for the common case, not the security
