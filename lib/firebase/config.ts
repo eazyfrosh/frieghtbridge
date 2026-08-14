@@ -15,6 +15,10 @@ export interface FirebaseClientConfig {
   authDomain: string;
   projectId: string;
   appId: string;
+  /** Only needed if Cloud Storage is added later. Harmless when absent. */
+  storageBucket?: string;
+  /** Only needed for Cloud Messaging. Harmless when absent. */
+  messagingSenderId?: string;
 }
 
 export function clientConfig(): FirebaseClientConfig | null {
@@ -23,8 +27,18 @@ export function clientConfig(): FirebaseClientConfig | null {
   const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
   const appId = process.env.NEXT_PUBLIC_FIREBASE_APP_ID;
 
+  // Only the four Auth needs are required. The rest are passed through so
+  // adding Storage or Messaging later is a config change, not a code change.
   if (!apiKey || !authDomain || !projectId || !appId) return null;
-  return { apiKey, authDomain, projectId, appId };
+
+  return {
+    apiKey,
+    authDomain,
+    projectId,
+    appId,
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || undefined,
+    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || undefined,
+  };
 }
 
 /**
