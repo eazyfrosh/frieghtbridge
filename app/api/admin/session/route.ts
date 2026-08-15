@@ -73,8 +73,23 @@ export async function POST(request: Request) {
     const response = NextResponse.json({ ok: true });
     response.cookies.set(SESSION_COOKIE, sessionCookie, sessionCookieOptions());
     return response;
-  } catch {
-    return NextResponse.json({ error: 'Those credentials were not recognised.' }, { status: 401 });
+  } catch (error) {
+    // A rejected token and a broken deployment are different problems and were
+    // previously reported identically. Firebase tags credential failures with
+    // an `auth/…` code; anything else is ours, and saying so is what makes it
+    // findable — the operator sees the reason instead of "not recognised".
+    const code = typeof error === 'object' && error && 'code' in error ? String(error.code) : '';
+
+    if (code.startsWith('auth/')) {
+      return NextResponse.json({ error: 'Those credentials were not recognised.' }, { status: 401 });
+    }
+
+    const detail = error instanceof Error ? error.message : String(error);
+    console.error('[admin/session] exchange failed:', code || '(no code)', detail);
+    return NextResponse.json(
+      { error: `Sign-in could not be completed: ${detail}` },
+      { status: 500 },
+    );
   }
 }
 
