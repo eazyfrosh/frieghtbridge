@@ -21,6 +21,23 @@ export const runtime = 'nodejs';
  * cannot lift the operator's session.
  */
 export async function POST(request: Request) {
+  // Outermost net. Anything that escapes `exchange` — including a failure to
+  // load the Admin SDK itself — would otherwise be rendered by Next as an HTML
+  // error page: a 500 with no JSON, which the browser can only report as
+  // "something went wrong". Every failure leaves here as a readable message.
+  try {
+    return await exchange(request);
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    console.error('[admin/session] unhandled:', detail);
+    return NextResponse.json(
+      { error: `Sign-in crashed on the server: ${detail}` },
+      { status: 500 },
+    );
+  }
+}
+
+async function exchange(request: Request) {
   if (!isAuthConfigured()) {
     return NextResponse.json(
       { error: 'Firebase is not configured on this deployment.' },
@@ -96,19 +113,26 @@ export async function POST(request: Request) {
 /** Sign out: revoke the account's refresh tokens, then drop the cookie. */
 export async function DELETE() {
   const response = NextResponse.json({ ok: true });
-  const auth = adminAuth();
-  const existing = (await cookies()).get(SESSION_COOKIE)?.value;
 
-  if (auth && existing) {
-    try {
-      const claims = await auth.verifySessionCookie(existing, false);
-      // Revoking is what makes sign-out real: `getSession` verifies with
-      // `checkRevoked`, so any copy of this cookie stops working immediately
-      // rather than lingering until it expires.
-      await auth.revokeRefreshTokens(claims.sub);
-    } catch {
-      // Already invalid — clearing the cookie below is all that is left to do.
+  try {
+    const auth = adminAuth();
+    const existing = (await cookies()).get(SESSION_COOKIE)?.value;
+
+    if (auth && existing) {
+      try {
+        const claims = await auth.verifySessionCookie(existing, false);
+        // Revoking is what makes sign-out real: `getSession` verifies with
+        // `checkRevoked`, so any copy of this cookie stops working immediately
+        // rather than lingering until it expires.
+        await auth.revokeRefreshTokens(claims.sub);
+      } catch {
+        // Already invalid — clearing the cookie below is all that is left to do.
+      }
     }
+  } catch (error) {
+    // Revocation is best-effort; dropping the cookie is not. Sign-out must
+    // never fail just because the Admin SDK is unavailable.
+    console.error('[admin/session] revoke failed:', error);
   }
 
   response.cookies.set(SESSION_COOKIE, '', { ...sessionCookieOptions(), maxAge: 0 });

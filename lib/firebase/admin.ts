@@ -105,10 +105,26 @@ function safeAdminApp(): App | null {
   }
 }
 
-/** Null when Firebase is not configured, so callers can degrade deliberately. */
+/**
+ * Null when Firebase is not configured, so callers can degrade deliberately.
+ *
+ * `getAuth` used to sit outside the guard, on the assumption that only
+ * *initialisation* could fail. It can throw too — the Admin SDK resolves
+ * `firebase-admin/auth` lazily, so a hosting environment that cannot load that
+ * subpath fails here rather than in `initializeApp`. Uncaught, it escaped the
+ * route handler as a bodyless HTML 500, which is precisely the shape that is
+ * impossible to diagnose from a browser.
+ */
 export function adminAuth(): Auth | null {
   const app = safeAdminApp();
-  return app ? getAuth(app) : null;
+  if (!app) return null;
+  try {
+    return getAuth(app);
+  } catch (error) {
+    configError = error instanceof Error ? error.message : 'firebase-admin/auth could not be loaded.';
+    console.error('[firebase] getAuth failed:', configError);
+    return null;
+  }
 }
 
 export function adminDb(): Firestore | null {
@@ -117,9 +133,13 @@ export function adminDb(): Firestore | null {
   try {
     return getFirestore(app);
   } catch {
+    // A second `getFirestore` on the same app throws; retrieving the app by
+    // name and retrying covers the re-evaluation case.
     try {
       return getFirestore(getApp(APP_NAME));
-    } catch {
+    } catch (error) {
+      configError = error instanceof Error ? error.message : 'firebase-admin/firestore could not be loaded.';
+      console.error('[firebase] getFirestore failed:', configError);
       return null;
     }
   }
