@@ -29,6 +29,33 @@ function messageFor(code: string): string {
   }
 }
 
+/**
+ * Turn a failed exchange into something an operator can act on.
+ *
+ * Every branch of the route replies with JSON, so a response *without* a JSON
+ * body did not come from the route at all — the function crashed before it ran,
+ * or never deployed. Hosts announce that in the body (Vercel puts a code like
+ * FUNCTION_INVOCATION_FAILED in its error page), and surfacing it is the
+ * difference between a fixable report and "sign-in failed, try again".
+ */
+async function failureMessage(response: Response): Promise<string> {
+  const text = await response.text().catch(() => '');
+
+  try {
+    const body = JSON.parse(text) as { error?: string };
+    if (body.error) return body.error;
+  } catch {
+    // Not JSON — fall through and describe what actually came back.
+  }
+
+  const hostCode = text.match(/[A-Z][A-Z_]{10,}/)?.[0];
+  if (hostCode) {
+    return `The sign-in endpoint failed to run (${response.status} ${hostCode}). This is a deployment fault, not a wrong password — open /api/admin/health.`;
+  }
+
+  return `Sign-in endpoint returned ${response.status} with no error body. Open /api/admin/health to see how this deployment is configured.`;
+}
+
 export function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
@@ -69,11 +96,7 @@ export function LoginForm() {
       await signOut(auth).catch(() => {});
 
       if (!response.ok) {
-        const body = (await response.json().catch(() => ({}))) as { error?: string };
-        // A response with no JSON body means the route crashed rather than
-        // rejecting the credential. Include the status so the two are
-        // distinguishable from the screenshot alone.
-        setError(body.error ?? `Sign-in failed (server error ${response.status}). Check the server logs.`);
+        setError(await failureMessage(response));
         setPending(false);
         return;
       }
