@@ -70,7 +70,10 @@ export function LoginForm() {
 
       if (!response.ok) {
         const body = (await response.json().catch(() => ({}))) as { error?: string };
-        setError(body.error ?? 'Sign-in failed. Try again.');
+        // A response with no JSON body means the route crashed rather than
+        // rejecting the credential. Include the status so the two are
+        // distinguishable from the screenshot alone.
+        setError(body.error ?? `Sign-in failed (server error ${response.status}). Check the server logs.`);
         setPending(false);
         return;
       }

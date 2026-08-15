@@ -75,18 +75,52 @@ function adminApp(): App | null {
   );
 }
 
+/**
+ * Why the Admin SDK could not start, if it could not.
+ *
+ * A malformed service account used to throw out of `adminAuth()` and escape
+ * the route handler as a bare 500 with an empty body — indistinguishable, from
+ * the browser, from any other crash, and reported to the operator as "Sign-in
+ * failed. Try again." The reason is captured here instead so callers can say
+ * what is actually wrong.
+ */
+let configError: string | null = null;
+
+export function adminConfigError(): string | null {
+  return configError;
+}
+
+/** Never throws. Returns null when Firebase cannot be initialised. */
+function safeAdminApp(): App | null {
+  try {
+    const app = adminApp();
+    configError = app ? null : 'FIREBASE_SERVICE_ACCOUNT_KEY is not set.';
+    return app;
+  } catch (error) {
+    configError = error instanceof Error ? error.message : 'Firebase Admin SDK failed to initialise.';
+    // Logged once per failure so the cause is in the server output too, not
+    // only in the HTTP response.
+    console.error('[firebase] admin init failed:', configError);
+    return null;
+  }
+}
+
 /** Null when Firebase is not configured, so callers can degrade deliberately. */
 export function adminAuth(): Auth | null {
-  const app = adminApp();
+  const app = safeAdminApp();
   return app ? getAuth(app) : null;
 }
 
 export function adminDb(): Firestore | null {
-  const app = adminApp();
+  const app = safeAdminApp();
   if (!app) return null;
   try {
     return getFirestore(app);
   } catch {
-    return getApp(APP_NAME) ? getFirestore(getApp(APP_NAME)) : null;
+    try {
+      return getFirestore(getApp(APP_NAME));
+    } catch {
+      return null;
+    }
   }
 }

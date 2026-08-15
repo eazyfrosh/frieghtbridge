@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { adminAuth } from '@/lib/firebase/admin';
+import { adminAuth, adminConfigError } from '@/lib/firebase/admin';
 import {
   SESSION_COOKIE,
   SESSION_MAX_AGE_MS,
@@ -30,7 +30,14 @@ export async function POST(request: Request) {
 
   const auth = adminAuth();
   if (!auth) {
-    return NextResponse.json({ error: 'Firebase is not configured.' }, { status: 503 });
+    // Say what is actually wrong. This is a deployment fault, not a bad
+    // credential, and the operator is the only one who can fix it — a generic
+    // message here costs an afternoon of guessing. The reasons describe the
+    // shape of the configuration, never its contents.
+    return NextResponse.json(
+      { error: `Firebase Admin SDK could not start. ${adminConfigError() ?? ''}`.trim() },
+      { status: 503 },
+    );
   }
 
   let idToken = '';
