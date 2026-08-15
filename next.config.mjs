@@ -3,10 +3,13 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   /**
-   * Keep the Admin SDK out of the bundler and let it load from node_modules at
-   * runtime. It resolves several dependencies dynamically, which webpack
-   * cannot follow — bundling it can produce a serverless function that builds
-   * fine and then throws on first use.
+   * Stated explicitly, though Next already ships `firebase-admin` in its
+   * built-in externals list — so this line documents the requirement rather
+   * than creating it. The SDK resolves several dependencies dynamically, which
+   * webpack cannot follow; it has to load from node_modules at runtime.
+   *
+   * Being external is also what made the jose/CommonJS conflict a *runtime*
+   * failure rather than a build one. See the `overrides` note in package.json.
    */
   serverExternalPackages: ['firebase-admin'],
   images: {

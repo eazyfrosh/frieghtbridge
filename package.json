@@ -19,12 +19,15 @@
     "firebase": "^12.17.1",
     "firebase-admin": "^14.2.0",
     "framer-motion": "^11.15.0",
-    "jose": "^6.2.8",
     "lucide-react": "^0.468.0",
     "next": "^15.1.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "server-only": "^0.0.1"
+  },
+  "//overrides": "firebase-admin depends on jwks-rsa, which loads jose with require(). jose 6 is ESM-only, so that only works where require(esm) is enabled — Vercel's runtime has it off, and firebase-admin fails to import there with ERR_REQUIRE_ESM before any credential is read. jose 5 ships a CommonJS build and still exports the four functions jwks-rsa uses: decodeJwt, decodeProtectedHeader, exportSPKI, importJWK. Drop this once jwks-rsa switches to await import().",
+  "overrides": {
+    "jose": "^5.10.0"
   },
   "devDependencies": {
     "@types/node": "^22.10.5",

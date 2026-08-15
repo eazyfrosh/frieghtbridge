@@ -31,6 +31,11 @@ export async function GET() {
     branch: process.env.VERCEL_GIT_COMMIT_REF ?? '(unknown)',
     environment: process.env.VERCEL_ENV ?? process.env.NODE_ENV,
     node: process.version,
+    // Whether this runtime lets CommonJS `require()` an ES module. Vercel's
+    // has it off while a plain Node install of the same version has it on,
+    // which is the whole reason `firebase-admin` failed there and nowhere
+    // else. Worth reporting so the difference is never guessed at again.
+    requireEsm: process.features.require_module ?? false,
   };
 
   try {
