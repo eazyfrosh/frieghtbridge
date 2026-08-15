@@ -107,6 +107,20 @@ npm run seed                        # writes the demo shipments
 firebase deploy --only firestore:rules
 ```
 
+### When sign-in fails
+
+```bash
+npm run doctor
+```
+
+Walks the whole chain — env file, client config, whether the project id is
+actually baked into the built bundle, the service account, the allowlist, live
+Firebase Auth, and whether the operator account exists — and names the broken
+link. It prints no secrets.
+
+The failure it catches most often: `NEXT_PUBLIC_*` values are inlined at
+**build** time, so editing `.env.local` and restarting is not enough. Rebuild.
+
 ### Running against the emulators
 
 No Firebase project needed, and nothing touches the network:
