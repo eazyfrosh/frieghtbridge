@@ -23,6 +23,29 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    // Live chat, also server-only. See lib/chat.ts.
+    //
+    // Denying client access is what makes the design safe: visitors are not
+    // signed in, so there is no uid to scope a rule to. Access is proved by a
+    // random secret in an httpOnly cookie, checked server-side against a hash
+    // — a rule engine never sees it, and could not enforce it if it did.
+    //
+    // Do not open these up to add real-time listeners. Any client read here
+    // would expose every visitor's name, email and message history, because
+    // Firestore cannot express "only the conversation whose secret you hold".
+    match /chats/{chatId} {
+      allow read, write: if false;
+      match /messages/{messageId} {
+        allow read, write: if false;
+      }
+    }
+
+    // Flood-control counters, keyed by a hash of the IP. Never client-visible:
+    // a client that could write these could reset its own limit.
+    match /chatRateLimits/{key} {
+      allow read, write: if false;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }

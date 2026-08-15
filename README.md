@@ -203,8 +203,41 @@ This is a front-end prototype: there is no backend.
   Auth; shipments are read from Cloud Firestore through the Admin SDK. Without
   Firebase configured, shipment reads fall back to the seed fixtures — sign-in
   does not fall back, it refuses.
+- **Live chat is real** and stores conversations in Firestore. See below.
 - **Statistics and dashboard figures** are demonstration values, labelled as
   such on the page.
+
+## Live chat
+
+Visitors chat from a bubble on every public page; operators reply at
+`/admin/chat`. Conversations live in Firestore under `chats/{id}` with a
+`messages` subcollection.
+
+**No client Firestore access, and no anonymous auth.** Everything goes through
+`/api/chat` and the Admin SDK, exactly as shipment reads do, so `firestore.rules`
+stays deny-all. A visitor proves ownership of a conversation with a 32-byte
+random secret in an httpOnly cookie; only its SHA-256 is stored, compared in
+constant time. The alternative — Firebase Anonymous Auth with per-uid rules —
+would mean enabling a provider, granting the browser a database handle, and
+writing rules that Firestore cannot actually express for this case.
+
+**Updates arrive by polling**, not a socket: 4s with the panel open, 15s with it
+shut, paused entirely when the tab is hidden. Serverless functions cap
+connection lifetime, so a socket would spend its time reconnecting.
+
+**Messages carry a per-conversation sequence number**, assigned inside the write
+transaction, and polls ask for everything after the highest one they hold. A
+timestamp cursor was tried first and is wrong: wall-clock ordering across
+instances is not guaranteed, and widening the window to compensate makes the
+newest message match its own cursor and re-send forever.
+
+Limits: 2000 characters a message, 20 messages a minute per conversation, 5 new
+conversations an hour per IP. The counters live in Firestore — an in-process
+counter on a serverless host resets constantly and limits nothing.
+
+Not built: email notification when a message arrives (an operator has to have
+the page open), typing indicators, read receipts, file attachments, and any
+retention policy — conversations accumulate until deleted by hand.
 
 ## Design system
 

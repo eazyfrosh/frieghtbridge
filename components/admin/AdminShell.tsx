@@ -1,6 +1,6 @@
 'use client';
 
-import { LayoutDashboard, LogOut, Menu, PackagePlus, Truck, X } from 'lucide-react';
+import { LayoutDashboard, LogOut, Menu, MessageCircle, PackagePlus, Truck, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState, type ReactNode } from 'react';
@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 const NAV = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
   { href: '/admin/shipments', label: 'Shipments', icon: Truck, exact: false },
+  { href: '/admin/chat', label: 'Live chat', icon: MessageCircle, exact: false },
   { href: '/admin/book', label: 'Book shipment', icon: PackagePlus, exact: false },
 ];
 

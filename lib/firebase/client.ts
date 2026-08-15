@@ -26,9 +26,14 @@ export function clientAuth(): Auth | null {
 
   const emulator = authEmulatorHost();
   if (emulator) {
+    // Firebase's own convention for these variables is bare `host:port`, which
+    // is what the Admin SDK reads — but `connectAuthEmulator` wants a URL and
+    // throws on anything without a scheme. Accept either form rather than make
+    // local development turn on a detail nothing announces.
+    const url = /^https?:\/\//.test(emulator) ? emulator : `http://${emulator}`;
     // `disableWarnings` keeps the emulator banner out of the console; the
     // environment variable is already an explicit opt-in.
-    connectAuthEmulator(auth, emulator, { disableWarnings: true });
+    connectAuthEmulator(auth, url, { disableWarnings: true });
   }
 
   cached = auth;
