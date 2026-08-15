@@ -1,16 +1,28 @@
 rules_version = '2';
 
-// Everything is denied to clients, on purpose.
+// Deny-all, which is also Firebase's production-mode default. It is kept in
+// the repo so the policy is version-controlled and reviewable, not because it
+// differs from what the console starts you with.
 //
-// The app reaches Firestore only through the Admin SDK on the server, which
-// bypasses these rules entirely. Nothing in the browser ever holds a Firestore
-// handle, so a blanket deny costs the app nothing and means a leaked client
-// config grants no read access to shipment data.
+// It is the correct rule for this app rather than a placeholder: every read
+// goes through the Admin SDK on the server, which bypasses rules entirely.
+// Nothing in the browser holds a Firestore handle, so there is no client
+// access to grant. The only route to shipment data from outside is
+// GET /api/tracking, which answers one exact tracking number.
 //
-// If a client-side read is ever genuinely needed, add a narrow rule for that
-// one collection rather than loosening this default.
+// The `shipments` block below is spelled out separately even though the
+// catch-all already covers it. It is there so that the next person to add a
+// client-side read — a customer portal, live status — finds a documented
+// decision rather than an unexamined default, and writes a narrow rule for
+// their collection instead of loosening this one.
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // Server-only, via the Admin SDK. See lib/shipments.ts.
+    match /shipments/{trackingNumber} {
+      allow read, write: if false;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }
