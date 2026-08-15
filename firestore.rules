@@ -46,6 +46,20 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    // Notification email wording, edited by operators. See lib/email.
+    // Written only by an authenticated admin through /api/admin/templates —
+    // a client write here would let someone rewrite the mail this company
+    // sends to its own customers.
+    match /emailTemplates/{templateId} {
+      allow read, write: if false;
+    }
+
+    // Record of what was sent, to whom, by which operator. Contains customer
+    // email addresses, so it is server-only for privacy as much as integrity.
+    match /emailLog/{entryId} {
+      allow read, write: if false;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }

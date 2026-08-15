@@ -239,6 +239,46 @@ Not built: email notification when a message arrives (an operator has to have
 the page open), typing indicators, read receipts, file attachments, and any
 retention policy — conversations accumulate until deleted by hand.
 
+## Shipment email notifications
+
+Five premade templates — booked, picked up, out for delivery, delivered,
+delayed — editable at `/admin/templates`, sent from a shipment's own page.
+
+**Templates are plain text with `{{placeholder}}` markers, not HTML.** The
+operator edits wording; the branded HTML shell is generated around it and a
+plain-text alternative goes alongside. Letting people paste HTML into a field
+that gets mailed out buys formatting almost nobody hand-writes, in exchange
+for broken layouts in Outlook and an injection surface. Everything
+interpolated is escaped.
+
+**Editing never overwrites the shipped copy.** Defaults live in
+`lib/email/templates.ts`; an edit is stored as an override in Firestore, so
+Reset always works. A mistyped marker like `{{recipeintName}}` is saved with a
+warning and rendered literally — a visible mistake beats a silent blank.
+
+**Preview is the same code path as the send**, rendered against the real
+shipment, so what the operator approves is what leaves. The estimated delivery
+date comes from `resolveShipment`, the same function the public tracking page
+uses, so the email cannot disagree with the page it links to.
+
+Every attempt is logged to Firestore, **failures included** — an operator needs
+to know a delay notice never left the building.
+
+Sending uses Resend's HTTP API through `fetch`, with no SDK: after
+`firebase-admin` failed to import on Vercel over a CommonJS/ESM conflict deep
+in its dependencies, a provider needing one POST does not justify a dependency
+that can break the deployment. Swapping providers means rewriting `deliver()`
+in `lib/email/index.ts` and nothing else.
+
+Set `RESEND_API_KEY` and `EMAIL_FROM` to enable sending; the From domain must
+be verified in Resend or it will refuse. Without them, editing and previewing
+still work and the UI says why sending is off.
+
+Not built: sending automatically on a status change (every send is a
+deliberate act), bulk sends, scheduling, open tracking, and unsubscribe
+handling — these are transactional notifications, but check your obligations
+before using them for anything else.
+
 ## Design system
 
 Tokens live in `tailwind.config.ts`:

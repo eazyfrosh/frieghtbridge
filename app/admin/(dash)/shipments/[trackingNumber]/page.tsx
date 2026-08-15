@@ -1,7 +1,9 @@
 import { ArrowLeft, Flag, MapPin, Navigation, Package, Truck } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { NotifyPanel } from '@/components/admin/NotifyPanel';
 import { adminStatusTone } from '@/lib/admin';
+import { emailConfigError, emailConfigured, listTemplates, sendsFor } from '@/lib/email';
 import { findShipment } from '@/lib/shipments';
 
 interface PageProps {
@@ -17,6 +19,11 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
   const { trackingNumber } = await params;
   const shipment = await findShipment(decodeURIComponent(trackingNumber));
   if (!shipment) notFound();
+
+  const [templates, history] = await Promise.all([
+    listTemplates(),
+    sendsFor(shipment.trackingNumber),
+  ]);
 
   const facts = [
     { icon: Flag, label: 'Origin', value: shipment.origin },
@@ -101,8 +108,16 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
         </ol>
       </section>
 
+      <NotifyPanel
+        trackingNumber={shipment.trackingNumber}
+        templates={templates.map(({ id, name, description }) => ({ id, name, description }))}
+        history={history}
+        configured={emailConfigured()}
+        configError={emailConfigError()}
+      />
+
       <p className="mt-6 text-xs text-ink-400">
-        Read-only in this prototype — scans come from the demo dataset, and there is no backend to write to.
+        Scans are read-only — they come from the demo dataset, and there is no backend writing to them.
       </p>
     </div>
   );

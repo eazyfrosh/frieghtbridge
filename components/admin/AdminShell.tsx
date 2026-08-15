@@ -1,6 +1,6 @@
 'use client';
 
-import { LayoutDashboard, LogOut, Menu, MessageCircle, PackagePlus, Truck, X } from 'lucide-react';
+import { LayoutDashboard, LogOut, Mail, Menu, MessageCircle, PackagePlus, Truck, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState, type ReactNode } from 'react';
@@ -12,6 +12,7 @@ const NAV = [
   { href: '/admin/shipments', label: 'Shipments', icon: Truck, exact: false },
   { href: '/admin/chat', label: 'Live chat', icon: MessageCircle, exact: false },
   { href: '/admin/book', label: 'Book shipment', icon: PackagePlus, exact: false },
+  { href: '/admin/templates', label: 'Email templates', icon: Mail, exact: false },
 ];
 
 interface AdminShellProps {
