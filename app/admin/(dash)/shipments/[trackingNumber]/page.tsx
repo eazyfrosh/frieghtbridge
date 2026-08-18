@@ -1,10 +1,14 @@
 import { ArrowLeft, Flag, MapPin, Navigation, Package, Truck } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { AddEventForm } from '@/components/admin/AddEventForm';
 import { NotifyPanel } from '@/components/admin/NotifyPanel';
+import { ShipmentEditor } from '@/components/admin/ShipmentEditor';
 import { adminStatusTone } from '@/lib/admin';
 import { emailConfigError, emailConfigured, listTemplates, sendsFor } from '@/lib/email';
-import { findShipment } from '@/lib/shipments';
+import { SHIPMENT_STATUSES, findShipment, shipmentsWritable } from '@/lib/shipments';
+import { TRACKING_STAGES, resolveShipment } from '@/lib/tracking';
+import { formatDateTime, timeAgo } from '@/lib/utils';
 
 interface PageProps {
   params: Promise<{ trackingNumber: string }>;
@@ -24,6 +28,12 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
     listTemplates(),
     sendsFor(shipment.trackingNumber),
   ]);
+
+  // The same resolution the public tracking page runs, so the operator's
+  // scan history is literally the customer's view rather than a second
+  // rendering of the raw record that can disagree with it.
+  const resolved = resolveShipment(shipment);
+  const writable = shipmentsWritable();
 
   const facts = [
     { icon: Flag, label: 'Origin', value: shipment.origin },
@@ -68,12 +78,30 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
         ))}
       </dl>
 
+      <ShipmentEditor
+        trackingNumber={shipment.trackingNumber}
+        shipment={{
+          status: shipment.status,
+          service: shipment.service,
+          origin: shipment.origin,
+          destination: shipment.destination,
+          currentLocation: shipment.currentLocation,
+          etaInDays: shipment.etaInDays,
+          pieces: shipment.pieces,
+          weight: shipment.weight,
+          dimensions: shipment.dimensions,
+          carrier: shipment.carrier,
+        }}
+        statuses={SHIPMENT_STATUSES}
+        writable={writable}
+      />
+
       <section className="mt-8 rounded-2xl border border-ink-200 bg-white p-5 sm:p-7">
         <h2 className="font-display text-lg font-semibold text-ink-900">Scan history</h2>
         <ol className="mt-5">
-          {shipment.events.map((event, index) => {
-            const happened = event.hoursAgo >= 0;
-            const isLast = index === shipment.events.length - 1;
+          {resolved.events.map((event, index) => {
+            const happened = event.state !== 'upcoming';
+            const isLast = index === resolved.events.length - 1;
             return (
               <li key={`${event.stage}-${index}`} className="relative flex gap-4 pb-6 last:pb-0">
                 {!isLast && (
@@ -92,7 +120,9 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
                   <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                     <p className={`font-medium ${happened ? 'text-ink-900' : 'text-ink-400'}`}>{event.title}</p>
                     <p className="font-mono text-xs text-ink-400">
-                      {happened ? `${event.hoursAgo}h ago` : 'Scheduled'}
+                      {event.timestamp
+                        ? `${formatDateTime(event.timestamp)} · ${timeAgo(event.timestamp)}`
+                        : 'Scheduled'}
                     </p>
                   </div>
                   <p className={`mt-0.5 text-sm ${happened ? 'text-ink-600' : 'text-ink-400'}`}>
@@ -106,6 +136,13 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
             );
           })}
         </ol>
+
+        <AddEventForm
+          trackingNumber={shipment.trackingNumber}
+          stages={[...TRACKING_STAGES]}
+          currentStatus={shipment.status}
+          writable={writable}
+        />
       </section>
 
       <NotifyPanel
@@ -116,9 +153,12 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
         configError={emailConfigError()}
       />
 
-      <p className="mt-6 text-xs text-ink-400">
-        Scans are read-only — they come from the demo dataset, and there is no backend writing to them.
-      </p>
+      {!writable && (
+        <p className="mt-6 text-xs text-ink-400">
+          Editing is unavailable because Firestore is not configured on this deployment — this shipment is
+          being served from the seed fixtures.
+        </p>
+      )}
     </div>
   );
 }

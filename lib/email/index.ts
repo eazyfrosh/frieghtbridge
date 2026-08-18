@@ -4,6 +4,7 @@ import { Timestamp } from 'firebase-admin/firestore';
 import { adminDb } from '../firebase/admin';
 import { SITE } from '../site';
 import { resolveShipment, type Shipment } from '../tracking';
+import { formatDate } from '../utils';
 import {
   DEFAULT_TEMPLATES,
   defaultTemplate,
@@ -167,7 +168,10 @@ export function shipmentVariables(shipment: Shipment, recipientName: string): Re
     carrier: shipment.carrier,
     pieces: String(shipment.pieces),
     weight: shipment.weight,
-    estimatedDelivery: resolved.estimatedDelivery,
+    // Formatted, not the raw ISO string. `resolveShipment` returns a timestamp
+    // for the UI to render, and dropping that straight into an email put
+    // "Estimated delivery: 2026-08-16T23:29:02.613Z" in front of a customer.
+    estimatedDelivery: formatDate(resolved.estimatedDelivery),
     trackingUrl: `${siteUrl()}/tracking?number=${encodeURIComponent(shipment.trackingNumber)}`,
     companyName: SITE.name,
   };

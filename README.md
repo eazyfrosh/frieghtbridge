@@ -185,9 +185,15 @@ returns null rather than pretending, and sign-in returns 503.
 ### What this is not
 
 A single operator account, created by hand in the console. There is no signup,
-no password reset flow, no MFA, no roles and no audit trail — and the ops views
-are read-only, since booking still writes nothing. Firebase gives you all of
-those; none are wired up here.
+no password reset flow, no MFA, no roles and no audit trail. Firebase gives you
+all of those; none are wired up here.
+
+Editing a shipment stores the whole record, so the first save on one of the
+seed fixtures materialises it into Firestore. `listShipments` therefore merges:
+Firestore wins for any tracking number it holds, and fixtures fill in the rest
+— otherwise saving one shipment would make the other three vanish from the
+list. To retire the demo data, delete the entries from
+`lib/fixtures/shipments.ts`.
 
 ## Prototype behaviour
 
@@ -199,6 +205,12 @@ This is a front-end prototype: there is no backend.
   consignment, and people paste it in and then ask why it is not their shipment.
   For testing, type one of: `FBX-28473921` (in transit), `FBX-90112845` (out for
   delivery), `FBX-55620174` (delivered), `FBX-73004466` (delayed).
+- **Shipments are editable.** An operator can correct a shipment's details and
+  record tracking events from `/admin/shipments/<number>`; both write to
+  Firestore and appear on the customer's tracking page immediately. Events
+  carry an absolute timestamp (`at`), unlike the fixtures' relative `hoursAgo`,
+  and the timeline sorts chronologically so a late-arriving depot scan lands in
+  the right place rather than on the end.
 - **Quote, contact and booking forms** validate fully client-side and show a
   success state; nothing is transmitted. The public `/quote` page is a short
   enquiry; the full booking form is staff-only, at `/admin/book`.

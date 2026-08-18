@@ -25,8 +25,17 @@ export interface TrackingEvent {
   stage: TrackingStage;
   title: string;
   location: string;
-  /** Hours before "now" that this event happened. Resolved at lookup time. */
+  /**
+   * Hours before "now" that this event happened, for the seed fixtures — they
+   * have to stay plausible whenever the demo is opened, so they are relative.
+   */
   hoursAgo: number;
+  /**
+   * Absolute time, for events an operator actually recorded. A real scan
+   * happened at a moment, not "six hours before whenever you load the page",
+   * so this wins over `hoursAgo` when present.
+   */
+  at?: string | null;
   description: string;
 }
 
@@ -79,26 +88,54 @@ export function isPlausibleTrackingNumber(input: string): boolean {
   return /^FBX-\d{6,10}$/.test(normalizeTrackingNumber(input));
 }
 
-function hoursFromNow(hours: number): string {
-  return new Date(Date.now() - hours * 3600_000).toISOString();
+/**
+ * When an event happened, or null if it has not happened yet.
+ *
+ * An explicit `at` wins over `hoursAgo`, and a future `at` counts as not yet
+ * reached — the same thing a negative `hoursAgo` has always meant, so the
+ * timeline renders a scheduled step identically whichever source it came from.
+ */
+function occurredAt(event: TrackingEvent, now: number): number | null {
+  if (event.at) {
+    const parsed = Date.parse(event.at);
+    if (Number.isNaN(parsed)) return null;
+    return parsed <= now ? parsed : null;
+  }
+  return event.hoursAgo >= 0 ? now - event.hoursAgo * 3600_000 : null;
 }
 
 function resolve(shipment: Shipment): TrackingResult {
-  const reachedIndexes = shipment.events
-    .map((event, index) => (event.hoursAgo >= 0 ? index : -1))
+  const now = Date.now();
+
+  // Chronological, because an operator can record a scan that happened before
+  // one already on the record — a late-arriving depot update, a correction.
+  // Fixtures are already in order, so this changes nothing for them.
+  const ordered = shipment.events
+    .map((event, index) => ({ event, index, time: occurredAt(event, now) }))
+    .sort((a, b) => {
+      if (a.time !== null && b.time !== null) return a.time - b.time;
+      // Anything that has happened comes before anything still scheduled;
+      // among equals, the original order is preserved.
+      if (a.time !== null) return -1;
+      if (b.time !== null) return 1;
+      return a.index - b.index;
+    });
+
+  const reachedIndexes = ordered
+    .map(({ time }, index) => (time !== null ? index : -1))
     .filter((index) => index >= 0);
   const currentIndex = reachedIndexes.length ? Math.max(...reachedIndexes) : 0;
 
-  const events: ResolvedEvent[] = shipment.events.map((event, index) => {
-    const { hoursAgo, ...rest } = event;
+  const events: ResolvedEvent[] = ordered.map(({ event, time }, index) => {
+    const { hoursAgo: _hoursAgo, at: _at, ...rest } = event;
     return {
       ...rest,
-      timestamp: hoursAgo >= 0 ? hoursFromNow(hoursAgo) : null,
+      timestamp: time === null ? null : new Date(time).toISOString(),
       state: index < currentIndex ? 'complete' : index === currentIndex ? 'current' : 'upcoming',
     };
   });
 
-  const lastReached = shipment.events[currentIndex];
+  const lastReachedTime = ordered[currentIndex]?.time ?? null;
 
   return {
     trackingNumber: shipment.trackingNumber,
@@ -112,9 +149,9 @@ function resolve(shipment: Shipment): TrackingResult {
     dimensions: shipment.dimensions,
     carrier: shipment.carrier,
     events,
-    estimatedDelivery: new Date(Date.now() + shipment.etaInDays * 86_400_000).toISOString(),
-    lastUpdate: hoursFromNow(Math.max(lastReached.hoursAgo, 0)),
-    progress: Math.round(((currentIndex + 1) / shipment.events.length) * 100),
+    estimatedDelivery: new Date(now + shipment.etaInDays * 86_400_000).toISOString(),
+    lastUpdate: new Date(lastReachedTime ?? now).toISOString(),
+    progress: Math.round(((currentIndex + 1) / Math.max(ordered.length, 1)) * 100),
   };
 }
 
