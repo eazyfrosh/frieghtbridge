@@ -2,7 +2,14 @@ import 'server-only';
 
 import { adminDb } from './firebase/admin';
 import { SEED_SHIPMENTS } from './fixtures/shipments';
-import { TRACKING_STAGES, type Shipment, type ShipmentStatus, type TrackingEvent, type TrackingStage } from './tracking';
+import {
+  TRACKING_STAGES,
+  type Shipment,
+  type ShipmentCustomer,
+  type ShipmentStatus,
+  type TrackingEvent,
+  type TrackingStage,
+} from './tracking';
 
 /**
  * Shipment reads, backed by Firestore.
@@ -50,6 +57,21 @@ function toShipment(data: FirebaseFirestore.DocumentData | undefined): Shipment 
     dimensions: typeof data.dimensions === 'string' ? data.dimensions : '',
     carrier: typeof data.carrier === 'string' ? data.carrier : '',
     events: Array.isArray(data.events) ? data.events : [],
+    customer: toCustomer(data.customer),
+    pickupDate: typeof data.pickupDate === 'string' ? data.pickupDate : null,
+  };
+}
+
+/** Absent on fixtures and on anything written before booking existed. */
+function toCustomer(value: unknown): ShipmentCustomer | null {
+  if (typeof value !== 'object' || value === null) return null;
+  const raw = value as Record<string, unknown>;
+  if (typeof raw.name !== 'string' || typeof raw.email !== 'string') return null;
+  return {
+    name: raw.name,
+    email: raw.email,
+    phone: typeof raw.phone === 'string' ? raw.phone : '',
+    company: typeof raw.company === 'string' ? raw.company : '',
   };
 }
 
@@ -322,4 +344,198 @@ export async function addTrackingEvent(
  */
 export function shipmentsWritable(): boolean {
   return adminDb() !== null;
+}
+
+// ---------------------------------------------------------------------------
+// Booking
+//
+// The last piece that only pretended to work: /admin/book waited 1.2 seconds
+// and invented a reference number. A booking now creates a real shipment, with
+// a tracking number the customer can actually use.
+
+export interface BookingInput {
+  fromCountry: string;
+  fromCity: string;
+  fromZip: string;
+  toCountry: string;
+  toCity: string;
+  toZip: string;
+  shipmentType: string;
+  weight: string;
+  dimensions: string;
+  pieces: number;
+  pickupDate: string;
+  deliveryPreference: string;
+  name: string;
+  businessName: string;
+  email: string;
+  phone: string;
+}
+
+const SHIPMENT_TYPES = ['Parcel', 'Pallet', 'LTL', 'FTL', 'Container'];
+const DELIVERY_PREFERENCES = ['Economy', 'Standard', 'Expedited', 'Same Day'];
+
+/** Transit days by service level, added to the days until collection. */
+const TRANSIT_DAYS: Record<string, number> = {
+  'Same Day': 0,
+  Expedited: 2,
+  Standard: 4,
+  Economy: 7,
+};
+
+export function validateBooking(input: unknown): { booking: BookingInput } | { error: string } {
+  if (typeof input !== 'object' || input === null) return { error: 'Malformed request.' };
+  const raw = input as Record<string, unknown>;
+
+  const required: Array<[keyof BookingInput, string]> = [
+    ['fromCountry', 'Origin country'],
+    ['fromCity', 'Pickup city'],
+    ['fromZip', 'Origin postal code'],
+    ['toCountry', 'Destination country'],
+    ['toCity', 'Delivery city'],
+    ['toZip', 'Destination postal code'],
+    ['weight', 'Weight'],
+    ['name', 'Contact name'],
+    ['phone', 'Phone number'],
+  ];
+
+  const values: Record<string, string> = {};
+  for (const [key, label] of required) {
+    const value = text(raw[key]);
+    if (!value) return { error: `${label} is required.` };
+    values[key] = value;
+  }
+
+  const shipmentType = SHIPMENT_TYPES.find((option) => option === raw.shipmentType);
+  if (!shipmentType) return { error: 'Choose a shipment type.' };
+
+  const deliveryPreference = DELIVERY_PREFERENCES.find((option) => option === raw.deliveryPreference);
+  if (!deliveryPreference) return { error: 'Choose a delivery preference.' };
+
+  const email = typeof raw.email === 'string' ? raw.email.trim().toLowerCase() : '';
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: 'Enter a valid email address.' };
+
+  const pieces = count(raw.pieces, 1, 100_000);
+  if (pieces === null) return { error: 'Pieces must be a whole number of at least 1.' };
+
+  const pickupDate = typeof raw.pickupDate === 'string' ? raw.pickupDate.trim() : '';
+  const pickupMs = Date.parse(`${pickupDate}T00:00:00Z`);
+  if (!pickupDate || Number.isNaN(pickupMs)) return { error: 'Choose a pickup date.' };
+  if (pickupMs > Date.now() + 366 * 86_400_000) return { error: 'That pickup date is too far ahead.' };
+
+  return {
+    booking: {
+      fromCountry: values.fromCountry,
+      fromCity: values.fromCity,
+      fromZip: values.fromZip,
+      toCountry: values.toCountry,
+      toCity: values.toCity,
+      toZip: values.toZip,
+      shipmentType,
+      weight: values.weight,
+      // The form does not require dimensions, and a booking should not be
+      // blocked on them — the operator can fill them in later.
+      dimensions: text(raw.dimensions) ?? 'Not specified',
+      pieces,
+      pickupDate,
+      deliveryPreference,
+      name: values.name,
+      businessName: text(raw.businessName) ?? '',
+      email,
+      phone: values.phone,
+    },
+  };
+}
+
+/** `FBX-` plus eight digits, matching what the public lookup accepts. */
+function candidateTrackingNumber(): string {
+  const digits = Math.floor(10_000_000 + Math.random() * 90_000_000);
+  return `FBX-${digits}`;
+}
+
+/** Whole days from today to `date`, floored at zero. */
+function daysUntil(date: string): number {
+  const target = Date.parse(`${date}T00:00:00Z`);
+  const today = new Date();
+  const startOfToday = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+  return Math.max(0, Math.round((target - startOfToday) / 86_400_000));
+}
+
+function shipmentFromBooking(trackingNumber: string, booking: BookingInput): Shipment {
+  const origin = `${booking.fromCity}, ${booking.fromCountry}`;
+  const destination = `${booking.toCity}, ${booking.toCountry}`;
+  const now = new Date().toISOString();
+
+  return {
+    trackingNumber,
+    status: 'Order Confirmed',
+    service: `${booking.shipmentType} · ${booking.deliveryPreference}`,
+    origin,
+    destination,
+    currentLocation: origin,
+    // Collection plus transit, rather than transit alone — a booking made for
+    // next week is not arriving in four days.
+    etaInDays: daysUntil(booking.pickupDate) + (TRANSIT_DAYS[booking.deliveryPreference] ?? 4),
+    pieces: booking.pieces,
+    weight: booking.weight,
+    dimensions: booking.dimensions,
+    carrier: 'FreightBridge',
+    pickupDate: booking.pickupDate,
+    customer: {
+      name: booking.name,
+      email: booking.email,
+      phone: booking.phone,
+      company: booking.businessName,
+    } satisfies ShipmentCustomer,
+    events: [
+      {
+        stage: 'Order Confirmed',
+        title: 'Booking confirmed',
+        location: origin,
+        description: `${booking.pieces} ${booking.shipmentType.toLowerCase()}${
+          booking.pieces === 1 ? '' : 's'
+        } booked for collection on ${booking.pickupDate}. ${booking.deliveryPreference} service to ${destination}.`,
+        at: now,
+        hoursAgo: 0,
+      },
+    ],
+  };
+}
+
+/**
+ * Create a shipment from a booking.
+ *
+ * The tracking number is random rather than sequential, and written with
+ * `create()` so a collision fails instead of overwriting somebody else's
+ * consignment. Eight digits makes a clash vanishingly unlikely, but "unlikely"
+ * is not a guarantee when the failure mode is losing a shipment, so it retries.
+ */
+export async function createShipmentFromBooking(
+  booking: BookingInput,
+): Promise<{ shipment: Shipment } | { error: string }> {
+  const db = adminDb();
+  if (!db) return { error: 'Firestore is not configured on this deployment.' };
+
+  const takenByFixture = new Set(SEED_SHIPMENTS.map((s) => s.trackingNumber.toUpperCase()));
+
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    const trackingNumber = candidateTrackingNumber();
+    if (takenByFixture.has(trackingNumber)) continue;
+
+    const shipment = shipmentFromBooking(trackingNumber, booking);
+    try {
+      await db.collection(COLLECTION).doc(trackingNumber).create(shipment);
+      return { shipment };
+    } catch (error) {
+      // ALREADY_EXISTS is the only error worth retrying; anything else is a
+      // real fault and should surface rather than burn four more attempts.
+      const code = typeof error === 'object' && error && 'code' in error ? Number(error.code) : null;
+      if (code !== 6) {
+        console.error('[shipments] booking write failed:', error);
+        return { error: 'Could not save the booking.' };
+      }
+    }
+  }
+
+  return { error: 'Could not allocate a tracking number. Please try again.' };
 }

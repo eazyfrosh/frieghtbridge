@@ -37,6 +37,8 @@ interface NotifyPanelProps {
   /** False when RESEND_API_KEY / EMAIL_FROM are missing on this deployment. */
   configured: boolean;
   configError: string | null;
+  /** From the booking, when there was one. Both fields stay editable. */
+  customer?: { name: string; email: string } | null;
 }
 
 export function NotifyPanel({
@@ -45,10 +47,14 @@ export function NotifyPanel({
   history: initialHistory,
   configured,
   configError,
+  customer,
 }: NotifyPanelProps) {
   const [templateId, setTemplateId] = useState(templates[0]?.id ?? '');
-  const [to, setTo] = useState('');
-  const [recipientName, setRecipientName] = useState('');
+  // Prefilled from the booking. Retyping an address that is already on the
+  // record is how the wrong customer gets an email about someone else's
+  // shipment.
+  const [to, setTo] = useState(customer?.email ?? '');
+  const [recipientName, setRecipientName] = useState(customer?.name ?? '');
   const [preview, setPreview] = useState<{ subject: string; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const [sending, setSending] = useState(false);

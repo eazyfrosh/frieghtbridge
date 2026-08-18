@@ -1,10 +1,10 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, CheckCircle2, Loader2, MapPin, PackageCheck, ShieldCheck, Truck } from 'lucide-react';
+import { AlertCircle, ArrowRight, CheckCircle2, Loader2, MapPin, PackageCheck, ShieldCheck, Truck } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { EASE_PREMIUM } from '@/lib/motion';
-import { cn, sleep } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { Button } from '../ui/Button';
 import { SegmentedField, SelectField, TextField } from '../ui/Field';
 import { useReducedMotion } from '@/lib/use-reduced-motion';
@@ -45,6 +45,7 @@ interface FormState {
   toZip: string;
   shipmentType: string;
   weight: string;
+  pieces: string;
   dimensions: string;
   pickupDate: string;
   deliveryPreference: string;
@@ -65,6 +66,7 @@ const INITIAL: FormState = {
   toZip: '',
   shipmentType: 'Pallet',
   weight: '',
+  pieces: '1',
   dimensions: '',
   pickupDate: '',
   deliveryPreference: 'Standard',
@@ -94,6 +96,13 @@ function validate(values: FormState): Errors {
     errors.weight = 'Enter an approximate weight.';
   } else if (!/\d/.test(values.weight)) {
     errors.weight = 'Weight should include a number, e.g. 1200 lb.';
+  }
+
+  // The shipment record carries a piece count and the tracking page shows it,
+  // so the booking is where it should be captured rather than defaulted to 1.
+  const pieces = Number(values.pieces);
+  if (!values.pieces.trim() || !Number.isFinite(pieces) || pieces < 1) {
+    errors.pieces = 'Enter how many pieces, at least 1.';
   }
 
   if (!values.pickupDate) {
@@ -133,6 +142,7 @@ export function BookingForm({ className }: { className?: string }) {
   const [submitted, setSubmitted] = useState(false);
   const [pending, setPending] = useState(false);
   const [success, setSuccess] = useState<{ reference: string } | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [minDate, setMinDate] = useState('');
   const formRef = useRef<HTMLFormElement>(null);
   const reduced = useReducedMotion();
@@ -170,11 +180,33 @@ export function BookingForm({ className }: { className?: string }) {
     }
 
     setPending(true);
-    // Prototype only — no backend. Simulates the round trip so the button's
-    // pending state is exercised exactly as it would be in production.
-    await sleep(1200);
-    setPending(false);
-    setSuccess({ reference: `FBX-${Math.floor(100000 + Math.random() * 899999)}` });
+    setSubmitError(null);
+
+    try {
+      const response = await fetch('/api/admin/shipments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...values, pieces: Number(values.pieces) }),
+      });
+      const data = (await response.json().catch(() => ({}))) as {
+        trackingNumber?: string;
+        error?: string;
+      };
+
+      if (!response.ok || !data.trackingNumber) {
+        setSubmitError(data.error ?? 'The booking was not saved. Please try again.');
+        return;
+      }
+
+      // The tracking number comes from the server, which allocated it. Making
+      // one up here is what the old prototype did, and it meant the reference
+      // read back to the customer matched nothing.
+      setSuccess({ reference: data.trackingNumber });
+    } catch {
+      setSubmitError('Could not reach the server. Check your connection and try again.');
+    } finally {
+      setPending(false);
+    }
   }
 
   function reset() {
@@ -182,6 +214,7 @@ export function BookingForm({ className }: { className?: string }) {
     setErrors({});
     setSubmitted(false);
     setSuccess(null);
+    setSubmitError(null);
   }
 
   return (
@@ -210,8 +243,8 @@ export function BookingForm({ className }: { className?: string }) {
               Shipment booked.
             </h3>
             <p className="mx-auto mt-3 max-w-md text-[1rem] leading-relaxed text-ink-500">
-              The booking is on the board and the origin terminal has been notified. Give the reference to the
-              customer so they can track it.
+              The shipment is saved and the tracking number works straight away. Give it to the customer, or
+              open the shipment to record a scan or send them a confirmation.
             </p>
 
             <dl className="mx-auto mt-8 grid max-w-lg gap-px overflow-hidden rounded-2xl bg-ink-100 text-left sm:grid-cols-3">
@@ -237,8 +270,8 @@ export function BookingForm({ className }: { className?: string }) {
               <Button onClick={reset} variant="secondary" size="lg">
                 Book another
               </Button>
-              <Button href="/admin/shipments" size="lg">
-                Back to shipments
+              <Button href={`/admin/shipments/${encodeURIComponent(success.reference)}`} size="lg">
+                Open shipment
                 <ArrowRight className="h-[1.05rem] w-[1.05rem]" />
               </Button>
             </div>
@@ -376,6 +409,18 @@ export function BookingForm({ className }: { className?: string }) {
                   error={errors.weight}
                 />
                 <TextField
+                  id="pieces"
+                  label="Pieces"
+                  type="number"
+                  min={1}
+                  required
+                  placeholder="2"
+                  hint="How many units"
+                  value={values.pieces}
+                  onChange={(event) => update('pieces', event.target.value)}
+                  error={errors.pieces}
+                />
+                <TextField
                   id="dimensions"
                   label="Dimensions"
                   placeholder="48 × 40 × 52 in"
@@ -458,19 +503,29 @@ export function BookingForm({ className }: { className?: string }) {
               </div>
             </div>
 
+            {submitError && (
+              <p
+                role="alert"
+                className="mt-8 flex items-start gap-2 rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-700 ring-1 ring-red-200"
+              >
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+                {submitError}
+              </p>
+            )}
+
             <div className="mt-8 flex flex-col items-start gap-4 border-t border-ink-100 pt-8 sm:flex-row sm:items-center sm:justify-between">
               <p className="max-w-sm text-sm text-ink-400">
-                We use these details only to prepare your quote. No spam, and no sharing with third parties.
+                This creates the shipment and allocates a tracking number the customer can use immediately.
               </p>
               <Button type="submit" size="lg" disabled={pending} className="w-full sm:w-auto">
                 {pending ? (
                   <>
                     <Loader2 className="h-[1.05rem] w-[1.05rem] animate-spin" aria-hidden="true" />
-                    Sending request…
+                    Booking…
                   </>
                 ) : (
                   <>
-                    Get My Quote
+                    Book shipment
                     <ArrowRight className="h-[1.05rem] w-[1.05rem] transition-transform duration-300 group-hover:translate-x-1" />
                   </>
                 )}

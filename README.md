@@ -188,6 +188,17 @@ A single operator account, created by hand in the console. There is no signup,
 no password reset flow, no MFA, no roles and no audit trail. Firebase gives you
 all of those; none are wired up here.
 
+A booking stores the customer's name, email, phone and company on the shipment,
+and the notify panel prefills from them. Those fields are excluded from
+`TrackingResult` by type, not just by omission in the mapping code — a tracking
+number is the only credential the public lookup asks for, so anyone who guesses
+one must not thereby learn who the shipment belongs to. A future `...shipment`
+spread into the public response fails to compile.
+
+Tracking numbers are random eight-digit `FBX-` references written with
+Firestore's `create()`, so a collision fails rather than overwriting an
+existing consignment; the allocator retries.
+
 Editing a shipment stores the whole record, so the first save on one of the
 seed fixtures materialises it into Firestore. `listShipments` therefore merges:
 Firestore wins for any tracking number it holds, and fixtures fill in the rest
@@ -211,9 +222,12 @@ This is a front-end prototype: there is no backend.
   carry an absolute timestamp (`at`), unlike the fixtures' relative `hoursAgo`,
   and the timeline sorts chronologically so a late-arriving depot scan lands in
   the right place rather than on the end.
-- **Quote, contact and booking forms** validate fully client-side and show a
-  success state; nothing is transmitted. The public `/quote` page is a short
-  enquiry; the full booking form is staff-only, at `/admin/book`.
+- **Booking is real.** `/admin/book` creates a shipment in Firestore and
+  allocates an `FBX-` tracking number that works on the public tracking page
+  immediately. It is staff-only; the public `/quote` page remains a short
+  enquiry that transmits nothing.
+- **Quote and contact forms** validate fully client-side and show a success
+  state; nothing is transmitted.
 - **Admin sign-in and shipment storage are real.** Authentication is Firebase
   Auth; shipments are read from Cloud Firestore through the Admin SDK. Without
   Firebase configured, shipment reads fall back to the seed fixtures — sign-in

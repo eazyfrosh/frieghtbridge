@@ -39,9 +39,27 @@ export interface TrackingEvent {
   description: string;
 }
 
+/**
+ * Who the shipment is for.
+ *
+ * Optional, because the seed fixtures predate booking and a shipment read back
+ * from an older document will not have it. Never sent to the public tracking
+ * endpoint — `TrackingResult` omits it, so a tracking number cannot be used to
+ * look up a customer's name, email and phone number.
+ */
+export interface ShipmentCustomer {
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+}
+
 export interface Shipment {
   trackingNumber: string;
   status: ShipmentStatus;
+  customer?: ShipmentCustomer | null;
+  /** ISO date (no time) the freight is due to be collected. */
+  pickupDate?: string | null;
   service: string;
   origin: string;
   destination: string;
@@ -61,7 +79,17 @@ export interface ResolvedEvent extends Omit<TrackingEvent, 'hoursAgo'> {
   state: 'complete' | 'current' | 'upcoming';
 }
 
-export interface TrackingResult extends Omit<Shipment, 'events' | 'etaInDays'> {
+/**
+ * What the public tracking endpoint returns.
+ *
+ * `customer` and `pickupDate` are omitted deliberately, not incidentally. A
+ * tracking number is the only credential for `/api/tracking`, and anyone who
+ * guesses one must not thereby learn a customer's name, email and phone
+ * number. Excluding them from the type means a future `...shipment` spread
+ * fails to compile rather than quietly leaking.
+ */
+export interface TrackingResult
+  extends Omit<Shipment, 'events' | 'etaInDays' | 'customer' | 'pickupDate'> {
   events: ResolvedEvent[];
   estimatedDelivery: string;
   lastUpdate: string;

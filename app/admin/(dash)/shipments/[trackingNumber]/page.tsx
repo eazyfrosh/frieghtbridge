@@ -78,6 +78,49 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
         ))}
       </dl>
 
+      {shipment.customer && (
+        <section className="mt-8 rounded-2xl border border-ink-200 bg-white p-5 sm:p-6">
+          <h2 className="font-display text-lg font-semibold text-ink-900">Customer</h2>
+          <dl className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div>
+              <dt className="text-xs font-semibold uppercase tracking-[0.1em] text-ink-500">Contact</dt>
+              <dd className="mt-1 text-[0.95rem] font-medium text-ink-900">{shipment.customer.name}</dd>
+            </div>
+            {shipment.customer.company && (
+              <div>
+                <dt className="text-xs font-semibold uppercase tracking-[0.1em] text-ink-500">Company</dt>
+                <dd className="mt-1 text-[0.95rem] font-medium text-ink-900">{shipment.customer.company}</dd>
+              </div>
+            )}
+            <div>
+              <dt className="text-xs font-semibold uppercase tracking-[0.1em] text-ink-500">Email</dt>
+              <dd className="mt-1 text-[0.95rem]">
+                <a
+                  href={`mailto:${shipment.customer.email}`}
+                  className="font-medium text-brand-700 underline decoration-brand-500/40 underline-offset-2"
+                >
+                  {shipment.customer.email}
+                </a>
+              </dd>
+            </div>
+            <div>
+              <dt className="text-xs font-semibold uppercase tracking-[0.1em] text-ink-500">Phone</dt>
+              <dd className="mt-1 text-[0.95rem]">
+                <a href={`tel:${shipment.customer.phone}`} className="font-medium text-ink-900">
+                  {shipment.customer.phone}
+                </a>
+              </dd>
+            </div>
+            {shipment.pickupDate && (
+              <div>
+                <dt className="text-xs font-semibold uppercase tracking-[0.1em] text-ink-500">Pickup date</dt>
+                <dd className="mt-1 text-[0.95rem] font-medium text-ink-900">{shipment.pickupDate}</dd>
+              </div>
+            )}
+          </dl>
+        </section>
+      )}
+
       <ShipmentEditor
         trackingNumber={shipment.trackingNumber}
         shipment={{
@@ -151,6 +194,7 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
         history={history}
         configured={emailConfigured()}
         configError={emailConfigError()}
+        customer={shipment.customer ?? null}
       />
 
       {!writable && (
