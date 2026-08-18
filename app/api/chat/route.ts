@@ -6,6 +6,7 @@ import {
   conversationForVisitor,
   decodeChatCookie,
   encodeChatCookie,
+  endConversationAsVisitor,
   messagesAfter,
   startConversation,
   validEmail,
@@ -114,9 +115,34 @@ export async function POST(request: Request) {
   }
 }
 
-/** Leave the conversation on this device: clears the cookie, keeps the record. */
+/**
+ * End the chat.
+ *
+ * Two things happen, and both matter. The conversation is marked closed so the
+ * operator's inbox stops showing it as live and can see the visitor ended it —
+ * and the cookie is cleared, so this browser can no longer read the thread.
+ * The record itself is kept: the operator needs the history, and a visitor who
+ * comes back simply starts a new conversation.
+ *
+ * The cookie is cleared even when closing the conversation fails. Someone
+ * ending a chat on a shared computer is asking for it off their screen, and a
+ * Firestore hiccup is no reason to leave it readable.
+ */
 export async function DELETE() {
   const response = NextResponse.json({ ok: true });
+
+  try {
+    const identity = decodeChatCookie((await cookies()).get(CHAT_COOKIE)?.value);
+    if (identity) {
+      // Verified before closing, so a guessed conversation id in a forged
+      // cookie cannot be used to shut someone else's chat.
+      const conversation = await conversationForVisitor(identity.id, identity.secret);
+      if (conversation) await endConversationAsVisitor(conversation.id);
+    }
+  } catch (error) {
+    console.error('[chat] end session failed:', error);
+  }
+
   response.cookies.set(CHAT_COOKIE, '', { ...chatCookieOptions(), maxAge: 0 });
   return response;
 }

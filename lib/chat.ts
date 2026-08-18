@@ -75,6 +75,8 @@ export interface ChatConversation {
   unreadForAdmin: number;
   /** The page the visitor was on when they opened the chat. */
   page: string;
+  /** Who closed it, when it is closed. Null while open. */
+  endedBy: ChatSender | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -154,6 +156,7 @@ function toConversation(id: string, data: FirebaseFirestore.DocumentData): ChatC
     lastSender: data.lastSender === 'agent' ? 'agent' : 'visitor',
     unreadForAdmin: typeof data.unreadForAdmin === 'number' ? data.unreadForAdmin : 0,
     page: typeof data.page === 'string' ? data.page : '/',
+    endedBy: data.endedBy === 'visitor' || data.endedBy === 'agent' ? data.endedBy : null,
   };
 }
 
@@ -433,7 +436,42 @@ export async function setConversationStatus(id: string, status: ChatStatus): Pro
   const db = adminDb();
   if (!db) return false;
   try {
-    await db.collection(CHATS).doc(id).update({ status });
+    // Reopening clears the record of who ended it — otherwise a conversation
+    // that gets picked back up still claims to have been ended.
+    await db
+      .collection(CHATS)
+      .doc(id)
+      .update(
+        status === 'closed'
+          ? { status, endedBy: 'agent' satisfies ChatSender, endedAt: Timestamp.now() }
+          : { status, endedBy: null, endedAt: null },
+      );
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * The visitor ending their own chat.
+ *
+ * Distinct from the operator closing it: the operator is filing a resolved
+ * conversation, while the visitor is saying they are done. Recording which of
+ * the two happened is what lets the inbox show it honestly.
+ *
+ * The record is kept — the operator still needs the history — but the caller
+ * clears the visitor's cookie, so this browser loses access to it. That is the
+ * point on a shared or public computer.
+ */
+export async function endConversationAsVisitor(id: string): Promise<boolean> {
+  const db = adminDb();
+  if (!db) return false;
+  try {
+    await db.collection(CHATS).doc(id).update({
+      status: 'closed' satisfies ChatStatus,
+      endedBy: 'visitor' satisfies ChatSender,
+      endedAt: Timestamp.now(),
+    });
     return true;
   } catch {
     return false;

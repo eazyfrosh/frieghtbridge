@@ -3,7 +3,7 @@ import { CircleDashed, Clock4, Headphones, PackageSearch, ShieldCheck, Truck } f
 import { PageHero } from '@/components/PageHero';
 import { TrackingWidget } from '@/components/TrackingWidget';
 import { Button } from '@/components/ui/Button';
-import { Reveal, StaggerGroup, RevealItem } from '@/components/ui/Reveal';
+import { StaggerGroup, RevealItem } from '@/components/ui/Reveal';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 
 export const metadata: Metadata = {
@@ -115,13 +115,6 @@ export default async function TrackingPage({ searchParams }: TrackingPageProps) 
             </RevealItem>
           </StaggerGroup>
 
-          <Reveal delay={0.1}>
-            <p className="mt-10 rounded-2xl border border-dashed border-ink-200 bg-ink-50/60 p-5 text-sm text-ink-500">
-              <span className="font-semibold text-ink-700">Prototype note:</span> tracking runs against a demo dataset
-              in this build. Try FBX-28473921, FBX-90112845, FBX-55620174, or FBX-73004466 to see in-transit,
-              out-for-delivery, delivered, and delayed shipments.
-            </p>
-          </Reveal>
         </div>
       </section>
     </>

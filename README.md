@@ -194,8 +194,11 @@ those; none are wired up here.
 This is a front-end prototype: there is no backend.
 
 - **Tracking** calls `GET /api/tracking`, which reads Firestore server-side.
-  Demo numbers: `FBX-28473921` (in transit), `FBX-90112845` (out for delivery),
-  `FBX-55620174` (delivered), `FBX-73004466` (delayed).
+  The seed fixtures cover the four states, and they are no longer advertised on
+  the page — a specimen number on a live tracking form reads as a real
+  consignment, and people paste it in and then ask why it is not their shipment.
+  For testing, type one of: `FBX-28473921` (in transit), `FBX-90112845` (out for
+  delivery), `FBX-55620174` (delivered), `FBX-73004466` (delayed).
 - **Quote, contact and booking forms** validate fully client-side and show a
   success state; nothing is transmitted. The public `/quote` page is a short
   enquiry; the full booking form is staff-only, at `/admin/book`.
@@ -234,6 +237,14 @@ newest message match its own cursor and re-send forever.
 Limits: 2000 characters a message, 20 messages a minute per conversation, 5 new
 conversations an hour per IP. The counters live in Firestore — an in-process
 counter on a serverless host resets constantly and limits nothing.
+
+**Ending a chat** is the visitor's to do, from the panel header. It closes the
+conversation for the operator — recorded as ended by the visitor, distinct from
+the operator filing it — and clears the cookie, so that browser can no longer
+read the thread. The record is kept, because the operator still needs the
+history. The cookie is cleared even if the close write fails: someone ending a
+chat on a shared computer is asking for it off their screen, and a Firestore
+hiccup is no reason to leave it readable.
 
 Not built: email notification when a message arrives (an operator has to have
 the page open), typing indicators, read receipts, file attachments, and any

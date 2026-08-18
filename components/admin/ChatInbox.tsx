@@ -27,6 +27,7 @@ interface Conversation {
   lastSender: 'visitor' | 'agent';
   unreadForAdmin: number;
   page: string;
+  endedBy: 'visitor' | 'agent' | null;
 }
 
 interface ChatMessage {
@@ -276,7 +277,7 @@ export function ChatInbox() {
                   </p>
                   {item.status === 'closed' && (
                     <span className="mt-1 inline-block rounded bg-ink-100 px-1.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-ink-500">
-                      Closed
+                      {item.endedBy === 'visitor' ? 'Ended by visitor' : 'Closed'}
                     </span>
                   )}
                 </button>
@@ -305,6 +306,14 @@ export function ChatInbox() {
                   </a>
                   <span className="mx-1.5">·</span>
                   started on {selected.page}
+                  {selected.status === 'closed' && (
+                    <>
+                      <span className="mx-1.5">·</span>
+                      <span className="font-medium text-ink-600">
+                        {selected.endedBy === 'visitor' ? 'ended by the visitor' : 'closed'}
+                      </span>
+                    </>
+                  )}
                 </p>
               </div>
               <button

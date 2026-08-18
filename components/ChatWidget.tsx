@@ -1,6 +1,6 @@
 'use client';
 
-import { MessageCircle, Send, X } from 'lucide-react';
+import { CheckCircle2, LogOut, MessageCircle, Send, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { TextAreaField, TextField } from '@/components/ui/Field';
@@ -72,6 +72,9 @@ export function ChatWidget() {
   const [email, setEmail] = useState('');
   const [draft, setDraft] = useState('');
   const [busy, setBusy] = useState(false);
+  /** Ending a chat destroys this browser's access to it, so it asks first. */
+  const [confirmEnd, setConfirmEnd] = useState(false);
+  const [ended, setEnded] = useState(false);
 
   // Refs the poller reads, so it never closes over stale state.
   const cursorRef = useRef<number | null>(null);
@@ -198,6 +201,7 @@ export function ChatWidget() {
     event.preventDefault();
     setBusy(true);
     setError(null);
+    setEnded(false);
 
     try {
       const response = await fetch('/api/chat', {
@@ -228,6 +232,34 @@ export function ChatWidget() {
   function send(event: FormEvent) {
     event.preventDefault();
     void submitMessage();
+  }
+
+  /**
+   * End the chat: close it for the operator and drop this browser's access.
+   *
+   * Local state is reset regardless of what the server said. If the request
+   * failed the visitor still asked for the conversation off their screen, and
+   * leaving it on display because a write did not land is the wrong way to
+   * fail — particularly on a shared computer, which is who this is for.
+   */
+  async function endChat() {
+    setBusy(true);
+    try {
+      await fetch('/api/chat', { method: 'DELETE' });
+    } catch {
+      // Deliberately ignored — see above.
+    } finally {
+      setConversation(null);
+      setMessages([]);
+      setDraft('');
+      setUnseen(0);
+      setError(null);
+      setConfirmEnd(false);
+      setEnded(true);
+      cursorRef.current = null;
+      seenIdsRef.current = new Set();
+      setBusy(false);
+    }
   }
 
   async function submitMessage() {
@@ -320,15 +352,49 @@ export function ChatWidget() {
                   : 'We usually reply within a few hours.'}
               </p>
             </div>
+            {conversation && (
+              <button
+                type="button"
+                onClick={() => setConfirmEnd(true)}
+                className="mt-0.5 shrink-0 rounded-lg px-2 py-1 text-xs font-semibold text-ink-300 transition-colors hover:bg-ink-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+              >
+                End chat
+              </button>
+            )}
             <button
               type="button"
               onClick={() => setOpen(false)}
-              aria-label="Close chat"
+              aria-label="Minimise chat"
               className="-mr-1 rounded-lg p-1.5 text-ink-400 transition-colors hover:bg-ink-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
           </div>
+
+          {confirmEnd && (
+            <div className="border-b border-amber-200 bg-amber-50 px-4 py-3">
+              <p className="text-[0.85rem] text-amber-900">
+                End this chat? You won&rsquo;t be able to see these messages on this device afterwards.
+              </p>
+              <div className="mt-2.5 flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => void endChat()}
+                  disabled={busy}
+                  className="rounded-lg bg-ink-900 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-ink-800 disabled:opacity-60"
+                >
+                  {busy ? 'Ending…' : 'Yes, end chat'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setConfirmEnd(false)}
+                  className="rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-xs font-semibold text-amber-900 transition-colors hover:bg-amber-100"
+                >
+                  Keep chatting
+                </button>
+              </div>
+            </div>
+          )}
 
           {conversation ? (
             <>
@@ -415,6 +481,16 @@ export function ChatWidget() {
             </>
           ) : (
             <form ref={startFormRef} onSubmit={start} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
+              {ended && (
+                <p
+                  role="status"
+                  className="flex items-start gap-2 rounded-xl bg-green-50 px-3 py-2.5 text-[0.85rem] text-green-800"
+                >
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+                  Chat ended. Start a new one below whenever you need us.
+                </p>
+              )}
+
               <p className="text-[0.88rem] leading-relaxed text-ink-600">
                 Tell us how to reach you and we&rsquo;ll pick this up — by chat if you stay, by email if
                 you don&rsquo;t.

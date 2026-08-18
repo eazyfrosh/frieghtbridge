@@ -21,7 +21,6 @@ import Link from 'next/link';
 import { useCallback, useEffect, useId, useState } from 'react';
 import { EASE_PREMIUM } from '@/lib/motion';
 import {
-  DEMO_TRACKING_NUMBERS,
   lookupShipment,
   statusTone,
   type LookupOutcome,
@@ -39,18 +38,21 @@ interface TrackingWidgetProps {
   className?: string;
 }
 
+// Describe the format rather than print a specimen number. A realistic-looking
+// example on a live tracking page reads as a real consignment, and people paste
+// it in and then ask why it does not match their shipment.
 const ERROR_COPY: Record<'empty' | 'malformed' | 'not-found', { title: string; body: string }> = {
   empty: {
     title: 'Enter a tracking number',
-    body: 'Tracking numbers look like FBX-28473921 and appear on your booking confirmation.',
+    body: 'Your tracking number is on your booking confirmation and every document we send for the shipment.',
   },
   malformed: {
     title: "That doesn't look like a FreightBridge tracking number",
-    body: 'Use the format FBX followed by 6–10 digits, for example FBX-28473921.',
+    body: 'Use the format FBX followed by 6 to 10 digits.',
   },
   'not-found': {
     title: 'No shipment found',
-    body: 'Double-check the number, or try one of the demo shipments below.',
+    body: 'Double-check the number against your booking confirmation. If it looks right, our team can trace it for you.',
   },
 };
 
@@ -171,21 +173,10 @@ export function TrackingWidget({ variant = 'page', initialQuery = '', className 
           </button>
         </div>
 
-        <p id={`${inputId}-help`} className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-400">
-          <span>Example:</span>
-          {DEMO_TRACKING_NUMBERS.map((number) => (
-            <button
-              key={number}
-              type="button"
-              onClick={() => {
-                setQuery(number);
-                void runLookup(number);
-              }}
-              className="rounded-md font-mono text-[0.82rem] font-semibold text-brand-700 underline decoration-brand-500/40 decoration-2 underline-offset-4 transition-colors hover:text-brand-800 hover:decoration-brand-600"
-            >
-              {number}
-            </button>
-          ))}
+        {/* Kept as the input's description so screen readers still announce the
+            expected format — it just no longer offers a number to click. */}
+        <p id={`${inputId}-help`} className="mt-3 text-sm text-ink-400">
+          Your tracking number is on your booking confirmation.
         </p>
       </form>
 
@@ -220,14 +211,6 @@ export function TrackingWidget({ variant = 'page', initialQuery = '', className 
                   <p className="font-display text-[1.05rem] font-semibold text-ink-900">{ERROR_COPY[error].title}</p>
                   <p className="mt-1 text-[0.95rem] text-ink-600">{ERROR_COPY[error].body}</p>
                   <div className="mt-4 flex flex-wrap gap-2">
-                    <button
-                      type="button"
-                      onClick={() => void runLookup(DEMO_TRACKING_NUMBERS[0])}
-                      className="inline-flex items-center gap-1.5 rounded-full bg-ink-900 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-ink-800"
-                    >
-                      <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
-                      Try a demo shipment
-                    </button>
                     <Link
                       href="/contact"
                       className="inline-flex items-center gap-1.5 rounded-full border border-ink-200 bg-white px-4 py-2 text-sm font-semibold text-ink-700 transition-colors hover:bg-ink-50"
