@@ -76,7 +76,7 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="flex flex-col items-start justify-between gap-6 border-t border-white/25 py-7 sm:flex-row sm:items-center">
-          <p className="text-sm text-white">© 2026 FreightBridge. All rights reserved.</p>
+          <p className="text-sm text-white">© 2023 FreightBridge. All rights reserved.</p>
 
           <div className="flex items-center gap-4">
             <p className="hidden text-sm text-white sm:block">{SITE.tagline}</p>
