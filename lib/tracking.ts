@@ -1,3 +1,4 @@
+import { detectCarriers, isFreightBridgeNumber, normalizeCarrierNumber } from './carriers';
 import { SEED_SHIPMENTS } from './fixtures/shipments';
 
 /**
@@ -183,8 +184,39 @@ function resolve(shipment: Shipment): TrackingResult {
   };
 }
 
+export interface CarrierOutcomeSummary {
+  id: string;
+  name: string;
+  initials: string;
+  trackingUrl: string;
+  verified: boolean;
+}
+
+export interface CarrierOutcomeEvent {
+  status: string;
+  location: string;
+  timestamp: string;
+  description: string;
+}
+
+/**
+ * What a lookup can come back as.
+ *
+ * `carrier` is the case the site gained when tracking stopped being only about
+ * our own consignments: the number is recognisably FedEx, UPS, USPS, DHL and
+ * so on, and the answer is that carrier plus a way through to it.
+ */
 export type LookupOutcome =
   | { ok: true; shipment: TrackingResult }
+  | {
+      ok: 'carrier';
+      query: string;
+      carrier: CarrierOutcomeSummary;
+      alternatives: CarrierOutcomeSummary[];
+      events: CarrierOutcomeEvent[] | null;
+      status: string | null;
+      note: string | null;
+    }
   | { ok: false; reason: 'empty' | 'malformed' | 'not-found'; query: string };
 
 /**
@@ -196,12 +228,16 @@ export function resolveShipment(shipment: Shipment): TrackingResult {
 }
 
 /**
- * Client-side lookup.
+ * Client-side lookup, for our numbers and other carriers' alike.
  *
  * Shipment data lives in Firestore and is only reachable through the Admin
  * SDK, so this cannot query directly — it calls the server, which owns the
- * read. Validation still happens here first so an obviously malformed number
- * never costs a round trip.
+ * read and the carrier detection.
+ *
+ * The only thing rejected without a round trip is a string that no carrier in
+ * the registry could have issued. Validating against our own `FBX-` format
+ * alone would now turn away every real FedEx and UPS number typed into the
+ * box.
  */
 export async function lookupShipment(rawInput: string): Promise<LookupOutcome> {
   const query = rawInput.trim();
@@ -210,25 +246,47 @@ export async function lookupShipment(rawInput: string): Promise<LookupOutcome> {
     return { ok: false, reason: 'empty', query };
   }
 
-  if (!isPlausibleTrackingNumber(query)) {
+  if (detectCarriers(query).length === 0) {
     return { ok: false, reason: 'malformed', query };
   }
 
-  const normalized = normalizeTrackingNumber(query);
+  // Our own numbers are normalised to `FBX-…`; anything else is passed through
+  // as the carrier issued it, minus the spacing people paste from labels.
+  const normalized = isFreightBridgeNumber(query)
+    ? normalizeTrackingNumber(query)
+    : normalizeCarrierNumber(query);
 
   try {
     const response = await fetch(`/api/tracking?number=${encodeURIComponent(normalized)}`, {
       headers: { Accept: 'application/json' },
     });
 
-    if (response.status === 404) {
-      return { ok: false, reason: 'not-found', query: normalized };
-    }
     if (!response.ok) {
       return { ok: false, reason: 'not-found', query: normalized };
     }
 
-    const body = (await response.json()) as { shipment?: TrackingResult };
+    const body = (await response.json()) as {
+      kind?: string;
+      shipment?: TrackingResult;
+      carrier?: CarrierOutcomeSummary;
+      alternatives?: CarrierOutcomeSummary[];
+      events?: CarrierOutcomeEvent[] | null;
+      status?: string | null;
+      note?: string | null;
+    };
+
+    if (body.kind === 'carrier' && body.carrier) {
+      return {
+        ok: 'carrier',
+        query: normalized,
+        carrier: body.carrier,
+        alternatives: body.alternatives ?? [],
+        events: body.events ?? null,
+        status: body.status ?? null,
+        note: body.note ?? null,
+      };
+    }
+
     if (!body.shipment) {
       return { ok: false, reason: 'not-found', query: normalized };
     }

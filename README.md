@@ -210,7 +210,9 @@ list. To retire the demo data, delete the entries from
 
 This is a front-end prototype: there is no backend.
 
-- **Tracking** calls `GET /api/tracking`, which reads Firestore server-side.
+- **Tracking** calls `GET /api/tracking`, which reads Firestore server-side for
+  our own numbers and identifies other carriers' from the number's format (see
+  Multi-carrier tracking below).
   The seed fixtures cover the four states, and they are no longer advertised on
   the page — a specimen number on a live tracking form reads as a real
   consignment, and people paste it in and then ask why it is not their shipment.
@@ -235,6 +237,52 @@ This is a front-end prototype: there is no backend.
 - **Live chat is real** and stores conversations in Firestore. See below.
 - **Statistics and dashboard figures** are demonstration values, labelled as
   such on the page.
+
+## Multi-carrier tracking
+
+The tracking box takes a FedEx, UPS, USPS, DHL, Royal Mail, Canada Post, DPD,
+GLS or TNT number as readily as one of ours, and works out which carrier it
+belongs to from the number itself. Nobody has to pick from a dropdown.
+
+**Detection is by format, then confirmed by check digit.** `lib/carriers.ts`
+holds the registry: patterns, a deep link, and — where the carrier publishes a
+scheme — a verifier. UPS `1Z` numbers, USPS mod-10, FedEx's 12-digit mod-11 and
+the UPU S10 format used for international post all carry one.
+
+**Checksums rank, they never reject.** A number whose pattern matches but whose
+check digit fails is still offered, just below one that verifies. Carriers issue
+numbers that fail their own published scheme more often than you would like, and
+turning away a real consignment is a worse failure than showing a second
+candidate. When several formats fit — `9400…` is both USPS and, differently
+spaced, other things — the alternatives are listed under the best guess.
+
+**What it shows depends on whether a provider key is set.**
+
+- Without `TRACKING_API_KEY`: the carrier, whether the check digit verified, and
+  a deep link straight to that carrier's own tracking page. This needs no
+  credentials and works the moment it deploys.
+- With one: the carrier's scan events inline, on our page.
+
+`lib/multi-tracking.ts` talks to a Ship24-shaped tracker API — one POST, one
+bearer token, one normalised response across carriers. Registering with each
+carrier separately is the alternative: every one has its own OAuth flow and its
+own approval queue, which is a project rather than a feature. Swapping vendors
+means rewriting `fetchProviderEvents()` and nothing else.
+
+**A provider outage degrades to the deep link.** `fetchProviderEvents` returns
+null on any failure — non-200, malformed body, or the 8-second timeout — and the
+page says live events are unavailable while still linking the customer through.
+A tracking page that hangs is worse than one that costs a click.
+
+Our own `FBX-` numbers are resolved from Firestore and never sent to a provider.
+A number shaped like ours but not on our books comes back as not found, rather
+than being handed to a carrier that never issued it.
+
+**Caveat on the provider path:** the Ship24 adapter has been verified against a
+stub that replays the documented response shape, not against the live service —
+the same situation as Resend. The request and response handling are exercised;
+the vendor's real payload is not. Expect to check the field names on first
+connection.
 
 ## Live chat
 

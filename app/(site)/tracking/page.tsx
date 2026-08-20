@@ -5,6 +5,7 @@ import { TrackingWidget } from '@/components/TrackingWidget';
 import { Button } from '@/components/ui/Button';
 import { StaggerGroup, RevealItem } from '@/components/ui/Reveal';
 import { SectionHeading } from '@/components/ui/SectionHeading';
+import { supportedCarriers } from '@/lib/multi-tracking';
 
 export const metadata: Metadata = {
   title: 'Track a Shipment',
@@ -115,6 +116,29 @@ export default async function TrackingPage({ searchParams }: TrackingPageProps) 
             </RevealItem>
           </StaggerGroup>
 
+          <div className="mt-14 rounded-3xl border border-ink-100 bg-ink-50/60 p-6 sm:p-8">
+            <h3 className="font-display text-lg font-semibold text-ink-900">Carriers we recognise</h3>
+            <p className="mt-1.5 max-w-2xl text-[0.95rem] text-ink-500">
+              Paste a tracking number from any of these and we identify the carrier from the number
+              itself — no need to tell us who is carrying it.
+            </p>
+            <ul className="mt-5 flex flex-wrap gap-2">
+              {supportedCarriers().map((carrier) => (
+                <li
+                  key={carrier.id}
+                  className="inline-flex items-center gap-2 rounded-full border border-ink-200 bg-surface px-3.5 py-2 text-sm font-medium text-ink-700"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="inline-flex h-6 min-w-[1.5rem] items-center justify-center rounded-md bg-ink-900 px-1.5 text-[0.6rem] font-bold text-surface"
+                  >
+                    {carrier.initials}
+                  </span>
+                  {carrier.name}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
     </>

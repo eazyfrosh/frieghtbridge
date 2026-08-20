@@ -20,6 +20,7 @@ import {
 import Link from 'next/link';
 import { useCallback, useEffect, useId, useState } from 'react';
 import { EASE_PREMIUM } from '@/lib/motion';
+import { detectCarrier } from '@/lib/carriers';
 import {
   lookupShipment,
   statusTone,
@@ -47,8 +48,8 @@ const ERROR_COPY: Record<'empty' | 'malformed' | 'not-found', { title: string; b
     body: 'Your tracking number is on your booking confirmation and every document we send for the shipment.',
   },
   malformed: {
-    title: "That doesn't look like a FreightBridge Logistics tracking number",
-    body: 'Use the format FBX followed by 6 to 10 digits.',
+    title: "That doesn't look like a tracking number",
+    body: 'We recognise FreightBridge Logistics numbers plus FedEx, UPS, USPS, DHL, Royal Mail, Canada Post and more. Check for a missing or extra character.',
   },
   'not-found': {
     title: 'No shipment found',
@@ -80,8 +81,14 @@ export function TrackingWidget({ variant = 'page', initialQuery = '', className 
   }, [initialQuery, runLookup]);
 
   const floating = variant === 'floating';
-  const result = outcome?.ok ? outcome.shipment : null;
-  const error = outcome && !outcome.ok ? outcome.reason : null;
+  const result = outcome?.ok === true ? outcome.shipment : null;
+  const carrierResult = outcome?.ok === 'carrier' ? outcome : null;
+  const error = outcome?.ok === false ? outcome.reason : null;
+
+  // Detected live, as they type. Telling someone "that looks like a UPS
+  // number" before they submit is the difference between a search box and one
+  // that appears to understand what was pasted into it.
+  const detected = query.trim() ? detectCarrier(query) : null;
 
   return (
     <div
@@ -101,7 +108,8 @@ export function TrackingWidget({ variant = 'page', initialQuery = '', className 
             Track your shipment
           </h2>
           <p className="mt-2 max-w-md text-[0.95rem] text-ink-500">
-            Enter your FreightBridge Logistics tracking number for live status, location, and delivery estimate.
+            Any carrier. Ours resolve to a full live timeline; FedEx, UPS, USPS, DHL and the rest are
+            recognised from the number itself.
           </p>
         </div>
 
@@ -173,10 +181,26 @@ export function TrackingWidget({ variant = 'page', initialQuery = '', className 
           </button>
         </div>
 
-        {/* Kept as the input's description so screen readers still announce the
-            expected format — it just no longer offers a number to click. */}
-        <p id={`${inputId}-help`} className="mt-3 text-sm text-ink-400">
-          Your tracking number is on your booking confirmation.
+        {/* Doubles as the input's description, so a screen reader hears the
+            detected carrier at the same moment a sighted user sees it. */}
+        <p id={`${inputId}-help`} className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-400">
+          {detected ? (
+            <>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-50 dark:bg-brand-500/10 px-2.5 py-1 text-xs font-semibold text-brand-700 dark:text-brand-300">
+                <Truck className="h-3 w-3" aria-hidden="true" />
+                {detected.carrier.name}
+              </span>
+              <span>
+                {detected.carrier.id === 'freightbridge'
+                  ? 'One of ours — press Track for the full timeline.'
+                  : detected.verified
+                    ? 'Recognised, and the check digit matches.'
+                    : 'Looks like this carrier.'}
+              </span>
+            </>
+          ) : (
+            'Works with FreightBridge Logistics numbers and with FedEx, UPS, USPS, DHL and more.'
+          )}
         </p>
       </form>
 
@@ -191,6 +215,103 @@ export function TrackingWidget({ variant = 'page', initialQuery = '', className 
               transition={{ duration: 0.25 }}
             >
               <TrackingSkeleton />
+            </motion.div>
+          )}
+
+          {status === 'done' && carrierResult && (
+            <motion.div
+              key={`carrier-${carrierResult.carrier.id}-${carrierResult.query}`}
+              initial={reduced ? { opacity: 0 } : { opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3, ease: EASE_PREMIUM }}
+              className="mt-6 rounded-3xl border border-ink-100 bg-surface p-5 shadow-soft sm:p-6"
+            >
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div className="flex items-start gap-3.5">
+                  <span
+                    aria-hidden="true"
+                    className="inline-flex h-11 min-w-[2.75rem] items-center justify-center rounded-xl bg-ink-900 px-2 text-[0.68rem] font-bold tracking-tight text-surface"
+                  >
+                    {carrierResult.carrier.initials}
+                  </span>
+                  <div>
+                    <p className="font-display text-[1.05rem] font-semibold text-ink-900">
+                      {carrierResult.carrier.name}
+                    </p>
+                    <p className="mt-0.5 font-mono text-sm text-ink-500">{carrierResult.query}</p>
+                    {carrierResult.carrier.verified && (
+                      <p className="mt-1 inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-300">
+                        <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                        Check digit verified
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <a
+                  href={carrierResult.carrier.trackingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-800"
+                >
+                  Track on {carrierResult.carrier.name}
+                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                </a>
+              </div>
+
+              {carrierResult.status && (
+                <p className="mt-4 text-[0.95rem] font-medium text-ink-800">{carrierResult.status}</p>
+              )}
+
+              {carrierResult.events && carrierResult.events.length > 0 ? (
+                <ol className="mt-4 space-y-3 border-t border-ink-100 pt-4">
+                  {carrierResult.events.slice(0, 8).map((event, index) => (
+                    <li key={`${event.timestamp}-${index}`} className="flex gap-3">
+                      <span
+                        aria-hidden="true"
+                        className={cn(
+                          'mt-1.5 h-2 w-2 shrink-0 rounded-full',
+                          index === 0 ? 'bg-brand-500' : 'bg-ink-300',
+                        )}
+                      />
+                      <div className="min-w-0">
+                        <p className="text-[0.92rem] font-medium text-ink-900">{event.status}</p>
+                        <p className="text-sm text-ink-500">
+                          {[event.location, formatDateTime(event.timestamp)].filter(Boolean).join(' · ')}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p className="mt-4 border-t border-ink-100 pt-4 text-sm text-ink-500">
+                  {carrierResult.note ??
+                    'We recognise the carrier from the number. Their own page has the live scan history.'}
+                </p>
+              )}
+
+              {carrierResult.alternatives.length > 0 && (
+                <div className="mt-4 border-t border-ink-100 pt-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.1em] text-ink-500">
+                    Not the right carrier?
+                  </p>
+                  <ul className="mt-2 flex flex-wrap gap-2">
+                    {carrierResult.alternatives.map((alternative) => (
+                      <li key={alternative.id}>
+                        <a
+                          href={alternative.trackingUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 rounded-full border border-ink-200 px-3 py-1.5 text-xs font-medium text-ink-700 transition-colors hover:border-ink-300 hover:text-ink-900"
+                        >
+                          {alternative.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </motion.div>
           )}
 
