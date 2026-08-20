@@ -68,7 +68,7 @@ export default function ServicesPage() {
       </PageHero>
 
       {/* Service detail rows */}
-      <section className="section bg-white">
+      <section className="section bg-surface">
         <div className="container">
           <SectionHeading
             eyebrow="What we move"
@@ -84,7 +84,7 @@ export default function ServicesPage() {
                   className="group grid scroll-mt-32 gap-6 py-10 lg:grid-cols-[auto_1fr_auto] lg:items-start lg:gap-10 lg:py-12"
                 >
                   <div className="flex items-center gap-4 lg:flex-col lg:items-start lg:gap-3">
-                    <span className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-ink-900 text-white transition-colors duration-400 ease-premium group-hover:bg-brand-600">
+                    <span className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-night-900 text-white transition-colors duration-400 ease-premium group-hover:bg-brand-600">
                       <service.icon className="h-6 w-6" aria-hidden="true" />
                     </span>
                     <span className="font-mono text-xs font-semibold text-ink-300">
@@ -102,7 +102,7 @@ export default function ServicesPage() {
                     <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2">
                       {service.highlights.map((highlight) => (
                         <li key={highlight} className="flex items-center gap-2 text-sm font-medium text-ink-600">
-                          <Check className="h-4 w-4 text-brand-600" aria-hidden="true" />
+                          <Check className="h-4 w-4 text-brand-600 dark:text-brand-300" aria-hidden="true" />
                           {highlight}
                         </li>
                       ))}
@@ -133,9 +133,9 @@ export default function ServicesPage() {
             {INDUSTRIES.map((industry) => (
               <RevealItem
                 key={industry.title}
-                className="group rounded-3xl border border-ink-100 bg-white p-6 shadow-soft transition-[transform,border-color,box-shadow] duration-400 ease-premium hover:-translate-y-1 hover:border-brand-200 hover:shadow-card sm:p-8"
+                className="group rounded-3xl border border-ink-100 bg-surface p-6 shadow-soft transition-[transform,border-color,box-shadow] duration-400 ease-premium hover:-translate-y-1 hover:border-brand-200 dark:hover:border-brand-500/30 hover:shadow-card sm:p-8"
               >
-                <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 transition-colors duration-400 group-hover:bg-brand-600 group-hover:text-white">
+                <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-300 transition-colors duration-400 group-hover:bg-brand-600 group-hover:text-white">
                   <industry.icon className="h-5 w-5" aria-hidden="true" />
                 </span>
                 <h3 className="mt-6 font-display text-xl font-semibold tracking-[-0.02em] text-ink-900">
@@ -157,7 +157,7 @@ export default function ServicesPage() {
       </section>
 
       {/* Warehousing visual */}
-      <section className="section bg-white">
+      <section className="section bg-surface">
         <div className="container">
           <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
             <Reveal>
@@ -181,7 +181,7 @@ export default function ServicesPage() {
                     'Kitting, labelling and returns processing',
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-3 text-[0.98rem] text-ink-600">
-                      <Check className="mt-0.5 h-[1.1rem] w-[1.1rem] shrink-0 text-brand-600" aria-hidden="true" />
+                      <Check className="mt-0.5 h-[1.1rem] w-[1.1rem] shrink-0 text-brand-600 dark:text-brand-300" aria-hidden="true" />
                       {item}
                     </li>
                   ))}

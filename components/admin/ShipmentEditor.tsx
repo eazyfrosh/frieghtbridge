@@ -84,7 +84,7 @@ export function ShipmentEditor({ trackingNumber, shipment, statuses, writable }:
           onClick={() => setOpen(true)}
           disabled={!writable}
           title={writable ? undefined : 'Firestore is not configured on this deployment.'}
-          className="inline-flex h-10 items-center gap-2 rounded-xl border border-ink-200 bg-white px-4 text-[0.92rem] font-semibold text-ink-700 transition-colors hover:bg-ink-50 hover:text-ink-900 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex h-10 items-center gap-2 rounded-xl border border-ink-200 bg-surface px-4 text-[0.92rem] font-semibold text-ink-700 transition-colors hover:bg-ink-50 hover:text-ink-900 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Pencil className="h-4 w-4" aria-hidden="true" />
           Edit shipment
@@ -104,7 +104,7 @@ export function ShipmentEditor({ trackingNumber, shipment, statuses, writable }:
   ];
 
   return (
-    <form onSubmit={save} className="mt-6 rounded-2xl border border-ink-200 bg-white p-5 sm:p-6">
+    <form onSubmit={save} className="mt-6 rounded-2xl border border-ink-200 bg-surface p-5 sm:p-6">
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="font-display text-lg font-semibold text-ink-900">Edit shipment</h2>
@@ -135,7 +135,7 @@ export function ShipmentEditor({ trackingNumber, shipment, statuses, writable }:
             id="edit-status"
             value={form.status}
             onChange={(event) => set('status', event.target.value)}
-            className="mt-1.5 h-11 w-full rounded-xl border border-ink-200 bg-white px-3.5 text-[0.95rem] text-ink-900 focus:border-brand-500 focus:outline-none"
+            className="mt-1.5 h-11 w-full rounded-xl border border-ink-200 bg-surface px-3.5 text-[0.95rem] text-ink-900 focus:border-brand-500 focus:outline-none"
           >
             {statuses.map((status) => (
               <option key={status} value={status}>
@@ -189,13 +189,13 @@ export function ShipmentEditor({ trackingNumber, shipment, statuses, writable }:
       </div>
 
       {error && (
-        <p role="alert" className="mt-4 flex items-start gap-2 text-sm text-red-600">
+        <p role="alert" className="mt-4 flex items-start gap-2 text-sm text-red-600 dark:text-red-300">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           {error}
         </p>
       )}
       {saved && (
-        <p role="status" className="mt-4 flex items-center gap-2 text-sm text-green-700">
+        <p role="status" className="mt-4 flex items-center gap-2 text-sm text-green-700 dark:text-green-300">
           <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden="true" />
           Saved.
         </p>
@@ -205,7 +205,7 @@ export function ShipmentEditor({ trackingNumber, shipment, statuses, writable }:
         <button
           type="submit"
           disabled={busy}
-          className="inline-flex h-11 items-center gap-2 rounded-xl bg-brand-500 px-5 text-[0.95rem] font-semibold text-ink-950 transition-colors hover:bg-brand-400 disabled:cursor-progress disabled:opacity-60"
+          className="inline-flex h-11 items-center gap-2 rounded-xl bg-brand-500 px-5 text-[0.95rem] font-semibold text-night-950 transition-colors hover:bg-brand-400 disabled:cursor-progress disabled:opacity-60"
         >
           <Save className="h-4 w-4" aria-hidden="true" />
           {busy ? 'Saving…' : 'Save changes'}

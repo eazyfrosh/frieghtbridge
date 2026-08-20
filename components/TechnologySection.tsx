@@ -42,16 +42,16 @@ const ACTIVITY = [
 ];
 
 const STATUS_STYLES: Record<string, string> = {
-  'In transit': 'bg-brand-50 text-brand-700 ring-brand-600/20',
+  'In transit': 'bg-brand-50 dark:bg-brand-500/10 text-brand-700 dark:text-brand-300 ring-brand-600/20',
   'Out for delivery': 'bg-brand-800 text-white ring-brand-900/30',
-  Delivered: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
-  Delayed: 'bg-rose-50 text-rose-700 ring-rose-600/20',
+  Delivered: 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 ring-emerald-600/20',
+  Delayed: 'bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 ring-rose-600/20',
 };
 
 const KPI_TONES: Record<string, string> = {
-  brand: 'bg-brand-50 text-brand-600',
-  emerald: 'bg-emerald-50 text-emerald-600',
-  rose: 'bg-rose-50 text-rose-600',
+  brand: 'bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-300',
+  emerald: 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-300',
+  rose: 'bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-300',
 };
 
 export function TechnologySection() {
@@ -70,7 +70,7 @@ export function TechnologySection() {
           align="center"
           title={
             <>
-              Your freight. <span className="text-brand-600">One connected view.</span>
+              Your freight. <span className="text-brand-600 dark:text-brand-300">One connected view.</span>
             </>
           }
           description="Quotes, bookings, live locations, documents, and exceptions in a single console — so nobody has to chase a status update again."
@@ -100,7 +100,7 @@ export function TechnologySection() {
               reduced={Boolean(reduced)}
             />
 
-            <div className="overflow-hidden rounded-4xl border border-ink-200/70 bg-white shadow-lift">
+            <div className="overflow-hidden rounded-4xl border border-ink-200/70 bg-surface shadow-lift">
               {/* Window chrome */}
               <div className="flex items-center gap-3 border-b border-ink-100 bg-ink-50/80 px-4 py-3 sm:px-5">
                 <div className="flex gap-1.5" aria-hidden="true">
@@ -108,11 +108,11 @@ export function TechnologySection() {
                   <span className="h-2.5 w-2.5 rounded-full bg-ink-200" />
                   <span className="h-2.5 w-2.5 rounded-full bg-ink-200" />
                 </div>
-                <div className="ml-2 hidden items-center gap-2 rounded-lg bg-white px-3 py-1.5 text-xs text-ink-400 ring-1 ring-ink-100 sm:flex">
+                <div className="ml-2 hidden items-center gap-2 rounded-lg bg-surface px-3 py-1.5 text-xs text-ink-400 ring-1 ring-ink-100 sm:flex">
                   <Search className="h-3 w-3" aria-hidden="true" />
                   console.freightbridge.com / shipments
                 </div>
-                <span className="ml-auto rounded-full bg-emerald-50 px-2.5 py-1 text-[0.68rem] font-semibold text-emerald-700">
+                <span className="ml-auto rounded-full bg-emerald-50 dark:bg-emerald-500/10 px-2.5 py-1 text-[0.68rem] font-semibold text-emerald-700 dark:text-emerald-300">
                   Live
                 </span>
               </div>
@@ -121,7 +121,7 @@ export function TechnologySection() {
                 {/* Rail */}
                 <nav
                   aria-hidden="true"
-                  className="hidden flex-col items-center gap-1 border-r border-ink-100 bg-white py-5 lg:flex"
+                  className="hidden flex-col items-center gap-1 border-r border-ink-100 bg-surface py-5 lg:flex"
                 >
                   {[LayoutDashboard, Package, Map, BarChart3, Settings].map((Icon, index) => (
                     <span
@@ -140,7 +140,7 @@ export function TechnologySection() {
                   {/* KPIs */}
                   <div className="grid gap-3 sm:grid-cols-3">
                     {KPIS.map((kpi) => (
-                      <div key={kpi.label} className="rounded-2xl border border-ink-100 bg-white p-4">
+                      <div key={kpi.label} className="rounded-2xl border border-ink-100 bg-surface p-4">
                         <div className="flex items-start justify-between">
                           <span
                             className={cn(
@@ -163,7 +163,7 @@ export function TechnologySection() {
 
                   <div className="mt-4 grid gap-4 lg:grid-cols-[1.45fr_1fr]">
                     {/* Shipment list */}
-                    <div className="rounded-2xl border border-ink-100 bg-white">
+                    <div className="rounded-2xl border border-ink-100 bg-surface">
                       <div className="flex items-center justify-between border-b border-ink-100 px-4 py-3">
                         <h3 className="text-sm font-semibold text-ink-900">Active shipments</h3>
                         <span className="text-[0.7rem] font-medium text-ink-400">Updated just now</span>
@@ -211,7 +211,7 @@ export function TechnologySection() {
 
                     <div className="grid gap-4">
                       {/* Locations */}
-                      <div className="overflow-hidden rounded-2xl border border-ink-100 bg-ink-950">
+                      <div className="overflow-hidden rounded-2xl border border-ink-100 bg-night-950">
                         <div className="flex items-center justify-between px-4 py-3">
                           <h3 className="text-sm font-semibold text-white">Shipment locations</h3>
                           <span className="text-[0.68rem] font-medium text-ink-400">4 live</span>
@@ -251,7 +251,7 @@ export function TechnologySection() {
                       </div>
 
                       {/* Activity */}
-                      <div className="rounded-2xl border border-ink-100 bg-white">
+                      <div className="rounded-2xl border border-ink-100 bg-surface">
                         <div className="flex items-center gap-2 border-b border-ink-100 px-4 py-3">
                           <Activity className="h-3.5 w-3.5 text-ink-400" aria-hidden="true" />
                           <h3 className="text-sm font-semibold text-ink-900">Recent activity</h3>
@@ -274,8 +274,8 @@ export function TechnologySection() {
                   </div>
 
                   {/* Alert */}
-                  <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl border border-rose-200 bg-rose-50/70 px-4 py-3">
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-rose-100 text-rose-700">
+                  <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl border border-rose-200 dark:border-rose-500/30 bg-rose-50/70 dark:bg-rose-500/10 px-4 py-3">
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300">
                       <CircleAlert className="h-4 w-4" aria-hidden="true" />
                     </span>
                     <p className="text-[0.85rem] text-ink-700">
@@ -342,7 +342,7 @@ function FloatingBadge({
       viewport={{ once: true }}
       transition={{ duration: 0.6, ease: EASE_PREMIUM, delay }}
     >
-      <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
+      <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-300">
         <Icon className="h-4 w-4" aria-hidden="true" />
       </span>
       <span>

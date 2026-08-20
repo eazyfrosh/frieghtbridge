@@ -10,9 +10,9 @@ export default async function AdminDashboardPage() {
   const stats = shipmentStats(shipments);
 
   const cards = [
-    { label: 'Open shipments', value: stats.inTransit, icon: Truck, tone: 'text-brand-700 bg-brand-50' },
-    { label: 'Delivered', value: stats.delivered, icon: CheckCircle2, tone: 'text-emerald-700 bg-emerald-50' },
-    { label: 'Exceptions', value: stats.exceptions, icon: AlertTriangle, tone: 'text-rose-700 bg-rose-50' },
+    { label: 'Open shipments', value: stats.inTransit, icon: Truck, tone: 'text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-500/10' },
+    { label: 'Delivered', value: stats.delivered, icon: CheckCircle2, tone: 'text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/10' },
+    { label: 'Exceptions', value: stats.exceptions, icon: AlertTriangle, tone: 'text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-500/10' },
     { label: 'On-time rate', value: `${stats.onTimeRate}%`, icon: CheckCircle2, tone: 'text-ink-700 bg-ink-100' },
   ];
 
@@ -31,7 +31,7 @@ export default async function AdminDashboardPage() {
         </div>
         <Link
           href="/admin/book"
-          className="group inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-brand-500 px-5 text-[0.95rem] font-semibold text-ink-950 transition-colors duration-300 hover:bg-brand-400"
+          className="group inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-brand-500 px-5 text-[0.95rem] font-semibold text-night-950 transition-colors duration-300 hover:bg-brand-400"
         >
           <PackagePlus className="h-[1.05rem] w-[1.05rem]" aria-hidden="true" />
           Book shipment
@@ -40,7 +40,7 @@ export default async function AdminDashboardPage() {
 
       <dl className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {cards.map((card) => (
-          <div key={card.label} className="rounded-2xl border border-ink-200 bg-white p-5">
+          <div key={card.label} className="rounded-2xl border border-ink-200 bg-surface p-5">
             <span className={`inline-flex h-9 w-9 items-center justify-center rounded-xl ${card.tone}`}>
               <card.icon className="h-[1.05rem] w-[1.05rem]" aria-hidden="true" />
             </span>
@@ -60,7 +60,7 @@ export default async function AdminDashboardPage() {
               <li key={shipment.trackingNumber}>
                 <Link
                   href={`/admin/shipments/${shipment.trackingNumber}`}
-                  className="flex flex-col gap-2 rounded-2xl border border-rose-200 bg-rose-50/60 p-4 transition-colors hover:border-rose-300 sm:flex-row sm:items-center sm:justify-between"
+                  className="flex flex-col gap-2 rounded-2xl border border-rose-200 dark:border-rose-500/30 bg-rose-50/60 dark:bg-rose-500/10 p-4 transition-colors hover:border-rose-300 dark:hover:border-rose-500/30 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <span>
                     <span className="font-mono text-sm font-semibold text-ink-900">
@@ -70,7 +70,7 @@ export default async function AdminDashboardPage() {
                       {shipment.origin} → {shipment.destination}
                     </span>
                   </span>
-                  <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-rose-700">
+                  <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-rose-700 dark:text-rose-300">
                     Review
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </span>
@@ -86,14 +86,14 @@ export default async function AdminDashboardPage() {
           <h2 className="font-display text-lg font-semibold text-ink-900">Recent shipments</h2>
           <Link
             href="/admin/shipments"
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:text-brand-800"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 dark:text-brand-300 hover:text-brand-800 dark:hover:text-brand-300"
           >
             View all
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>
 
-        <ul className="mt-3 divide-y divide-ink-100 overflow-hidden rounded-2xl border border-ink-200 bg-white">
+        <ul className="mt-3 divide-y divide-ink-100 overflow-hidden rounded-2xl border border-ink-200 bg-surface">
           {shipments.slice(0, 5).map((shipment) => (
             <li key={shipment.trackingNumber}>
               <Link

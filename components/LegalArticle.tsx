@@ -20,7 +20,7 @@ export function LegalArticle({ breadcrumb, title, intro, updated, sections }: Le
     <>
       <PageHero eyebrow="Legal" breadcrumb={breadcrumb} title={title} description={intro} />
 
-      <article className="section bg-white">
+      <article className="section bg-surface">
         <div className="container">
           <div className="mx-auto max-w-3xl">
             <Reveal>

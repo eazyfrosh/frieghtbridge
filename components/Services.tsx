@@ -14,13 +14,13 @@ export function Services() {
   const reduced = useReducedMotion();
 
   return (
-    <section id="services" className="section relative bg-white">
+    <section id="services" className="section relative bg-surface">
       <div className="container">
         <SectionHeading
           eyebrow="Services"
           title={
             <>
-              Logistics solutions built <span className="text-brand-600">around your business</span>
+              Logistics solutions built <span className="text-brand-600 dark:text-brand-300">around your business</span>
             </>
           }
           description="One partner across every mode and every mile — from a single pallet across town to a container across an ocean."
@@ -39,7 +39,7 @@ export function Services() {
               variants={motionSafe(reduced, fadeUp)}
               whileHover={reduced ? undefined : { y: -8 }}
               transition={{ type: 'spring', stiffness: 320, damping: 26 }}
-              className="group relative overflow-hidden rounded-3xl border border-ink-100 bg-white p-6 shadow-soft transition-[border-color,box-shadow] duration-400 ease-premium hover:border-brand-200 hover:shadow-lift sm:p-7"
+              className="group relative overflow-hidden rounded-3xl border border-ink-100 bg-surface p-6 shadow-soft transition-[border-color,box-shadow] duration-400 ease-premium hover:border-brand-200 dark:hover:border-brand-500/30 hover:shadow-lift sm:p-7"
             >
               {/* Visual treatment: a soft freight-lane sweep that warms on hover */}
               <span
@@ -53,7 +53,7 @@ export function Services() {
 
               <div className="relative flex h-full flex-col">
                 <div className="flex items-start justify-between">
-                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-ink-900 text-white shadow-[0_10px_24px_-14px_rgba(18,18,18,0.9)] transition-colors duration-400 ease-premium group-hover:bg-brand-600">
+                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-night-900 text-white shadow-[0_10px_24px_-14px_rgba(18,18,18,0.9)] transition-colors duration-400 ease-premium group-hover:bg-brand-600">
                     <service.icon className="h-[1.35rem] w-[1.35rem]" aria-hidden="true" />
                   </span>
                   <span className="font-mono text-xs font-semibold text-ink-300">
@@ -77,7 +77,7 @@ export function Services() {
 
                 <Link
                   href={`/services#${service.slug}`}
-                  className="mt-auto inline-flex items-center gap-1.5 pt-6 text-[0.95rem] font-semibold text-ink-900 transition-colors duration-300 hover:text-brand-700 focus-visible:text-brand-700"
+                  className="mt-auto inline-flex items-center gap-1.5 pt-6 text-[0.95rem] font-semibold text-ink-900 transition-colors duration-300 hover:text-brand-700 dark:hover:text-brand-300 focus-visible:text-brand-700 dark:focus-visible:text-brand-300"
                 >
                   <span className="relative">
                     Learn more

@@ -76,7 +76,7 @@ export default function AboutPage() {
       />
 
       {/* Story */}
-      <section className="section bg-white">
+      <section className="section bg-surface">
         <div className="container">
           <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
             <div>
@@ -117,7 +117,7 @@ export default function AboutPage() {
             {TIMELINE.map((entry) => (
               <RevealItem key={entry.year} className="relative border-t-2 border-ink-100 pt-6">
                 <span className="absolute -top-[5px] left-0 h-2 w-2 rounded-full bg-brand-600" aria-hidden="true" />
-                <p className="font-mono text-sm font-semibold text-brand-700">{entry.year}</p>
+                <p className="font-mono text-sm font-semibold text-brand-700 dark:text-brand-300">{entry.year}</p>
                 <h3 className="mt-2 font-display text-lg font-semibold text-ink-900">{entry.title}</h3>
                 <p className="mt-2 text-[0.92rem] leading-relaxed text-ink-500">{entry.body}</p>
               </RevealItem>
@@ -138,9 +138,9 @@ export default function AboutPage() {
             {VALUES.map((value) => (
               <RevealItem
                 key={value.title}
-                className="rounded-3xl border border-ink-100 bg-white p-6 shadow-soft transition-[transform,box-shadow] duration-400 ease-premium hover:-translate-y-1 hover:shadow-card sm:p-8"
+                className="rounded-3xl border border-ink-100 bg-surface p-6 shadow-soft transition-[transform,box-shadow] duration-400 ease-premium hover:-translate-y-1 hover:shadow-card sm:p-8"
               >
-                <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-ink-900 text-white">
+                <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-night-900 text-white">
                   <value.icon className="h-5 w-5" aria-hidden="true" />
                 </span>
                 <h3 className="mt-6 font-display text-xl font-semibold tracking-[-0.02em] text-ink-900">
@@ -156,7 +156,7 @@ export default function AboutPage() {
       <EnterpriseSection />
 
       {/* Careers */}
-      <section id="careers" className="section scroll-mt-24 bg-white">
+      <section id="careers" className="section scroll-mt-24 bg-surface">
         <div className="container">
           <SectionHeading
             eyebrow="Careers"
@@ -203,9 +203,9 @@ export default function AboutPage() {
             {PARTNERS.map((partner) => (
               <RevealItem
                 key={partner.title}
-                className="rounded-3xl border border-ink-100 bg-white p-6 shadow-soft transition-[transform,border-color] duration-400 ease-premium hover:-translate-y-1 hover:border-brand-200"
+                className="rounded-3xl border border-ink-100 bg-surface p-6 shadow-soft transition-[transform,border-color] duration-400 ease-premium hover:-translate-y-1 hover:border-brand-200 dark:hover:border-brand-500/30"
               >
-                <Handshake className="h-5 w-5 text-brand-600" aria-hidden="true" />
+                <Handshake className="h-5 w-5 text-brand-600 dark:text-brand-300" aria-hidden="true" />
                 <h3 className="mt-5 font-display text-lg font-semibold text-ink-900">{partner.title}</h3>
                 <p className="mt-2 text-[0.92rem] leading-relaxed text-ink-500">{partner.body}</p>
               </RevealItem>

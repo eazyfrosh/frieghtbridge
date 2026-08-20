@@ -38,13 +38,13 @@ export function shipmentStats(shipments: Shipment[]): AdminStats {
 export function adminStatusTone(status: ShipmentStatus): string {
   switch (status) {
     case 'Delivered':
-      return 'bg-emerald-50 text-emerald-700 ring-emerald-600/20';
+      return 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 ring-emerald-600/20';
     case 'Exception':
-      return 'bg-rose-50 text-rose-700 ring-rose-600/20';
+      return 'bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 ring-rose-600/20';
     case 'Out for Delivery':
       return 'bg-brand-800 text-white ring-brand-900/30';
     default:
-      return 'bg-brand-50 text-brand-700 ring-brand-600/20';
+      return 'bg-brand-50 dark:bg-brand-500/10 text-brand-700 dark:text-brand-300 ring-brand-600/20';
   }
 }
 

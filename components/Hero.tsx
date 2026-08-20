@@ -58,7 +58,7 @@ export function Hero() {
               <label htmlFor="hero-tracking" className="sr-only">
                 Tracking number
               </label>
-              <div className="flex flex-col gap-2 rounded-2xl border-2 border-ink-200 bg-white p-2 shadow-[0_2px_6px_rgba(17,17,17,0.04),0_18px_44px_-24px_rgba(17,17,17,0.28)] transition-colors duration-300 ease-premium focus-within:border-brand-500 sm:flex-row sm:items-center sm:rounded-full sm:p-1.5">
+              <div className="flex flex-col gap-2 rounded-2xl border-2 border-ink-200 bg-surface p-2 shadow-[0_2px_6px_rgba(17,17,17,0.04),0_18px_44px_-24px_rgba(17,17,17,0.28)] transition-colors duration-300 ease-premium focus-within:border-brand-500 sm:flex-row sm:items-center sm:rounded-full sm:p-1.5">
                 <div className="flex flex-1 items-center gap-2.5 px-3 sm:px-4">
                   <Search className="h-[1.15rem] w-[1.15rem] shrink-0 text-ink-400" aria-hidden="true" />
                   <input
@@ -73,7 +73,7 @@ export function Hero() {
                 </div>
                 <button
                   type="submit"
-                  className="group inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-brand-500 px-6 text-[0.98rem] font-semibold text-ink-950 transition-all duration-300 ease-premium hover:bg-brand-400 hover:shadow-[0_14px_30px_-14px_rgba(255,106,0,0.9)] sm:rounded-full"
+                  className="group inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-brand-500 px-6 text-[0.98rem] font-semibold text-night-950 transition-all duration-300 ease-premium hover:bg-brand-400 hover:shadow-[0_14px_30px_-14px_rgba(255,106,0,0.9)] sm:rounded-full"
                 >
                   Track
                   <ArrowRight
@@ -121,7 +121,7 @@ export function Hero() {
               reduced={reduced}
               from={-16}
             >
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-brand-50 dark:bg-brand-500/10 text-brand-700 dark:text-brand-300">
                 <Timer className="h-[1.05rem] w-[1.05rem]" aria-hidden="true" />
               </span>
               <span>
@@ -137,7 +137,7 @@ export function Hero() {
               from={16}
               floatDelay="1.6s"
             >
-              <span className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
+              <span className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-brand-50 dark:bg-brand-500/10 text-brand-700 dark:text-brand-300">
                 <Radar className="h-[1.05rem] w-[1.05rem]" aria-hidden="true" />
               </span>
               <span>
@@ -168,7 +168,7 @@ function FloatingCard({ children, className, delay, from, floatDelay, reduced }:
   return (
     <motion.div
       aria-hidden="true"
-      className={`absolute hidden items-center gap-3 rounded-2xl bg-white px-4 py-3.5 shadow-[0_1px_3px_rgba(17,17,17,0.05),0_16px_36px_-16px_rgba(17,17,17,0.22)] lg:flex ${className}`}
+      className={`absolute hidden items-center gap-3 rounded-2xl bg-surface px-4 py-3.5 shadow-[0_1px_3px_rgba(17,17,17,0.05),0_16px_36px_-16px_rgba(17,17,17,0.22)] lg:flex ${className}`}
       initial={reduced ? undefined : { opacity: 0, x: from, y: 10 }}
       animate={reduced ? undefined : { opacity: 1, x: 0, y: 0 }}
       transition={{ duration: 0.7, ease: EASE_PREMIUM, delay }}

@@ -86,14 +86,14 @@ export function TrackingWidget({ variant = 'page', initialQuery = '', className 
   return (
     <div
       className={cn(
-        'relative rounded-4xl border bg-white p-5 sm:p-7 lg:p-8',
+        'relative rounded-4xl border bg-surface p-5 sm:p-7 lg:p-8',
         floating ? 'border-ink-100/80 shadow-lift' : 'border-ink-100 shadow-card',
         className,
       )}
     >
       <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <span className="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">
+          <span className="inline-flex items-center gap-2 rounded-full bg-brand-50 dark:bg-brand-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-brand-700 dark:text-brand-300">
             <PackageSearch className="h-3.5 w-3.5" aria-hidden="true" />
             Shipment tracking
           </span>
@@ -144,7 +144,7 @@ export function TrackingWidget({ variant = 'page', initialQuery = '', className 
               aria-invalid={Boolean(error) || undefined}
               aria-describedby={`${inputId}-help`}
               className={cn(
-                'h-14 w-full rounded-2xl border bg-white pl-11 pr-4 text-[1rem] font-medium text-ink-900 transition-[border-color,box-shadow] duration-200 placeholder:font-normal placeholder:text-ink-300 focus:outline-none',
+                'h-14 w-full rounded-2xl border bg-surface pl-11 pr-4 text-[1rem] font-medium text-ink-900 transition-[border-color,box-shadow] duration-200 placeholder:font-normal placeholder:text-ink-300 focus:outline-none',
                 error
                   ? 'border-red-400 focus:border-red-500 focus:shadow-[0_0_0_4px_rgba(248,113,113,0.16)]'
                   : 'border-ink-200 hover:border-ink-300 focus:border-brand-500 focus:shadow-[0_0_0_4px_rgba(255,106,0,0.14)]',
@@ -201,10 +201,10 @@ export function TrackingWidget({ variant = 'page', initialQuery = '', className 
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3, ease: EASE_PREMIUM }}
-              className="mt-6 rounded-3xl border border-rose-200 bg-rose-50/70 p-5 sm:p-6"
+              className="mt-6 rounded-3xl border border-rose-200 dark:border-rose-500/30 bg-rose-50/70 dark:bg-rose-500/10 p-5 sm:p-6"
             >
               <div className="flex gap-3.5">
-                <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-rose-100 text-rose-700">
+                <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300">
                   <AlertTriangle className="h-[1.1rem] w-[1.1rem]" aria-hidden="true" />
                 </span>
                 <div>
@@ -213,7 +213,7 @@ export function TrackingWidget({ variant = 'page', initialQuery = '', className 
                   <div className="mt-4 flex flex-wrap gap-2">
                     <Link
                       href="/contact"
-                      className="inline-flex items-center gap-1.5 rounded-full border border-ink-200 bg-white px-4 py-2 text-sm font-semibold text-ink-700 transition-colors hover:bg-ink-50"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-ink-200 bg-surface px-4 py-2 text-sm font-semibold text-ink-700 transition-colors hover:bg-ink-50"
                     >
                       <Headphones className="h-3.5 w-3.5" aria-hidden="true" />
                       Contact support
@@ -258,7 +258,7 @@ export function TrackingWidget({ variant = 'page', initialQuery = '', className 
 
 function TrackingSkeleton() {
   return (
-    <div className="mt-6 overflow-hidden rounded-3xl border border-ink-100 bg-white p-5 sm:p-6" aria-hidden="true">
+    <div className="mt-6 overflow-hidden rounded-3xl border border-ink-100 bg-surface p-5 sm:p-6" aria-hidden="true">
       <div className="flex items-center justify-between gap-4">
         <div className="h-6 w-40 animate-pulse rounded-full bg-ink-100" />
         <div className="h-6 w-24 animate-pulse rounded-full bg-ink-100" />
@@ -301,7 +301,7 @@ function TrackingResultPanel({ result, reduced }: { result: TrackingResult; redu
   ];
 
   return (
-    <div className="mt-6 overflow-hidden rounded-3xl border border-ink-100 bg-white shadow-soft">
+    <div className="mt-6 overflow-hidden rounded-3xl border border-ink-100 bg-surface shadow-soft">
       {/* Summary */}
       <div className="border-b border-ink-100 bg-gradient-to-br from-ink-50/80 to-white p-5 sm:p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
@@ -342,7 +342,7 @@ function TrackingResultPanel({ result, reduced }: { result: TrackingResult; redu
       {/* Details */}
       <dl className="grid gap-px bg-ink-100 sm:grid-cols-2 lg:grid-cols-3">
         {details.map((detail) => (
-          <div key={detail.label} className="bg-white p-4 sm:p-5">
+          <div key={detail.label} className="bg-surface p-4 sm:p-5">
             <dt className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.12em] text-ink-400">
               <detail.icon className="h-3.5 w-3.5" aria-hidden="true" />
               {detail.label}
@@ -390,8 +390,8 @@ function TrackingResultPanel({ result, reduced }: { result: TrackingResult; redu
                     // Bright `brand-500` only carries white at 2.87:1, so the
                     // filled node steps down to `brand-700` (5.07:1).
                     event.state === 'complete' && 'border-brand-700 bg-brand-700 text-white',
-                    event.state === 'current' && 'border-brand-500 bg-white text-brand-700',
-                    event.state === 'upcoming' && 'border-ink-200 bg-white text-ink-300',
+                    event.state === 'current' && 'border-brand-500 bg-surface text-brand-700 dark:text-brand-300',
+                    event.state === 'upcoming' && 'border-ink-200 bg-surface text-ink-300',
                   )}
                 >
                   {event.state === 'complete' ? (
@@ -419,7 +419,7 @@ function TrackingResultPanel({ result, reduced }: { result: TrackingResult; redu
                     >
                       {event.stage}
                       {event.state === 'current' && (
-                        <span className="ml-2 rounded-full bg-brand-50 px-2 py-0.5 align-middle text-[0.7rem] font-semibold uppercase tracking-wide text-brand-700">
+                        <span className="ml-2 rounded-full bg-brand-50 dark:bg-brand-500/10 px-2 py-0.5 align-middle text-[0.7rem] font-semibold uppercase tracking-wide text-brand-700 dark:text-brand-300">
                           Now
                         </span>
                       )}
@@ -446,7 +446,7 @@ function TrackingResultPanel({ result, reduced }: { result: TrackingResult; redu
         </p>
         <Link
           href="/contact"
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 transition-colors hover:text-brand-800"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 dark:text-brand-300 transition-colors hover:text-brand-800 dark:hover:text-brand-300"
         >
           Questions about this shipment?
           <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

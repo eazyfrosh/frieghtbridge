@@ -6,7 +6,7 @@ import { Reveal } from './ui/Reveal';
 
 export function CTA() {
   return (
-    <section className="relative overflow-hidden bg-white pb-24 pt-4 sm:pb-28">
+    <section className="relative overflow-hidden bg-surface pb-24 pt-4 sm:pb-28">
       <div className="container">
         <Reveal>
           <div className="relative overflow-hidden rounded-[2.5rem] bg-brand-500 px-6 py-16 text-center sm:px-12 sm:py-24 lg:py-28">

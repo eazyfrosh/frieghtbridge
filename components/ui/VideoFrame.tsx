@@ -115,7 +115,7 @@ export function VideoFrame({
         'relative overflow-hidden',
         light
           ? 'rounded-3xl bg-ink-100 shadow-[0_2px_6px_rgba(17,17,17,0.04),0_40px_80px_-32px_rgba(17,17,17,0.28)]'
-          : 'rounded-4xl border border-white/10 bg-ink-900 shadow-[0_50px_120px_-40px_rgba(0,0,0,0.9)]',
+          : 'rounded-4xl border border-white/10 bg-night-900 shadow-[0_50px_120px_-40px_rgba(0,0,0,0.9)]',
         className,
       )}
     >
@@ -170,7 +170,7 @@ export function VideoFrame({
       {scrim && (
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-950/75 via-ink-950/10 to-transparent"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-night-950/75 via-night-950/10 to-transparent"
         />
       )}
       {!light && (
@@ -185,7 +185,7 @@ export function VideoFrame({
           type="button"
           onClick={togglePlayback}
           aria-label={playing ? 'Pause background video' : 'Play background video'}
-          className="absolute bottom-4 right-4 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-ink-950/60 text-white backdrop-blur transition-colors duration-300 hover:border-white/50 hover:bg-ink-950/80"
+          className="absolute bottom-4 right-4 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-night-950/60 text-white backdrop-blur transition-colors duration-300 hover:border-white/50 hover:bg-night-950/80"
         >
           {playing ? (
             <Pause className="h-4 w-4" aria-hidden="true" />

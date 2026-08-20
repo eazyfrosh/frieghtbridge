@@ -119,7 +119,7 @@ export default function FaqPage() {
         description="Straight answers on quoting, tracking, transit times, customs, and what happens when something goes wrong."
       />
 
-      <section className="section bg-white">
+      <section className="section bg-surface">
         <div className="container">
           <div className="mx-auto max-w-3xl space-y-16">
             {GROUPS.map((group) => (

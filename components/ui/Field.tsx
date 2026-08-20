@@ -5,7 +5,7 @@ import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTML
 import { cn } from '@/lib/utils';
 
 const controlBase =
-  'w-full rounded-xl border bg-white px-4 text-[0.95rem] text-ink-900 shadow-[0_1px_2px_rgba(18,18,18,0.04)] transition-[border-color,box-shadow,background-color] duration-200 placeholder:text-ink-300 focus:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:bg-ink-50';
+  'w-full rounded-xl border bg-surface px-4 text-[0.95rem] text-ink-900 shadow-[0_1px_2px_rgba(18,18,18,0.04)] transition-[border-color,box-shadow,background-color] duration-200 placeholder:text-ink-300 focus:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:bg-ink-50';
 
 const controlState = (invalid: boolean) =>
   invalid
@@ -28,14 +28,14 @@ export function FieldShell({ id, label, hint, error, required, className, childr
       <label htmlFor={id} className="text-sm font-medium text-ink-700">
         {label}
         {required && (
-          <span className="ml-1 text-brand-700" aria-hidden="true">
+          <span className="ml-1 text-brand-700 dark:text-brand-300" aria-hidden="true">
             *
           </span>
         )}
       </label>
       {children}
       {error ? (
-        <p id={`${id}-error`} role="alert" className="flex items-center gap-1.5 text-sm text-red-600">
+        <p id={`${id}-error`} role="alert" className="flex items-center gap-1.5 text-sm text-red-600 dark:text-red-300">
           <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
           {error}
         </p>
@@ -180,8 +180,8 @@ export function SegmentedField({ legend, name, value, options, onChange, error }
               className={cn(
                 'group flex cursor-pointer flex-col items-center justify-center gap-0.5 rounded-xl border px-3 py-3 text-center transition-all duration-200 ease-premium',
                 active
-                  ? 'border-brand-500 bg-brand-50/70 shadow-[0_0_0_3px_rgba(255,106,0,0.12)]'
-                  : 'border-ink-200 bg-white hover:border-ink-300 hover:bg-ink-50',
+                  ? 'border-brand-500 bg-brand-50/70 dark:bg-brand-500/10 shadow-[0_0_0_3px_rgba(255,106,0,0.12)]'
+                  : 'border-ink-200 bg-surface hover:border-ink-300 hover:bg-ink-50',
               )}
             >
               <input
@@ -192,7 +192,7 @@ export function SegmentedField({ legend, name, value, options, onChange, error }
                 onChange={() => onChange(option.value)}
                 className="sr-only"
               />
-              <span className={cn('text-sm font-semibold', active ? 'text-brand-700' : 'text-ink-700')}>
+              <span className={cn('text-sm font-semibold', active ? 'text-brand-700 dark:text-brand-300' : 'text-ink-700')}>
                 {option.label}
               </span>
               {option.helper && <span className="text-[0.7rem] text-ink-400">{option.helper}</span>}
@@ -201,7 +201,7 @@ export function SegmentedField({ legend, name, value, options, onChange, error }
         })}
       </div>
       {error && (
-        <p role="alert" className="flex items-center gap-1.5 text-sm text-red-600">
+        <p role="alert" className="flex items-center gap-1.5 text-sm text-red-600 dark:text-red-300">
           <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
           {error}
         </p>

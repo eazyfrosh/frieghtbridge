@@ -76,7 +76,7 @@ export function WhyFreightBridge() {
             </Reveal>
             <Reveal delay={0.06} from="left">
               <h2 className="display-2 mt-5">
-                Built for the way freight <span className="text-brand-600">moves today.</span>
+                Built for the way freight <span className="text-brand-600 dark:text-brand-300">moves today.</span>
               </h2>
             </Reveal>
             <Reveal delay={0.12} from="left">
@@ -87,14 +87,14 @@ export function WhyFreightBridge() {
             </Reveal>
 
             <Reveal delay={0.2} from="left">
-              <div className="relative mt-10 overflow-hidden rounded-4xl border border-ink-100 bg-white shadow-card">
+              <div className="relative mt-10 overflow-hidden rounded-4xl border border-ink-100 bg-surface shadow-card">
                 <Figure
                   media={IMAGERY.port}
                   sizes="(min-width: 1024px) 38vw, 100vw"
                   className="h-56 w-full object-cover sm:h-72 lg:h-[17rem]"
                 />
                 <div className="flex items-center gap-3 border-t border-ink-100 px-5 py-4">
-                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
+                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-300">
                     <ShieldCheck className="h-4 w-4" aria-hidden="true" />
                   </span>
                   <p className="text-sm text-ink-600">
@@ -118,7 +118,7 @@ export function WhyFreightBridge() {
                   tabIndex={0}
                   className={cn(
                     'group relative cursor-default border-t border-ink-200/70 py-8 transition-colors duration-400 ease-premium first:border-t-0 first:pt-0 sm:py-10',
-                    isActive && 'border-brand-200',
+                    isActive && 'border-brand-200 dark:border-brand-500/30',
                   )}
                 >
                   <div className="flex items-start gap-5 sm:gap-8">
@@ -127,7 +127,7 @@ export function WhyFreightBridge() {
                         'mt-1 inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border transition-all duration-400 ease-premium sm:h-14 sm:w-14',
                         isActive
                           ? 'border-brand-500 bg-brand-600 text-white shadow-[0_16px_36px_-18px_rgba(226,81,0,0.95)]'
-                          : 'border-ink-200 bg-white text-ink-500',
+                          : 'border-ink-200 bg-surface text-ink-500',
                       )}
                     >
                       <benefit.icon className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
@@ -145,8 +145,8 @@ export function WhyFreightBridge() {
                       <p className="mt-2 text-[1.05rem] font-medium text-ink-700 sm:text-lg">{benefit.copy}</p>
                       <p className="mt-2.5 max-w-xl text-[0.95rem] leading-relaxed text-ink-500">{benefit.detail}</p>
 
-                      <div className="mt-5 inline-flex items-baseline gap-2.5 rounded-full bg-white px-4 py-2 shadow-soft ring-1 ring-ink-100">
-                        <span className="font-display text-lg font-semibold text-brand-700">{benefit.metric}</span>
+                      <div className="mt-5 inline-flex items-baseline gap-2.5 rounded-full bg-surface px-4 py-2 shadow-soft ring-1 ring-ink-100">
+                        <span className="font-display text-lg font-semibold text-brand-700 dark:text-brand-300">{benefit.metric}</span>
                         <span className="text-xs font-medium uppercase tracking-[0.1em] text-ink-400">
                           {benefit.metricLabel}
                         </span>

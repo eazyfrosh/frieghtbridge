@@ -43,7 +43,7 @@ export default function HomePage() {
       <Testimonials />
 
       {/* Secondary conversion strip */}
-      <section className="bg-white pt-20 sm:pt-24">
+      <section className="bg-surface pt-20 sm:pt-24">
         <div className="container">
           <Reveal>
             <div className="flex flex-col items-center justify-between gap-6 rounded-3xl border border-ink-100 bg-ink-50/60 px-6 py-8 sm:flex-row sm:px-10">

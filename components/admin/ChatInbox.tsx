@@ -211,7 +211,7 @@ export function ChatInbox() {
   const unreadTotal = conversations.reduce((sum, item) => sum + item.unreadForAdmin, 0);
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-ink-200 bg-white">
+    <div className="overflow-hidden rounded-2xl border border-ink-200 bg-surface">
       <div className="grid min-h-[32rem] lg:grid-cols-[20rem_1fr]">
         {/* Conversation list */}
         <div className={cn('border-ink-200 lg:border-r', selected && 'hidden lg:block')}>
@@ -225,7 +225,7 @@ export function ChatInbox() {
                   aria-pressed={filter === value}
                   className={cn(
                     'rounded-md px-3 py-1 text-xs font-semibold capitalize transition-colors',
-                    filter === value ? 'bg-white text-ink-900 shadow-sm' : 'text-ink-500 hover:text-ink-800',
+                    filter === value ? 'bg-surface text-ink-900 shadow-sm' : 'text-ink-500 hover:text-ink-800',
                   )}
                 >
                   {value}
@@ -233,7 +233,7 @@ export function ChatInbox() {
               ))}
             </div>
             {unreadTotal > 0 && (
-              <span className="ml-auto rounded-full bg-brand-500 px-2 py-0.5 text-[0.68rem] font-bold text-ink-950">
+              <span className="ml-auto rounded-full bg-brand-500 px-2 py-0.5 text-[0.68rem] font-bold text-night-950">
                 {unreadTotal} new
               </span>
             )}
@@ -259,7 +259,7 @@ export function ChatInbox() {
                   aria-current={item.id === selectedId ? 'true' : undefined}
                   className={cn(
                     'w-full px-4 py-3 text-left transition-colors',
-                    item.id === selectedId ? 'bg-brand-50' : 'hover:bg-ink-50',
+                    item.id === selectedId ? 'bg-brand-50 dark:bg-brand-500/10' : 'hover:bg-ink-50',
                   )}
                 >
                   <div className="flex items-baseline gap-2">
@@ -353,8 +353,8 @@ export function ChatInbox() {
                         className={cn(
                           'whitespace-pre-wrap break-words rounded-2xl px-3.5 py-2.5 text-[0.9rem] leading-relaxed',
                           mine
-                            ? 'rounded-br-md bg-brand-500 text-ink-950'
-                            : 'rounded-bl-md border border-ink-200 bg-white text-ink-800',
+                            ? 'rounded-br-md bg-brand-500 text-night-950'
+                            : 'rounded-bl-md border border-ink-200 bg-surface text-ink-800',
                         )}
                       >
                         {message.body}
@@ -370,7 +370,7 @@ export function ChatInbox() {
 
             <form onSubmit={reply} className="border-t border-ink-200 p-3">
               {error && (
-                <p role="alert" className="mb-2 text-xs text-red-600">
+                <p role="alert" className="mb-2 text-xs text-red-600 dark:text-red-300">
                   {error}
                 </p>
               )}
@@ -397,7 +397,7 @@ export function ChatInbox() {
                 <button
                   type="submit"
                   disabled={busy || !draft.trim()}
-                  className="inline-flex h-11 shrink-0 items-center gap-2 rounded-xl bg-brand-500 px-4 text-[0.9rem] font-semibold text-ink-950 transition-colors hover:bg-brand-400 disabled:cursor-not-allowed disabled:opacity-40"
+                  className="inline-flex h-11 shrink-0 items-center gap-2 rounded-xl bg-brand-500 px-4 text-[0.9rem] font-semibold text-night-950 transition-colors hover:bg-brand-400 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <Send className="h-4 w-4" aria-hidden="true" />
                   Send

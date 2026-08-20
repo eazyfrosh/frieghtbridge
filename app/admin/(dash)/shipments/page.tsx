@@ -45,8 +45,8 @@ export default async function AdminShipmentsPage({ searchParams }: PageProps) {
               aria-current={isActive ? 'true' : undefined}
               className={
                 isActive
-                  ? 'rounded-full bg-ink-900 px-4 py-2 text-sm font-semibold text-white'
-                  : 'rounded-full border border-ink-200 bg-white px-4 py-2 text-sm font-medium text-ink-600 transition-colors hover:border-ink-300 hover:text-ink-900'
+                  ? 'rounded-full bg-night-900 px-4 py-2 text-sm font-semibold text-white'
+                  : 'rounded-full border border-ink-200 bg-surface px-4 py-2 text-sm font-medium text-ink-600 transition-colors hover:border-ink-300 hover:text-ink-900'
               }
             >
               {filter}
@@ -56,13 +56,13 @@ export default async function AdminShipmentsPage({ searchParams }: PageProps) {
       </nav>
 
       {shipments.length === 0 ? (
-        <p className="mt-8 rounded-2xl border border-dashed border-ink-200 bg-white p-8 text-center text-sm text-ink-500">
+        <p className="mt-8 rounded-2xl border border-dashed border-ink-200 bg-surface p-8 text-center text-sm text-ink-500">
           No shipments with that status.
         </p>
       ) : (
         <>
           {/* Table on wide screens */}
-          <div className="mt-6 hidden overflow-hidden rounded-2xl border border-ink-200 bg-white lg:block">
+          <div className="mt-6 hidden overflow-hidden rounded-2xl border border-ink-200 bg-surface lg:block">
             <table className="w-full text-left">
               <thead className="border-b border-ink-100 bg-ink-50/60">
                 <tr>
@@ -97,7 +97,7 @@ export default async function AdminShipmentsPage({ searchParams }: PageProps) {
                     <td className="px-5 py-4 text-right">
                       <Link
                         href={`/admin/shipments/${shipment.trackingNumber}`}
-                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:text-brand-800"
+                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 dark:text-brand-300 hover:text-brand-800 dark:hover:text-brand-300"
                       >
                         Open
                         <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -116,7 +116,7 @@ export default async function AdminShipmentsPage({ searchParams }: PageProps) {
               <li key={shipment.trackingNumber}>
                 <Link
                   href={`/admin/shipments/${shipment.trackingNumber}`}
-                  className="block rounded-2xl border border-ink-200 bg-white p-4 transition-colors hover:border-ink-300"
+                  className="block rounded-2xl border border-ink-200 bg-surface p-4 transition-colors hover:border-ink-300"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <span className="font-mono text-sm font-semibold text-ink-900">

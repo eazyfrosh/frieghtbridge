@@ -104,7 +104,7 @@ function StatCard({ value, suffix, label }: { value: number; suffix: string; lab
       />
       <p className="relative font-display text-4xl font-semibold tracking-[-0.04em] text-white sm:text-5xl">
         {display}
-        <span className="text-ink-950">{suffix}</span>
+        <span className="text-night-950">{suffix}</span>
       </p>
       <p className="relative mt-2 text-sm font-medium text-white">{label}</p>
     </motion.div>

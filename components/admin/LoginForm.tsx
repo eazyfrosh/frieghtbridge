@@ -124,7 +124,7 @@ export function LoginForm() {
           required
           value={email}
           onChange={(event) => setEmail(event.target.value)}
-          className="mt-1.5 h-12 w-full rounded-xl border border-ink-700 bg-ink-900 px-4 text-[0.95rem] text-white placeholder:text-ink-500 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/40"
+          className="mt-1.5 h-12 w-full rounded-xl border border-ink-700 bg-night-900 px-4 text-[0.95rem] text-white placeholder:text-ink-500 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/40"
           placeholder="ops@freightbridge.com"
         />
       </div>
@@ -141,7 +141,7 @@ export function LoginForm() {
           required
           value={password}
           onChange={(event) => setPassword(event.target.value)}
-          className="mt-1.5 h-12 w-full rounded-xl border border-ink-700 bg-ink-900 px-4 text-[0.95rem] text-white placeholder:text-ink-500 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/40"
+          className="mt-1.5 h-12 w-full rounded-xl border border-ink-700 bg-night-900 px-4 text-[0.95rem] text-white placeholder:text-ink-500 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/40"
           placeholder="••••••••••••"
         />
       </div>
@@ -156,7 +156,7 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={pending}
-        className="group mt-2 inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-brand-500 px-6 text-[0.98rem] font-semibold text-ink-950 transition-all duration-300 ease-premium hover:bg-brand-400 disabled:cursor-progress disabled:opacity-70"
+        className="group mt-2 inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-brand-500 px-6 text-[0.98rem] font-semibold text-night-950 transition-all duration-300 ease-premium hover:bg-brand-400 disabled:cursor-progress disabled:opacity-70"
       >
         {pending ? (
           <>

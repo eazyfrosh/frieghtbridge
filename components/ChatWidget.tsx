@@ -309,7 +309,7 @@ export function ChatWidget() {
         aria-label={open ? 'Close chat' : unseen > 0 ? `Open chat, ${unseen} new` : 'Chat with us'}
         className={cn(
           'fixed bottom-5 right-5 z-[60] inline-flex h-14 w-14 items-center justify-center rounded-full',
-          'bg-brand-500 text-ink-950 shadow-[0_8px_28px_rgba(18,18,18,0.22)]',
+          'bg-brand-500 text-night-950 shadow-[0_8px_28px_rgba(18,18,18,0.22)]',
           'transition-transform duration-300 ease-premium hover:scale-105 motion-reduce:transition-none motion-reduce:hover:scale-100',
           'focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/40',
         )}
@@ -322,7 +322,7 @@ export function ChatWidget() {
         {!open && unseen > 0 && (
           <span
             aria-hidden="true"
-            className="absolute -right-0.5 -top-0.5 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-ink-950 px-1 text-[0.68rem] font-bold text-white"
+            className="absolute -right-0.5 -top-0.5 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-night-950 px-1 text-[0.68rem] font-bold text-white"
           >
             {unseen > 9 ? '9+' : unseen}
           </span>
@@ -336,13 +336,13 @@ export function ChatWidget() {
           aria-label="Chat with FreightBridge Logistics"
           className={cn(
             'fixed bottom-24 right-5 z-[60] flex w-[min(23rem,calc(100vw-2.5rem))] flex-col',
-            'h-[min(30rem,calc(100vh-9rem))] overflow-hidden rounded-2xl border border-ink-200 bg-white',
+            'h-[min(30rem,calc(100vh-9rem))] overflow-hidden rounded-2xl border border-ink-200 bg-surface',
             'shadow-[0_24px_60px_rgba(18,18,18,0.24)]',
           )}
         >
-          <div className="flex items-start gap-3 bg-ink-950 px-4 py-3.5">
+          <div className="flex items-start gap-3 bg-night-950 px-4 py-3.5">
             <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-500">
-              <MessageCircle className="h-4 w-4 text-ink-950" aria-hidden="true" />
+              <MessageCircle className="h-4 w-4 text-night-950" aria-hidden="true" />
             </div>
             <div className="min-w-0 flex-1">
               <p className="font-display text-[0.98rem] font-semibold text-white">FreightBridge Logistics</p>
@@ -356,7 +356,7 @@ export function ChatWidget() {
               <button
                 type="button"
                 onClick={() => setConfirmEnd(true)}
-                className="mt-0.5 shrink-0 rounded-lg px-2 py-1 text-xs font-semibold text-ink-300 transition-colors hover:bg-ink-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+                className="mt-0.5 shrink-0 rounded-lg px-2 py-1 text-xs font-semibold text-ink-300 transition-colors hover:bg-night-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
               >
                 End chat
               </button>
@@ -365,15 +365,15 @@ export function ChatWidget() {
               type="button"
               onClick={() => setOpen(false)}
               aria-label="Minimise chat"
-              className="-mr-1 rounded-lg p-1.5 text-ink-400 transition-colors hover:bg-ink-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+              className="-mr-1 rounded-lg p-1.5 text-ink-400 transition-colors hover:bg-night-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
           </div>
 
           {confirmEnd && (
-            <div className="border-b border-amber-200 bg-amber-50 px-4 py-3">
-              <p className="text-[0.85rem] text-amber-900">
+            <div className="border-b border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 px-4 py-3">
+              <p className="text-[0.85rem] text-amber-900 dark:text-amber-300">
                 End this chat? You won&rsquo;t be able to see these messages on this device afterwards.
               </p>
               <div className="mt-2.5 flex gap-2">
@@ -381,14 +381,14 @@ export function ChatWidget() {
                   type="button"
                   onClick={() => void endChat()}
                   disabled={busy}
-                  className="rounded-lg bg-ink-900 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-ink-800 disabled:opacity-60"
+                  className="rounded-lg bg-night-900 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-night-800 disabled:opacity-60"
                 >
                   {busy ? 'Ending…' : 'Yes, end chat'}
                 </button>
                 <button
                   type="button"
                   onClick={() => setConfirmEnd(false)}
-                  className="rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-xs font-semibold text-amber-900 transition-colors hover:bg-amber-100"
+                  className="rounded-lg border border-amber-300 dark:border-amber-500/30 bg-white px-3 py-1.5 text-xs font-semibold text-amber-900 dark:text-amber-300 transition-colors hover:bg-amber-100 dark:hover:bg-amber-500/20"
                 >
                   Keep chatting
                 </button>
@@ -420,8 +420,8 @@ export function ChatWidget() {
                           className={cn(
                             'whitespace-pre-wrap break-words rounded-2xl px-3.5 py-2.5 text-[0.9rem] leading-relaxed',
                             mine
-                              ? 'rounded-br-md bg-brand-500 text-ink-950'
-                              : 'rounded-bl-md border border-ink-200 bg-white text-ink-800',
+                              ? 'rounded-br-md bg-brand-500 text-night-950'
+                              : 'rounded-bl-md border border-ink-200 bg-surface text-ink-800',
                           )}
                         >
                           {message.body}
@@ -440,9 +440,9 @@ export function ChatWidget() {
                 })}
               </div>
 
-              <form onSubmit={send} className="border-t border-ink-200 bg-white p-3">
+              <form onSubmit={send} className="border-t border-ink-200 bg-surface p-3">
                 {error && (
-                  <p role="alert" className="mb-2 text-xs text-red-600">
+                  <p role="alert" className="mb-2 text-xs text-red-600 dark:text-red-300">
                     {error}
                   </p>
                 )}
@@ -472,7 +472,7 @@ export function ChatWidget() {
                     type="submit"
                     disabled={busy || !draft.trim()}
                     aria-label="Send message"
-                    className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-500 text-ink-950 transition-colors duration-200 hover:bg-brand-400 disabled:cursor-not-allowed disabled:opacity-40 focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/40"
+                    className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-500 text-night-950 transition-colors duration-200 hover:bg-brand-400 disabled:cursor-not-allowed disabled:opacity-40 focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/40"
                   >
                     <Send className="h-4 w-4" aria-hidden="true" />
                   </button>
@@ -484,7 +484,7 @@ export function ChatWidget() {
               {ended && (
                 <p
                   role="status"
-                  className="flex items-start gap-2 rounded-xl bg-green-50 px-3 py-2.5 text-[0.85rem] text-green-800"
+                  className="flex items-start gap-2 rounded-xl bg-green-50 dark:bg-green-500/10 px-3 py-2.5 text-[0.85rem] text-green-800 dark:text-green-300"
                 >
                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
                   Chat ended. Start a new one below whenever you need us.
@@ -524,7 +524,7 @@ export function ChatWidget() {
               />
 
               {error && (
-                <p role="alert" className="text-sm text-red-600">
+                <p role="alert" className="text-sm text-red-600 dark:text-red-300">
                   {error}
                 </p>
               )}
@@ -532,7 +532,7 @@ export function ChatWidget() {
               <button
                 type="submit"
                 disabled={busy}
-                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-brand-500 text-[0.95rem] font-semibold text-ink-950 transition-colors duration-200 hover:bg-brand-400 disabled:cursor-progress disabled:opacity-70 focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/40"
+                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-brand-500 text-[0.95rem] font-semibold text-night-950 transition-colors duration-200 hover:bg-brand-400 disabled:cursor-progress disabled:opacity-70 focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/40"
               >
                 {busy ? 'Starting…' : 'Start chat'}
               </button>

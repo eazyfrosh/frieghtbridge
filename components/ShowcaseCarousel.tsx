@@ -167,7 +167,7 @@ export function ShowcaseCarousel() {
                         <div key={stat.label}>
                           <dt className="sr-only">{stat.label}</dt>
                           <dd>
-                            <span className="block font-display text-2xl font-semibold text-ink-950">
+                            <span className="block font-display text-2xl font-semibold text-night-950">
                               {stat.value}
                             </span>
                             <span className="mt-0.5 block text-xs font-medium uppercase tracking-[0.12em] text-white">

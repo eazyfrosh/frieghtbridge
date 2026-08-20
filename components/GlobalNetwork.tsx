@@ -42,14 +42,14 @@ export function GlobalNetwork() {
   const reduced = useReducedMotion();
 
   return (
-    <section id="coverage" className="section relative overflow-hidden bg-white">
+    <section id="coverage" className="section relative overflow-hidden bg-surface">
       <div className="container">
         <SectionHeading
           eyebrow="Global coverage"
           align="center"
           title={
             <>
-              Connecting businesses to destinations <span className="text-brand-600">around the world.</span>
+              Connecting businesses to destinations <span className="text-brand-600 dark:text-brand-300">around the world.</span>
             </>
           }
           description="Regional depth where you ship most, and partner coverage everywhere else — coordinated through a single point of contact."
@@ -183,7 +183,7 @@ export function GlobalNetwork() {
                       className={cn(
                         'pointer-events-auto absolute whitespace-nowrap rounded-full border px-2.5 py-1 text-[0.72rem] font-semibold backdrop-blur transition-colors duration-300 ease-premium',
                         hovered === region.code
-                          ? 'border-white bg-white text-brand-800'
+                          ? 'border-white bg-white text-brand-800 dark:text-brand-300'
                           : 'border-white/40 bg-white/[0.16] text-white',
                       )}
                       style={{
@@ -229,14 +229,14 @@ export function GlobalNetwork() {
                 onMouseEnter={() => setHovered(region.code)}
                 onMouseLeave={() => setHovered(null)}
                 className={cn(
-                  'flex items-center justify-between rounded-2xl border bg-white px-4 py-3.5 transition-all duration-300 ease-premium',
+                  'flex items-center justify-between rounded-2xl border bg-surface px-4 py-3.5 transition-all duration-300 ease-premium',
                   hovered === region.code
-                    ? 'border-brand-300 shadow-soft'
+                    ? 'border-brand-300 dark:border-brand-500/30 shadow-soft'
                     : 'border-ink-100 hover:border-ink-200',
                 )}
               >
                 <span className="flex items-center gap-2.5">
-                  <span className="inline-flex h-7 w-9 items-center justify-center rounded-md bg-ink-900 font-mono text-[0.68rem] font-semibold text-white">
+                  <span className="inline-flex h-7 w-9 items-center justify-center rounded-md bg-night-900 font-mono text-[0.68rem] font-semibold text-white">
                     {region.code}
                   </span>
                   <span className="text-[0.95rem] font-medium text-ink-800">{region.name}</span>

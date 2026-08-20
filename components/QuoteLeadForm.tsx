@@ -103,9 +103,9 @@ export function QuoteLeadForm({ className }: { className?: string }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: EASE_PREMIUM }}
             role="status"
-            className="rounded-4xl border border-ink-100 bg-white p-8 text-center shadow-card sm:p-12"
+            className="rounded-4xl border border-ink-100 bg-surface p-8 text-center shadow-card sm:p-12"
           >
-            <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
+            <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-300">
               <CheckCircle2 className="h-7 w-7" aria-hidden="true" />
             </span>
             <h2 className="mt-6 font-display text-2xl font-semibold text-ink-900">Request received.</h2>
@@ -141,7 +141,7 @@ export function QuoteLeadForm({ className }: { className?: string }) {
             noValidate
             onSubmit={handleSubmit}
             exit={{ opacity: 0 }}
-            className="rounded-4xl border border-ink-100 bg-white p-6 shadow-card sm:p-8 lg:p-10"
+            className="rounded-4xl border border-ink-100 bg-surface p-6 shadow-card sm:p-8 lg:p-10"
           >
             <div className="grid gap-5 sm:grid-cols-2">
               <TextField
@@ -214,7 +214,7 @@ export function QuoteLeadForm({ className }: { className?: string }) {
                 value={values.details}
                 onChange={(event) => update('details', event.target.value)}
                 placeholder="Rough weight, pallet count, timings — whatever you already know."
-                className="mt-1.5 w-full rounded-2xl border border-ink-200 bg-white px-4 py-3 text-[0.95rem] text-ink-900 placeholder:text-ink-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30"
+                className="mt-1.5 w-full rounded-2xl border border-ink-200 bg-surface px-4 py-3 text-[0.95rem] text-ink-900 placeholder:text-ink-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30"
               />
               <p className="mt-1.5 text-xs text-ink-400">
                 We only need the lane to start. The details get confirmed on the call.

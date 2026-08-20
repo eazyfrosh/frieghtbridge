@@ -19,7 +19,7 @@ export default async function AdminTemplatesPage() {
       </p>
 
       {!emailConfigured() && (
-        <p className="mt-5 flex items-start gap-2 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800 ring-1 ring-amber-200">
+        <p className="mt-5 flex items-start gap-2 rounded-xl bg-amber-50 dark:bg-amber-500/10 px-4 py-3 text-sm text-amber-800 dark:text-amber-300 ring-1 ring-amber-200 dark:ring-amber-500/30">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           <span>
             Editing and previewing work, but nothing can be sent yet — {emailConfigError()} See the README

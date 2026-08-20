@@ -66,14 +66,14 @@ export function Testimonials() {
   const active = TESTIMONIALS[index];
 
   return (
-    <section id="testimonials" className="section bg-white">
+    <section id="testimonials" className="section bg-surface">
       <div className="container">
         <SectionHeading
           eyebrow="Customer stories"
           align="center"
           title={
             <>
-              Teams that move freight <span className="text-brand-600">every single day.</span>
+              Teams that move freight <span className="text-brand-600 dark:text-brand-300">every single day.</span>
             </>
           }
           description="What shippers tell us after their first quarter on the FreightBridge Logistics network."
@@ -118,7 +118,7 @@ export function Testimonials() {
                     <footer className="mt-auto flex items-center gap-3.5 pt-8">
                       <span
                         aria-hidden="true"
-                        className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-ink-900 font-display text-sm font-semibold text-white"
+                        className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-night-900 font-display text-sm font-semibold text-white"
                       >
                         {active.initials}
                       </span>
@@ -156,7 +156,7 @@ export function Testimonials() {
                   type="button"
                   onClick={() => go(index - 1, -1)}
                   aria-label="Previous testimonial"
-                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ink-200 bg-white text-ink-700 transition-all duration-300 ease-premium hover:-translate-y-0.5 hover:border-ink-300 hover:bg-ink-50"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ink-200 bg-surface text-ink-700 transition-all duration-300 ease-premium hover:-translate-y-0.5 hover:border-ink-300 hover:bg-ink-50"
                 >
                   <ChevronLeft className="h-[1.15rem] w-[1.15rem]" aria-hidden="true" />
                 </button>
@@ -164,7 +164,7 @@ export function Testimonials() {
                   type="button"
                   onClick={() => go(index + 1, 1)}
                   aria-label="Next testimonial"
-                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ink-200 bg-white text-ink-700 transition-all duration-300 ease-premium hover:-translate-y-0.5 hover:border-ink-300 hover:bg-ink-50"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ink-200 bg-surface text-ink-700 transition-all duration-300 ease-premium hover:-translate-y-0.5 hover:border-ink-300 hover:bg-ink-50"
                 >
                   <ChevronRight className="h-[1.15rem] w-[1.15rem]" aria-hidden="true" />
                 </button>

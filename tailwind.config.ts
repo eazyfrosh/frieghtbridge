@@ -1,6 +1,9 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
+  // Class-based, not media-based: the visitor gets a toggle, and a media
+  // query cannot be overridden by a choice.
+  darkMode: 'class',
   content: [
     './app/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
@@ -33,18 +36,54 @@ const config: Config = {
           800: '#16294F',
           900: '#0F1E3D',
         },
-        // True neutral. The scheme is orange and white, so the greys stay
-        // untinted — no navy cast, no brown cast. `ink-400` is the lightest
-        // step used for body text on white and clears 4.5:1.
+
+        /**
+         * The neutral scale, and the whole of dark mode.
+         *
+         * These resolve through CSS variables that `globals.css` redefines
+         * under `.dark`, so a component written as `text-ink-900` on
+         * `bg-surface` is correct in both themes without a single `dark:`
+         * variant. That matters at this size: there are ~685 `ink-*` uses
+         * across 30-odd components, and hand-writing a dark counterpart for
+         * each would be a permanent tax on every future edit.
+         *
+         * Read the steps by role, not by lightness: `ink-900` is "primary
+         * text", `ink-400` is "muted text", `ink-100` is "hairline". In dark
+         * mode the ramp inverts, so those roles hold and the numbers stop
+         * describing brightness.
+         */
         ink: {
-          50: '#F8F8F8',
-          100: '#EFEFEF',
-          200: '#DCDCDC',
-          300: '#BFBFBF',
-          400: '#6E6E6E',
-          500: '#565656',
-          600: '#414141',
-          700: '#2E2E2E',
+          50: 'rgb(var(--ink-50) / <alpha-value>)',
+          100: 'rgb(var(--ink-100) / <alpha-value>)',
+          200: 'rgb(var(--ink-200) / <alpha-value>)',
+          300: 'rgb(var(--ink-300) / <alpha-value>)',
+          400: 'rgb(var(--ink-400) / <alpha-value>)',
+          500: 'rgb(var(--ink-500) / <alpha-value>)',
+          600: 'rgb(var(--ink-600) / <alpha-value>)',
+          700: 'rgb(var(--ink-700) / <alpha-value>)',
+          800: 'rgb(var(--ink-800) / <alpha-value>)',
+          900: 'rgb(var(--ink-900) / <alpha-value>)',
+          950: 'rgb(var(--ink-950) / <alpha-value>)',
+        },
+
+        /**
+         * Page and card grounds: white in light, near-black in dark.
+         *
+         * Distinct from `ink-50`, which is the *subtle* alternate ground.
+         * `surface` replaced the literal `bg-white`, which could not flip.
+         */
+        surface: 'rgb(var(--surface) / <alpha-value>)',
+
+        /**
+         * Neutrals that must stay dark in **both** themes.
+         *
+         * Two things need this. Deliberate dark bands — the admin rail, the
+         * sign-in page, dark feature cards — are a design choice, not an
+         * absence of light, and inverting them would turn the rail white while
+         * its text stayed white. And dark text on a bright orange button has
+         * to remain dark: white on `brand-500` is 2.9:1 and fails at any size.
+         */
+        night: {
           800: '#1F1F1F',
           900: '#121212',
           950: '#0A0A0A',
@@ -66,9 +105,10 @@ const config: Config = {
           800: '#9C3800',
           900: '#7A2D00',
         },
-        // Warm off-white for the hero surface — a touch softer than pure white
-        // so the white floating cards read as raised against it.
-        canvas: '#F7F7F5',
+        // Warm off-white for the hero surface in light mode, so the raised
+        // cards read against it; a step above the page ground in dark, where
+        // the same separation has to come from being lighter, not darker.
+        canvas: 'rgb(var(--canvas) / <alpha-value>)',
         // Warm gold secondary. Lifts the primary without introducing a second
         // hue family — used for highlights, glows and rating marks.
         signal: {

@@ -66,7 +66,7 @@ export function Logo({ tone = 'dark', className, href = '/', showWordmark = true
           )}
         >
           Freight
-          <span className={tone === 'light' ? 'text-white/75' : 'text-brand-600'}>Bridge</span>
+          <span className={tone === 'light' ? 'text-white/75' : 'text-brand-600 dark:text-brand-300'}>Bridge</span>
           {/* A real space, not a margin. Spacing it with `ml-*` looked right
               and read as "FreightBridgeLogistics" to a screen reader, and to
               anyone copying the name off the page.

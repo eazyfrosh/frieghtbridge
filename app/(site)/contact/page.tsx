@@ -64,21 +64,21 @@ export default function ContactPage() {
         description="Sales, dispatch, and support are staffed by people who know freight. Pick the fastest route to the answer you need."
       />
 
-      <section className="section bg-white">
+      <section className="section bg-surface">
         <div className="container">
           <StaggerGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" gap={0.07}>
             {CHANNELS.map((channel) => (
               <RevealItem key={channel.title}>
                 <a
                   href={channel.href}
-                  className="group flex h-full flex-col rounded-3xl border border-ink-100 bg-white p-6 shadow-soft transition-all duration-400 ease-premium hover:-translate-y-1 hover:border-brand-200 hover:shadow-card"
+                  className="group flex h-full flex-col rounded-3xl border border-ink-100 bg-surface p-6 shadow-soft transition-all duration-400 ease-premium hover:-translate-y-1 hover:border-brand-200 dark:hover:border-brand-500/30 hover:shadow-card"
                 >
-                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 transition-colors duration-400 group-hover:bg-brand-600 group-hover:text-white">
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-300 transition-colors duration-400 group-hover:bg-brand-600 group-hover:text-white">
                     <channel.icon className="h-5 w-5" aria-hidden="true" />
                   </span>
                   <h2 className="mt-5 font-display text-lg font-semibold text-ink-900">{channel.title}</h2>
                   <p className="mt-1.5 flex-1 text-[0.92rem] leading-relaxed text-ink-500">{channel.body}</p>
-                  <span className="mt-4 text-[0.92rem] font-semibold text-brand-700 underline decoration-brand-500/40 decoration-2 underline-offset-4 transition-colors group-hover:decoration-brand-600">
+                  <span className="mt-4 text-[0.92rem] font-semibold text-brand-700 dark:text-brand-300 underline decoration-brand-500/40 decoration-2 underline-offset-4 transition-colors group-hover:decoration-brand-600">
                     {channel.action}
                   </span>
                 </a>
@@ -95,7 +95,7 @@ export default function ContactPage() {
               <Reveal delay={0.1}>
                 <div className="rounded-3xl border border-ink-100 bg-ink-50/60 p-6 sm:p-8">
                   <h2 className="flex items-center gap-2 font-display text-lg font-semibold text-ink-900">
-                    <Clock4 className="h-[1.1rem] w-[1.1rem] text-brand-600" aria-hidden="true" />
+                    <Clock4 className="h-[1.1rem] w-[1.1rem] text-brand-600 dark:text-brand-300" aria-hidden="true" />
                     Hours
                   </h2>
                   <dl className="mt-4 space-y-2.5 text-[0.95rem]">
@@ -116,9 +116,9 @@ export default function ContactPage() {
               </Reveal>
 
               <Reveal delay={0.16}>
-                <div className="rounded-3xl border border-ink-100 bg-white p-6 shadow-soft sm:p-8">
+                <div className="rounded-3xl border border-ink-100 bg-surface p-6 shadow-soft sm:p-8">
                   <h2 className="flex items-center gap-2 font-display text-lg font-semibold text-ink-900">
-                    <MapPin className="h-[1.1rem] w-[1.1rem] text-brand-600" aria-hidden="true" />
+                    <MapPin className="h-[1.1rem] w-[1.1rem] text-brand-600 dark:text-brand-300" aria-hidden="true" />
                     Offices
                   </h2>
                   <ul className="mt-4 divide-y divide-ink-100">
@@ -134,7 +134,7 @@ export default function ContactPage() {
               </Reveal>
 
               <Reveal delay={0.22}>
-                <div className="rounded-3xl bg-ink-950 p-6 text-white sm:p-8">
+                <div className="rounded-3xl bg-night-950 p-6 text-white sm:p-8">
                   <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-brand-300">
                     <Headphones className="h-5 w-5" aria-hidden="true" />
                   </span>

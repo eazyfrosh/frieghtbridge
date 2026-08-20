@@ -17,7 +17,7 @@ export default function AdminChatPage() {
         {chatAvailable() ? (
           <ChatInbox />
         ) : (
-          <p className="rounded-2xl border border-ink-200 bg-white px-5 py-8 text-center text-sm text-ink-500">
+          <p className="rounded-2xl border border-ink-200 bg-surface px-5 py-8 text-center text-sm text-ink-500">
             Chat needs Firestore. Set <code className="font-mono text-ink-700">FIREBASE_SERVICE_ACCOUNT_KEY</code>{' '}
             on this deployment and the inbox will appear here.
           </p>

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function AdminLoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-ink-950 px-5 py-16">
+    <main className="flex min-h-screen items-center justify-center bg-night-950 px-5 py-16">
       <div className="w-full max-w-[26rem]">
         <div className="flex items-center gap-2.5">
           <LogoMark />

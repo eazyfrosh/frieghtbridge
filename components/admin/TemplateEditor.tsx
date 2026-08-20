@@ -160,7 +160,7 @@ export function TemplateEditor({ templates: initial, placeholders }: TemplateEdi
                 aria-current={template.id === activeId ? 'true' : undefined}
                 className={cn(
                   'w-full rounded-xl px-3.5 py-2.5 text-left transition-colors',
-                  template.id === activeId ? 'bg-brand-500 text-ink-950' : 'text-ink-700 hover:bg-ink-100',
+                  template.id === activeId ? 'bg-brand-500 text-night-950' : 'text-ink-700 hover:bg-ink-100',
                 )}
               >
                 <span className="block text-[0.92rem] font-semibold">{template.name}</span>
@@ -182,7 +182,7 @@ export function TemplateEditor({ templates: initial, placeholders }: TemplateEdi
 
       {active && (
         <div className="min-w-0">
-          <div className="rounded-2xl border border-ink-200 bg-white p-5">
+          <div className="rounded-2xl border border-ink-200 bg-surface p-5">
             <h2 className="font-display text-lg font-semibold text-ink-900">{active.name}</h2>
             <p className="mt-1 text-sm text-ink-500">{active.description}</p>
             {active.edited && active.updatedAt && (
@@ -229,7 +229,7 @@ export function TemplateEditor({ templates: initial, placeholders }: TemplateEdi
                     type="button"
                     onClick={() => insert(placeholder.token)}
                     title={`Insert ${placeholder.label}`}
-                    className="rounded-lg border border-ink-200 bg-ink-50 px-2 py-1 font-mono text-[0.72rem] text-ink-600 transition-colors hover:border-brand-500 hover:text-brand-700"
+                    className="rounded-lg border border-ink-200 bg-ink-50 px-2 py-1 font-mono text-[0.72rem] text-ink-600 transition-colors hover:border-brand-500 hover:text-brand-700 dark:hover:text-brand-300"
                   >
                     {`{{${placeholder.token}}}`}
                   </button>
@@ -238,13 +238,13 @@ export function TemplateEditor({ templates: initial, placeholders }: TemplateEdi
             </div>
 
             {error && (
-              <p role="alert" className="mt-4 flex items-start gap-2 text-sm text-red-600">
+              <p role="alert" className="mt-4 flex items-start gap-2 text-sm text-red-600 dark:text-red-300">
                 <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
                 {error}
               </p>
             )}
             {status && (
-              <p role="status" className="mt-4 flex items-start gap-2 text-sm text-green-700">
+              <p role="status" className="mt-4 flex items-start gap-2 text-sm text-green-700 dark:text-green-300">
                 <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
                 {status}
               </p>
@@ -255,7 +255,7 @@ export function TemplateEditor({ templates: initial, placeholders }: TemplateEdi
                 type="button"
                 onClick={() => void save()}
                 disabled={busy || !dirty}
-                className="inline-flex h-11 items-center gap-2 rounded-xl bg-brand-500 px-5 text-[0.95rem] font-semibold text-ink-950 transition-colors hover:bg-brand-400 disabled:cursor-not-allowed disabled:opacity-40"
+                className="inline-flex h-11 items-center gap-2 rounded-xl bg-brand-500 px-5 text-[0.95rem] font-semibold text-night-950 transition-colors hover:bg-brand-400 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <Save className="h-4 w-4" aria-hidden="true" />
                 {busy ? 'Saving…' : dirty ? 'Save changes' : 'Saved'}

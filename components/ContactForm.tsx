@@ -93,9 +93,9 @@ export function ContactForm() {
           initial={reduced ? { opacity: 0 } : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, ease: EASE_PREMIUM }}
-          className="rounded-4xl border border-ink-100 bg-white p-8 text-center shadow-card sm:p-12"
+          className="rounded-4xl border border-ink-100 bg-surface p-8 text-center shadow-card sm:p-12"
         >
-          <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
+          <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-300">
             <CheckCircle2 className="h-7 w-7" aria-hidden="true" />
           </span>
           <h2 className="mt-6 font-display text-2xl font-semibold text-ink-900">Message received</h2>
@@ -129,7 +129,7 @@ export function ContactForm() {
           onSubmit={handleSubmit}
           initial={false}
           exit={{ opacity: 0 }}
-          className="rounded-4xl border border-ink-100 bg-white p-6 shadow-card sm:p-8 lg:p-10"
+          className="rounded-4xl border border-ink-100 bg-surface p-6 shadow-card sm:p-8 lg:p-10"
         >
           <h2 className="font-display text-2xl font-semibold tracking-[-0.02em] text-ink-900">Send us a message</h2>
           <p className="mt-2 text-[0.95rem] text-ink-500">

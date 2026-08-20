@@ -31,7 +31,7 @@ const POINTS = [
  */
 export function NetworkStory() {
   return (
-    <section id="inside-the-network" className="section scroll-mt-24 bg-white">
+    <section id="inside-the-network" className="section scroll-mt-24 bg-surface">
       <div className="container">
         <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
           <div>
@@ -44,7 +44,7 @@ export function NetworkStory() {
 
             <Reveal delay={0.06} from="left">
               <h2 className="display-2 mt-5">
-                See how your freight <span className="text-brand-600">actually moves.</span>
+                See how your freight <span className="text-brand-600 dark:text-brand-300">actually moves.</span>
               </h2>
             </Reveal>
 
@@ -59,7 +59,7 @@ export function NetworkStory() {
               <ul className="mt-9 space-y-6">
                 {POINTS.map((point) => (
                   <li key={point.title} className="flex gap-4">
-                    <span className="mt-0.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-50 text-brand-600">
+                    <span className="mt-0.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-300">
                       <point.icon className="h-5 w-5" aria-hidden="true" />
                     </span>
                     <span>

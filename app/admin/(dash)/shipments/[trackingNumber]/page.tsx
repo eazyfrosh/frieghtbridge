@@ -68,7 +68,7 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
 
       <dl className="mt-8 grid gap-px overflow-hidden rounded-2xl border border-ink-200 bg-ink-200 sm:grid-cols-2 lg:grid-cols-3">
         {facts.map((fact) => (
-          <div key={fact.label} className="bg-white p-5">
+          <div key={fact.label} className="bg-surface p-5">
             <dt className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.1em] text-ink-500">
               <fact.icon className="h-3.5 w-3.5" aria-hidden="true" />
               {fact.label}
@@ -79,7 +79,7 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
       </dl>
 
       {shipment.customer && (
-        <section className="mt-8 rounded-2xl border border-ink-200 bg-white p-5 sm:p-6">
+        <section className="mt-8 rounded-2xl border border-ink-200 bg-surface p-5 sm:p-6">
           <h2 className="font-display text-lg font-semibold text-ink-900">Customer</h2>
           <dl className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div>
@@ -97,7 +97,7 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
               <dd className="mt-1 text-[0.95rem]">
                 <a
                   href={`mailto:${shipment.customer.email}`}
-                  className="font-medium text-brand-700 underline decoration-brand-500/40 underline-offset-2"
+                  className="font-medium text-brand-700 dark:text-brand-300 underline decoration-brand-500/40 underline-offset-2"
                 >
                   {shipment.customer.email}
                 </a>
@@ -139,7 +139,7 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
         writable={writable}
       />
 
-      <section className="mt-8 rounded-2xl border border-ink-200 bg-white p-5 sm:p-7">
+      <section className="mt-8 rounded-2xl border border-ink-200 bg-surface p-5 sm:p-7">
         <h2 className="font-display text-lg font-semibold text-ink-900">Scan history</h2>
         <ol className="mt-5">
           {resolved.events.map((event, index) => {
@@ -156,7 +156,7 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
                 <span
                   aria-hidden="true"
                   className={`relative z-10 mt-1 h-[22px] w-[22px] shrink-0 rounded-full border-2 ${
-                    happened ? 'border-brand-700 bg-brand-700' : 'border-ink-200 bg-white'
+                    happened ? 'border-brand-700 bg-brand-700' : 'border-ink-200 bg-surface'
                   }`}
                 />
                 <div className="min-w-0 flex-1">

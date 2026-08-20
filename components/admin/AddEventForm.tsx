@@ -92,7 +92,7 @@ export function AddEventForm({ trackingNumber, stages, currentStatus, writable }
           onClick={() => setOpen(true)}
           disabled={!writable}
           title={writable ? undefined : 'Firestore is not configured on this deployment.'}
-          className="inline-flex h-10 items-center gap-2 rounded-xl bg-ink-900 px-4 text-[0.92rem] font-semibold text-white transition-colors hover:bg-ink-800 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex h-10 items-center gap-2 rounded-xl bg-night-900 px-4 text-[0.92rem] font-semibold text-white transition-colors hover:bg-night-800 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Plus className="h-4 w-4" aria-hidden="true" />
           Add tracking event
@@ -102,9 +102,9 @@ export function AddEventForm({ trackingNumber, stages, currentStatus, writable }
   }
 
   return (
-    <form onSubmit={submit} className="mt-4 rounded-2xl border border-ink-200 bg-white p-5">
+    <form onSubmit={submit} className="mt-4 rounded-2xl border border-ink-200 bg-surface p-5">
       <h3 className="flex items-center gap-2 font-display text-[1.05rem] font-semibold text-ink-900">
-        <MapPin className="h-[1.05rem] w-[1.05rem] text-brand-700" aria-hidden="true" />
+        <MapPin className="h-[1.05rem] w-[1.05rem] text-brand-700 dark:text-brand-300" aria-hidden="true" />
         Add tracking event
       </h3>
 
@@ -117,7 +117,7 @@ export function AddEventForm({ trackingNumber, stages, currentStatus, writable }
             id="event-stage"
             value={stage}
             onChange={(event) => setStage(event.target.value)}
-            className="mt-1.5 h-11 w-full rounded-xl border border-ink-200 bg-white px-3.5 text-[0.95rem] text-ink-900 focus:border-brand-500 focus:outline-none"
+            className="mt-1.5 h-11 w-full rounded-xl border border-ink-200 bg-surface px-3.5 text-[0.95rem] text-ink-900 focus:border-brand-500 focus:outline-none"
           >
             {stages.map((option) => (
               <option key={option} value={option}>
@@ -202,13 +202,13 @@ export function AddEventForm({ trackingNumber, stages, currentStatus, writable }
       </label>
 
       {error && (
-        <p role="alert" className="mt-4 flex items-start gap-2 text-sm text-red-600">
+        <p role="alert" className="mt-4 flex items-start gap-2 text-sm text-red-600 dark:text-red-300">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           {error}
         </p>
       )}
       {added && (
-        <p role="status" className="mt-4 flex items-center gap-2 text-sm text-green-700">
+        <p role="status" className="mt-4 flex items-center gap-2 text-sm text-green-700 dark:text-green-300">
           <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden="true" />
           {added}
         </p>
@@ -218,7 +218,7 @@ export function AddEventForm({ trackingNumber, stages, currentStatus, writable }
         <button
           type="submit"
           disabled={busy}
-          className="inline-flex h-11 items-center gap-2 rounded-xl bg-brand-500 px-5 text-[0.95rem] font-semibold text-ink-950 transition-colors hover:bg-brand-400 disabled:cursor-progress disabled:opacity-60"
+          className="inline-flex h-11 items-center gap-2 rounded-xl bg-brand-500 px-5 text-[0.95rem] font-semibold text-night-950 transition-colors hover:bg-brand-400 disabled:cursor-progress disabled:opacity-60"
         >
           <Plus className="h-4 w-4" aria-hidden="true" />
           {busy ? 'Recording…' : 'Record event'}

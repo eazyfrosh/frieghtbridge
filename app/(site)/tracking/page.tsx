@@ -69,7 +69,7 @@ export default async function TrackingPage({ searchParams }: TrackingPageProps) 
         </div>
       </section>
 
-      <section className="section bg-white">
+      <section className="section bg-surface">
         <div className="container">
           <SectionHeading
             eyebrow="Status guide"
@@ -81,10 +81,10 @@ export default async function TrackingPage({ searchParams }: TrackingPageProps) 
             {STATUS_GUIDE.map((status, index) => (
               <RevealItem
                 key={status.title}
-                className="rounded-3xl border border-ink-100 bg-white p-6 shadow-soft transition-[border-color,box-shadow,transform] duration-400 ease-premium hover:-translate-y-1 hover:border-brand-200 hover:shadow-card"
+                className="rounded-3xl border border-ink-100 bg-surface p-6 shadow-soft transition-[border-color,box-shadow,transform] duration-400 ease-premium hover:-translate-y-1 hover:border-brand-200 dark:hover:border-brand-500/30 hover:shadow-card"
               >
                 <div className="flex items-center justify-between">
-                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-50 text-brand-600">
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-300">
                     <status.icon className="h-5 w-5" aria-hidden="true" />
                   </span>
                   <span className="font-mono text-xs font-semibold text-ink-300">
@@ -96,7 +96,7 @@ export default async function TrackingPage({ searchParams }: TrackingPageProps) 
               </RevealItem>
             ))}
 
-            <RevealItem className="flex flex-col justify-between rounded-3xl border border-ink-900 bg-ink-950 p-6 text-white">
+            <RevealItem className="flex flex-col justify-between rounded-3xl border border-night-900 bg-night-950 p-6 text-white">
               <div>
                 <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-brand-300">
                   <Headphones className="h-5 w-5" aria-hidden="true" />

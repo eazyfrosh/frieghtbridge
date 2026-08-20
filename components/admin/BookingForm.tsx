@@ -227,11 +227,11 @@ export function BookingForm({ className }: { className?: string }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.45, ease: EASE_PREMIUM }}
-            className="rounded-4xl border border-ink-100 bg-white p-8 text-center shadow-card sm:p-12"
+            className="rounded-4xl border border-ink-100 bg-surface p-8 text-center shadow-card sm:p-12"
             role="status"
           >
             <motion.span
-              className="mx-auto inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-emerald-600"
+              className="mx-auto inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-300"
               initial={reduced ? undefined : { scale: 0.7, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: 'spring', stiffness: 260, damping: 18, delay: 0.1 }}
@@ -248,17 +248,17 @@ export function BookingForm({ className }: { className?: string }) {
             </p>
 
             <dl className="mx-auto mt-8 grid max-w-lg gap-px overflow-hidden rounded-2xl bg-ink-100 text-left sm:grid-cols-3">
-              <div className="bg-white p-4">
+              <div className="bg-surface p-4">
                 <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-400">Reference</dt>
                 <dd className="mt-1 font-mono text-sm font-semibold text-ink-900">{success.reference}</dd>
               </div>
-              <div className="bg-white p-4">
+              <div className="bg-surface p-4">
                 <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-400">Lane</dt>
                 <dd className="mt-1 text-sm font-medium text-ink-900">
                   {values.fromCity} → {values.toCity}
                 </dd>
               </div>
-              <div className="bg-white p-4">
+              <div className="bg-surface p-4">
                 <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-400">Service</dt>
                 <dd className="mt-1 text-sm font-medium text-ink-900">
                   {values.shipmentType} · {values.deliveryPreference}
@@ -284,17 +284,17 @@ export function BookingForm({ className }: { className?: string }) {
             onSubmit={handleSubmit}
             initial={false}
             exit={{ opacity: 0 }}
-            className="rounded-4xl border border-ink-100 bg-white p-6 shadow-card sm:p-8 lg:p-10"
+            className="rounded-4xl border border-ink-100 bg-surface p-6 shadow-card sm:p-8 lg:p-10"
           >
             {submitted && errorCount > 0 && (
               <div
                 role="alert"
-                className="mb-8 flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+                className="mb-8 flex items-start gap-3 rounded-2xl border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 p-4 text-sm text-red-700 dark:text-red-300"
               >
                 <span className="mt-0.5 font-semibold">
                   {errorCount} {errorCount === 1 ? 'field needs' : 'fields need'} attention
                 </span>
-                <span className="text-red-600">Fix the highlighted fields and submit again.</span>
+                <span className="text-red-600 dark:text-red-300">Fix the highlighted fields and submit again.</span>
               </div>
             )}
 
@@ -302,7 +302,7 @@ export function BookingForm({ className }: { className?: string }) {
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
               <fieldset className="rounded-3xl border border-ink-100 bg-ink-50/40 p-5 sm:p-6">
                 <legend className="flex items-center gap-2 px-2 font-display text-sm font-semibold uppercase tracking-[0.14em] text-ink-700">
-                  <MapPin className="h-4 w-4 text-brand-600" aria-hidden="true" />
+                  <MapPin className="h-4 w-4 text-brand-600 dark:text-brand-300" aria-hidden="true" />
                   From
                 </legend>
                 <div className="mt-4 grid gap-4">
@@ -382,7 +382,7 @@ export function BookingForm({ className }: { className?: string }) {
             {/* Shipment */}
             <div className="mt-8 border-t border-ink-100 pt-8">
               <h3 className="flex items-center gap-2 font-display text-sm font-semibold uppercase tracking-[0.14em] text-ink-700">
-                <Truck className="h-4 w-4 text-brand-600" aria-hidden="true" />
+                <Truck className="h-4 w-4 text-brand-600 dark:text-brand-300" aria-hidden="true" />
                 Shipment details
               </h3>
 
@@ -453,7 +453,7 @@ export function BookingForm({ className }: { className?: string }) {
             {/* Contact */}
             <div className="mt-8 border-t border-ink-100 pt-8">
               <h3 className="flex items-center gap-2 font-display text-sm font-semibold uppercase tracking-[0.14em] text-ink-700">
-                <ShieldCheck className="h-4 w-4 text-brand-600" aria-hidden="true" />
+                <ShieldCheck className="h-4 w-4 text-brand-600 dark:text-brand-300" aria-hidden="true" />
                 How we reach you
               </h3>
 
@@ -506,7 +506,7 @@ export function BookingForm({ className }: { className?: string }) {
             {submitError && (
               <p
                 role="alert"
-                className="mt-8 flex items-start gap-2 rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-700 ring-1 ring-red-200"
+                className="mt-8 flex items-start gap-2 rounded-2xl bg-red-50 dark:bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-300 ring-1 ring-red-200 dark:ring-red-500/30"
               >
                 <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
                 {submitError}

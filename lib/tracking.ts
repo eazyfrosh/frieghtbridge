@@ -250,13 +250,13 @@ export function statusTone(status: ShipmentStatus): {
     case 'Delivered':
       return {
         label: 'Delivered',
-        className: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
+        className: 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 ring-emerald-600/20',
         dot: 'bg-emerald-500',
       };
     case 'Exception':
       return {
         label: 'Delay reported',
-        className: 'bg-rose-50 text-rose-700 ring-rose-600/20',
+        className: 'bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 ring-rose-600/20',
         dot: 'bg-rose-500',
       };
     case 'Out for Delivery':
@@ -268,7 +268,7 @@ export function statusTone(status: ShipmentStatus): {
     default:
       return {
         label: status,
-        className: 'bg-brand-50 text-brand-700 ring-brand-600/20',
+        className: 'bg-brand-50 dark:bg-brand-500/10 text-brand-700 dark:text-brand-300 ring-brand-600/20',
         dot: 'bg-brand-500',
       };
   }

@@ -28,7 +28,7 @@ export function Accordion({ items, className }: { items: AccordionItem[]; classN
                 aria-expanded={expanded}
                 aria-controls={`faq-panel-${index}`}
                 id={`faq-trigger-${index}`}
-                className="flex w-full items-start justify-between gap-6 py-5 text-left transition-colors duration-200 hover:text-brand-700"
+                className="flex w-full items-start justify-between gap-6 py-5 text-left transition-colors duration-200 hover:text-brand-700 dark:hover:text-brand-300"
               >
                 <span className="font-display text-[1.05rem] font-semibold text-ink-900 sm:text-lg">
                   {item.question}
@@ -38,7 +38,7 @@ export function Accordion({ items, className }: { items: AccordionItem[]; classN
                     'mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition-all duration-400 ease-premium',
                     expanded
                       ? 'rotate-45 border-brand-500 bg-brand-600 text-white'
-                      : 'border-ink-200 bg-white text-ink-500',
+                      : 'border-ink-200 bg-surface text-ink-500',
                   )}
                   aria-hidden="true"
                 >

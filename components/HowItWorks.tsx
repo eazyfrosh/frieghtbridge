@@ -39,14 +39,14 @@ export function HowItWorks() {
   const reduced = useReducedMotion();
 
   return (
-    <section id="how-it-works" className="section bg-white">
+    <section id="how-it-works" className="section bg-surface">
       <div className="container">
         <SectionHeading
           eyebrow="How it works"
           align="center"
           title={
             <>
-              Moving freight is easier <span className="text-brand-600">with FreightBridge Logistics.</span>
+              Moving freight is easier <span className="text-brand-600 dark:text-brand-300">with FreightBridge Logistics.</span>
             </>
           }
           description="Four steps from first quote to proof of delivery — with a named logistics specialist on every one of them."
@@ -72,11 +72,11 @@ export function HowItWorks() {
                 variants={motionSafe(reduced, slideInLeft)}
                 className="group relative flex flex-col items-start lg:items-center lg:text-center"
               >
-                <span className="relative z-10 inline-flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-3xl border border-ink-100 bg-white text-ink-900 shadow-soft transition-all duration-400 ease-premium group-hover:-translate-y-1 group-hover:border-brand-200 group-hover:bg-brand-600 group-hover:text-white group-hover:shadow-glow">
+                <span className="relative z-10 inline-flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-3xl border border-ink-100 bg-surface text-ink-900 shadow-soft transition-all duration-400 ease-premium group-hover:-translate-y-1 group-hover:border-brand-200 dark:group-hover:border-brand-500/30 group-hover:bg-brand-600 group-hover:text-white group-hover:shadow-glow">
                   <step.icon className="h-7 w-7" aria-hidden="true" />
                 </span>
 
-                <span className="mt-6 font-mono text-sm font-semibold tracking-[0.18em] text-brand-700">
+                <span className="mt-6 font-mono text-sm font-semibold tracking-[0.18em] text-brand-700 dark:text-brand-300">
                   {step.number}
                 </span>
                 <h3 className="mt-2 font-display text-xl font-semibold tracking-[-0.02em] text-ink-900">

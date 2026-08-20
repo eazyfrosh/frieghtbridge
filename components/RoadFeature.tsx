@@ -46,7 +46,7 @@ export function RoadFeature() {
 
             <Reveal delay={0.06} from="right">
               <h2 className="display-2 mt-5">
-                Every delivery has <span className="text-brand-600">a name on it.</span>
+                Every delivery has <span className="text-brand-600 dark:text-brand-300">a name on it.</span>
               </h2>
             </Reveal>
 
@@ -62,9 +62,9 @@ export function RoadFeature() {
                 {STATS.map((stat) => (
                   <div
                     key={stat.label}
-                    className="rounded-2xl border border-ink-100 bg-white p-4 shadow-soft"
+                    className="rounded-2xl border border-ink-100 bg-surface p-4 shadow-soft"
                   >
-                    <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
+                    <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-brand-50 dark:bg-brand-500/10 text-brand-700 dark:text-brand-300">
                       <stat.icon className="h-[1.05rem] w-[1.05rem]" aria-hidden="true" />
                     </span>
                     <dt className="sr-only">{stat.label}</dt>

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { NAV_ITEMS, SITE, type NavItem } from '@/lib/site';
 import { cn } from '@/lib/utils';
+import { ThemeToggle } from './ThemeToggle';
 import { Button } from './ui/Button';
 import { Logo } from './ui/Logo';
 import { useReducedMotion } from '@/lib/use-reduced-motion';
@@ -75,7 +76,7 @@ export function Navbar() {
           content and swallow clicks. */}
       <a
         href="#main"
-        className="sr-only rounded-full bg-ink-900 px-4 py-2 text-sm font-semibold text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70]"
+        className="sr-only rounded-full bg-night-900 px-4 py-2 text-sm font-semibold text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70]"
       >
         Skip to content
       </a>
@@ -84,7 +85,7 @@ export function Navbar() {
           shadow and the height shrink, never the colour scheme. */}
       <header
         className={cn(
-          'fixed inset-x-0 top-0 z-50 border-b border-ink-100 bg-white transition-[box-shadow] duration-500 ease-premium',
+          'fixed inset-x-0 top-0 z-50 border-b border-ink-100 bg-surface transition-[box-shadow] duration-500 ease-premium',
           scrolled && 'shadow-[0_1px_24px_-12px_rgba(18,18,18,0.4)]',
         )}
       >
@@ -119,7 +120,8 @@ export function Navbar() {
 
             {/* One action. Tracking is the thing customers come back for —
                 booking now lives in the operations area, not on this site. */}
-            <div className="hidden items-center lg:flex">
+            <div className="hidden items-center gap-3 lg:flex">
+              <ThemeToggle />
               <Button href="/tracking" size="md" variant="primary" onClick={closeAll}>
                 <PackageSearch className="h-4 w-4" aria-hidden="true" />
                 Track Shipment
@@ -133,7 +135,7 @@ export function Navbar() {
               aria-label="Open menu"
               aria-expanded={mobileOpen}
               aria-controls="mobile-menu"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ink-200 bg-white text-ink-800 transition-colors duration-300 hover:bg-ink-50 lg:hidden"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ink-200 bg-surface text-ink-800 transition-colors duration-300 hover:bg-ink-50 lg:hidden"
             >
               <Menu className="h-5 w-5" aria-hidden="true" />
             </button>
@@ -155,14 +157,14 @@ export function Navbar() {
             <button
               type="button"
               aria-label="Close menu"
-              className="absolute inset-0 h-full w-full cursor-default bg-ink-950/50 backdrop-blur-sm"
+              className="absolute inset-0 h-full w-full cursor-default bg-night-950/50 backdrop-blur-sm"
               onClick={() => setMobileOpen(false)}
             />
             <motion.div
               role="dialog"
               aria-modal="true"
               aria-label="Site menu"
-              className="absolute inset-y-0 right-0 flex w-full max-w-sm flex-col bg-white shadow-2xl"
+              className="absolute inset-y-0 right-0 flex w-full max-w-sm flex-col bg-surface shadow-2xl"
               initial={reduced ? false : { x: '100%' }}
               animate={{ x: 0 }}
               exit={reduced ? undefined : { x: '100%' }}
@@ -232,7 +234,7 @@ export function Navbar() {
                                     className="flex items-start gap-3 rounded-xl px-2 py-3 transition-colors hover:bg-ink-50"
                                   >
                                     {child.icon && (
-                                      <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
+                                      <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-300">
                                         <child.icon className="h-4 w-4" aria-hidden="true" />
                                       </span>
                                     )}
@@ -260,6 +262,13 @@ export function Navbar() {
                     <PackageSearch className="h-4 w-4" aria-hidden="true" />
                     Track Shipment
                   </Button>
+                </div>
+
+                {/* In the drawer rather than the collapsed header bar, which
+                    has room for the menu button and the logo and nothing more. */}
+                <div className="mt-5 flex items-center justify-between">
+                  <span className="text-sm font-medium text-ink-500">Theme</span>
+                  <ThemeToggle />
                 </div>
 
                 <a
@@ -340,7 +349,7 @@ function DesktopNavItem({ item, open, reduced, onOpen, onToggle, onClose }: Desk
                         className="group/link flex items-start gap-3 rounded-2xl p-3 transition-colors duration-200 hover:bg-ink-50"
                       >
                         {child.icon && (
-                          <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600 transition-colors duration-200 group-hover/link:bg-brand-600 group-hover/link:text-white">
+                          <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-300 transition-colors duration-200 group-hover/link:bg-brand-600 group-hover/link:text-white">
                             <child.icon className="h-[1.05rem] w-[1.05rem]" aria-hidden="true" />
                           </span>
                         )}
@@ -364,7 +373,7 @@ function DesktopNavItem({ item, open, reduced, onOpen, onToggle, onClose }: Desk
                 </ul>
 
                 {item.featured && (
-                  <div className="relative overflow-hidden rounded-2xl bg-ink-900 p-5 text-white">
+                  <div className="relative overflow-hidden rounded-2xl bg-night-900 p-5 text-white">
                     <div
                       className="pointer-events-none absolute -right-10 -top-12 h-36 w-36 rounded-full bg-brand-500/40 blur-2xl"
                       aria-hidden="true"

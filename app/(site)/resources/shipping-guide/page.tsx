@@ -81,7 +81,7 @@ export default function ShippingGuidePage() {
       />
 
       {/* Choosing a mode */}
-      <section className="section bg-white">
+      <section className="section bg-surface">
         <div className="container">
           <SectionHeading
             eyebrow="Step one"
@@ -93,13 +93,13 @@ export default function ShippingGuidePage() {
             {MODES.map((mode) => (
               <RevealItem
                 key={mode.name}
-                className="group rounded-3xl border border-ink-100 bg-white p-6 shadow-soft transition-[transform,border-color,box-shadow] duration-400 ease-premium hover:-translate-y-1 hover:border-brand-200 hover:shadow-card"
+                className="group rounded-3xl border border-ink-100 bg-surface p-6 shadow-soft transition-[transform,border-color,box-shadow] duration-400 ease-premium hover:-translate-y-1 hover:border-brand-200 dark:hover:border-brand-500/30 hover:shadow-card"
               >
-                <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-ink-900 text-white transition-colors duration-400 group-hover:bg-brand-600">
+                <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-night-900 text-white transition-colors duration-400 group-hover:bg-brand-600">
                   <mode.icon className="h-5 w-5" aria-hidden="true" />
                 </span>
                 <h3 className="mt-5 font-display text-lg font-semibold text-ink-900">{mode.name}</h3>
-                <p className="mt-2 text-sm font-medium text-brand-700">{mode.when}</p>
+                <p className="mt-2 text-sm font-medium text-brand-700 dark:text-brand-300">{mode.when}</p>
                 <p className="mt-2 text-[0.92rem] leading-relaxed text-ink-500">{mode.detail}</p>
               </RevealItem>
             ))}
@@ -118,9 +118,9 @@ export default function ShippingGuidePage() {
                 description="Most freight damage and most billing surprises trace back to the same two things: how the load was built, and how it was measured."
               />
               <Reveal delay={0.2}>
-                <div className="mt-8 rounded-3xl border border-ink-100 bg-white p-6 shadow-soft">
+                <div className="mt-8 rounded-3xl border border-ink-100 bg-surface p-6 shadow-soft">
                   <h3 className="flex items-center gap-2 font-display text-base font-semibold text-ink-900">
-                    <Ruler className="h-4 w-4 text-brand-600" aria-hidden="true" />
+                    <Ruler className="h-4 w-4 text-brand-600 dark:text-brand-300" aria-hidden="true" />
                     Dimensional weight, quickly
                   </h3>
                   <p className="mt-3 text-[0.95rem] leading-relaxed text-ink-500">
@@ -136,8 +136,8 @@ export default function ShippingGuidePage() {
 
             <StaggerGroup className="grid gap-4 sm:grid-cols-2" gap={0.08}>
               {PACKING.map((tip, index) => (
-                <RevealItem key={tip.title} className="rounded-3xl border border-ink-100 bg-white p-6 shadow-soft">
-                  <span className="font-mono text-xs font-semibold text-brand-700">
+                <RevealItem key={tip.title} className="rounded-3xl border border-ink-100 bg-surface p-6 shadow-soft">
+                  <span className="font-mono text-xs font-semibold text-brand-700 dark:text-brand-300">
                     {String(index + 1).padStart(2, '0')}
                   </span>
                   <h3 className="mt-3 font-display text-lg font-semibold text-ink-900">{tip.title}</h3>
@@ -150,7 +150,7 @@ export default function ShippingGuidePage() {
       </section>
 
       {/* Documents */}
-      <section className="section bg-white">
+      <section className="section bg-surface">
         <div className="container">
           <SectionHeading
             eyebrow="Step three"
@@ -168,9 +168,9 @@ export default function ShippingGuidePage() {
             {DOCUMENTS.map((document) => (
               <RevealItem
                 key={document.title}
-                className="rounded-3xl border border-ink-100 bg-white p-6 shadow-soft transition-[transform,box-shadow] duration-400 ease-premium hover:-translate-y-1 hover:shadow-card"
+                className="rounded-3xl border border-ink-100 bg-surface p-6 shadow-soft transition-[transform,box-shadow] duration-400 ease-premium hover:-translate-y-1 hover:shadow-card"
               >
-                <FileText className="h-5 w-5 text-brand-600" aria-hidden="true" />
+                <FileText className="h-5 w-5 text-brand-600 dark:text-brand-300" aria-hidden="true" />
                 <h3 className="mt-5 font-display text-base font-semibold text-ink-900">{document.title}</h3>
                 <p className="mt-2 text-[0.92rem] leading-relaxed text-ink-500">{document.body}</p>
               </RevealItem>

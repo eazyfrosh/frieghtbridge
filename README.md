@@ -316,6 +316,45 @@ deliberate act), bulk sends, scheduling, open tracking, and unsubscribe
 handling — these are transactional notifications, but check your obligations
 before using them for anything else.
 
+## Light and dark mode
+
+A three-way control — light, dark, follow the system — in the navbar and in the
+admin rail. The choice is stored in `localStorage` under `fb-theme`; with
+nothing stored the site follows `prefers-color-scheme`, and while on "system"
+it keeps following it, so a phone that switches at sunset switches the site too.
+
+**Done in the tokens, not with `dark:` variants.** The `ink` scale and
+`surface` resolve through CSS variables that `globals.css` redefines under
+`.dark`, so `text-ink-900` on `bg-surface` is correct in both themes with no
+second class. There are ~685 `ink-*` uses across 30-odd components; a
+hand-written dark counterpart for each would be a tax on every future edit and
+would drift the first time someone forgot one.
+
+Three things deliberately do **not** invert, and have their own `night-*`
+token:
+
+- Dark bands — the admin rail, the sign-in page, dark feature cards — are a
+  design choice, not an absence of light. Inverting them turns the rail white
+  under its own white text.
+- Dark text on a bright orange button. White on `brand-500` is 2.9:1.
+- The navy footer, which is already a fixed dark ground.
+
+The dark ramp is not an arithmetic inversion. Light-on-dark reads heavier at
+equal contrast, so the top of the scale is `#F2F3F4` rather than white; the
+muted step has to climb from `#6E6E6E` to `#A2A6AB`, which would otherwise sit
+at 3.4:1 and be illegible; and the grounds start at `#0E0F11` rather than pure
+black so the elevation steps stay visible.
+
+An inline script in `<head>` applies the theme before first paint. It has to be
+blocking and it has to be there: the server cannot know the visitor's choice,
+so anything running later means a white flash on every navigation for a
+dark-mode visitor.
+
+Fixed accent tints — the rose "needs attention" card, amber warnings, emerald
+status pills — carry explicit `dark:` variants. A light tint under text that
+has flipped to near-white is unreadable, and that class of bug is why a
+themed-token approach still needs a pass over the accents.
+
 ## Design system
 
 Tokens live in `tailwind.config.ts`:

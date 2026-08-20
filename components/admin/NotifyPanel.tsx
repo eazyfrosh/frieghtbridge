@@ -138,21 +138,21 @@ export function NotifyPanel({
   const selected = templates.find((t) => t.id === templateId);
 
   return (
-    <section className="mt-8 rounded-2xl border border-ink-200 bg-white p-5 sm:p-6">
+    <section className="mt-8 rounded-2xl border border-ink-200 bg-surface p-5 sm:p-6">
       <h2 className="flex items-center gap-2 font-display text-lg font-semibold text-ink-900">
-        <Mail className="h-[1.15rem] w-[1.15rem] text-brand-700" aria-hidden="true" />
+        <Mail className="h-[1.15rem] w-[1.15rem] text-brand-700 dark:text-brand-300" aria-hidden="true" />
         Notify the customer
       </h2>
       <p className="mt-1 text-sm text-ink-500">
         Templates are editable under{' '}
-        <a href="/admin/templates" className="font-medium text-brand-700 underline underline-offset-2">
+        <a href="/admin/templates" className="font-medium text-brand-700 dark:text-brand-300 underline underline-offset-2">
           Email templates
         </a>
         .
       </p>
 
       {!configured && (
-        <p className="mt-4 flex items-start gap-2 rounded-xl bg-amber-50 px-3.5 py-3 text-sm text-amber-800 ring-1 ring-amber-200">
+        <p className="mt-4 flex items-start gap-2 rounded-xl bg-amber-50 dark:bg-amber-500/10 px-3.5 py-3 text-sm text-amber-800 dark:text-amber-300 ring-1 ring-amber-200 dark:ring-amber-500/30">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           <span>
             Sending is switched off — {configError ?? 'the email provider is not configured.'} You can still
@@ -171,7 +171,7 @@ export function NotifyPanel({
               id="notify-template"
               value={templateId}
               onChange={(event) => setTemplateId(event.target.value)}
-              className="mt-1.5 h-11 w-full rounded-xl border border-ink-200 bg-white px-3.5 text-[0.95rem] text-ink-900 focus:border-brand-500 focus:outline-none"
+              className="mt-1.5 h-11 w-full rounded-xl border border-ink-200 bg-surface px-3.5 text-[0.95rem] text-ink-900 focus:border-brand-500 focus:outline-none"
             >
               {templates.map((template) => (
                 <option key={template.id} value={template.id}>
@@ -211,13 +211,13 @@ export function NotifyPanel({
           </div>
 
           {error && (
-            <p role="alert" className="flex items-start gap-2 text-sm text-red-600">
+            <p role="alert" className="flex items-start gap-2 text-sm text-red-600 dark:text-red-300">
               <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
               {error}
             </p>
           )}
           {sent && (
-            <p role="status" className="flex items-center gap-2 text-sm text-green-700">
+            <p role="status" className="flex items-center gap-2 text-sm text-green-700 dark:text-green-300">
               <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden="true" />
               {sent}
             </p>
@@ -227,7 +227,7 @@ export function NotifyPanel({
             type="button"
             onClick={() => void send()}
             disabled={!configured || sending || !to.trim() || !templateId}
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-brand-500 px-5 text-[0.95rem] font-semibold text-ink-950 transition-colors hover:bg-brand-400 disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-brand-500 px-5 text-[0.95rem] font-semibold text-night-950 transition-colors hover:bg-brand-400 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Send className="h-4 w-4" aria-hidden="true" />
             {sending ? 'Sending…' : 'Send notification'}
@@ -263,7 +263,7 @@ export function NotifyPanel({
                 <span
                   className={cn(
                     'inline-flex items-center rounded px-1.5 py-0.5 text-[0.68rem] font-semibold uppercase tracking-wide',
-                    entry.ok ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700',
+                    entry.ok ? 'bg-green-50 dark:bg-green-500/10 text-green-700 dark:text-green-300' : 'bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-300',
                   )}
                 >
                   {entry.ok ? 'Sent' : 'Failed'}
@@ -271,7 +271,7 @@ export function NotifyPanel({
                 <span className="font-medium text-ink-800">{entry.templateName}</span>
                 <span className="text-ink-500">to {entry.to}</span>
                 <span className="ml-auto font-mono text-xs text-ink-400">{formatDateTime(entry.sentAt)}</span>
-                {entry.error && <span className="w-full text-xs text-red-600">{entry.error}</span>}
+                {entry.error && <span className="w-full text-xs text-red-600 dark:text-red-300">{entry.error}</span>}
               </li>
             ))}
           </ul>
