@@ -21,6 +21,18 @@ const config: Config = {
     },
     extend: {
       colors: {
+        /**
+         * Dark blue, used for the footer band.
+         *
+         * Named rather than inlined because a second brand ground deserves a
+         * token — the next person adding a dark section should reach for this
+         * instead of picking their own navy. White on `navy-900` measures
+         * 16.5:1, so every weight of text on it clears AAA.
+         */
+        navy: {
+          800: '#16294F',
+          900: '#0F1E3D',
+        },
         // True neutral. The scheme is orange and white, so the greys stay
         // untinted — no navy cast, no brown cast. `ink-400` is the lightest
         // step used for body text on white and clears 4.5:1.

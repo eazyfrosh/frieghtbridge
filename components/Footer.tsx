@@ -11,10 +11,13 @@ const SOCIALS = [
 
 export function Footer() {
   return (
-    <footer className="on-dark relative overflow-hidden bg-brand-500 text-white">
+    <footer className="on-dark relative overflow-hidden bg-navy-900 text-white">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-grid-light bg-[size:56px_56px] opacity-20" />
-        <div className="absolute -top-32 left-1/4 h-72 w-72 rounded-full bg-white/20 blur-[110px]" />
+        {/* Warm glow rather than white: on a navy ground a white bloom reads
+            as haze, while a touch of the brand orange ties the band back to
+            the rest of the site. */}
+        <div className="absolute -top-32 left-1/4 h-72 w-72 rounded-full bg-brand-500/25 blur-[110px]" />
       </div>
 
       <div className="container relative">
@@ -30,20 +33,20 @@ export function Footer() {
             <ul className="mt-7 space-y-3 text-sm">
               <li className="flex items-start gap-2.5">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-white" aria-hidden="true" />
-                <span className="text-white">{SITE.address}</span>
+                <span className="text-white/75">{SITE.address}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="h-4 w-4 shrink-0 text-white" aria-hidden="true" />
                 <a
                   href={`tel:${SITE.phone.replace(/[^+\d]/g, '')}`}
-                  className="text-white transition-colors hover:text-white"
+                  className="text-white/75 transition-colors hover:text-white"
                 >
                   {SITE.phone}
                 </a>
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="h-4 w-4 shrink-0 text-white" aria-hidden="true" />
-                <a href={`mailto:${SITE.email}`} className="text-white transition-colors hover:text-white">
+                <a href={`mailto:${SITE.email}`} className="text-white/75 transition-colors hover:text-white">
                   {SITE.email}
                 </a>
               </li>
@@ -62,7 +65,7 @@ export function Footer() {
                     <li key={link.label}>
                       <Link
                         href={link.href}
-                        className="text-[0.92rem] text-white transition-colors duration-200 hover:text-white"
+                        className="text-[0.92rem] text-white/75 transition-colors duration-200 hover:text-white"
                       >
                         {link.label}
                       </Link>
@@ -76,10 +79,10 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="flex flex-col items-start justify-between gap-6 border-t border-white/25 py-7 sm:flex-row sm:items-center">
-          <p className="text-sm text-white">© 2023 FreightBridge Logistics. All rights reserved.</p>
+          <p className="text-sm text-white/70">© 2023 FreightBridge Logistics. All rights reserved.</p>
 
           <div className="flex items-center gap-4">
-            <p className="hidden text-sm text-white sm:block">{SITE.tagline}</p>
+            <p className="hidden text-sm text-white/70 sm:block">{SITE.tagline}</p>
             <ul className="flex gap-2">
               {SOCIALS.map((social) => (
                 <li key={social.label}>
@@ -88,7 +91,7 @@ export function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
-                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/45 bg-white/20 text-white transition-all duration-300 ease-premium hover:-translate-y-0.5 hover:border-white/60 hover:bg-white/20 hover:text-white"
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/45 bg-white/20 text-white transition-all duration-300 ease-premium hover:-translate-y-0.5 hover:border-white/70 hover:bg-white/25 hover:text-white"
                   >
                     <social.icon className="h-[1.05rem] w-[1.05rem]" aria-hidden="true" />
                   </a>
