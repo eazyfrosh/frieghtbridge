@@ -7,7 +7,7 @@ import { Reveal } from '@/components/ui/Reveal';
 export const metadata: Metadata = {
   title: 'Get a Freight Quote',
   description:
-    'Request a freight quote from FreightBridge. Share your lane and shipment type — a logistics specialist responds with options and pricing.',
+    'Request a freight quote from FreightBridge Logistics. Share your lane and shipment type — a logistics specialist responds with options and pricing.',
   alternates: { canonical: '/quote' },
 };
 

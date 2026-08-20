@@ -37,7 +37,7 @@ export function CTA() {
                 </Button>
                 <Button href="/contact" size="lg" variant="outlineDark" className="w-full sm:w-auto">
                   <MessageSquare className="h-[1.05rem] w-[1.05rem]" />
-                  Contact FreightBridge
+                  Contact FreightBridge Logistics
                 </Button>
               </div>
 

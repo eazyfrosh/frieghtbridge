@@ -49,7 +49,7 @@ export function Hero() {
             </h1>
 
             <motion.p {...rise(0.32)} className="mt-7 max-w-[30rem] text-[1.05rem] leading-relaxed text-ink-500 sm:text-lg">
-              FreightBridge makes shipping, tracking, and managing freight simple from one powerful platform.
+              FreightBridge Logistics makes shipping, tracking, and managing freight simple from one powerful platform.
             </motion.p>
 
             {/* A plain GET form, so tracking still works before JavaScript

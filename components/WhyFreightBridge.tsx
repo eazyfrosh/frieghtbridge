@@ -71,7 +71,7 @@ export function WhyFreightBridge() {
             <Reveal from="left">
               <span className="eyebrow">
                 <span className="h-1.5 w-1.5 rounded-full bg-brand-500" aria-hidden="true" />
-                Why FreightBridge
+                Why FreightBridge Logistics
               </span>
             </Reveal>
             <Reveal delay={0.06} from="left">
@@ -81,7 +81,7 @@ export function WhyFreightBridge() {
             </Reveal>
             <Reveal delay={0.12} from="left">
               <p className="lead mt-5 max-w-md">
-                Supply chains stopped being predictable a long time ago. FreightBridge is designed for the version of
+                Supply chains stopped being predictable a long time ago. FreightBridge Logistics is designed for the version of
                 logistics you actually work in — fast, visible, and accountable at every handoff.
               </p>
             </Reveal>

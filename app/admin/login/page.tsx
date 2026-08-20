@@ -15,14 +15,19 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-[26rem]">
         <div className="flex items-center gap-2.5">
           <LogoMark />
-          <span className="font-display text-[1.15rem] font-semibold tracking-[-0.03em] text-white">
-            FreightBridge<span className="text-ink-400"> Operations</span>
+          <span>
+            <span className="block font-display text-[1.1rem] font-semibold leading-tight tracking-[-0.03em] text-white">
+              FreightBridge Logistics
+            </span>
+            <span className="block text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-ink-400">
+              Operations
+            </span>
           </span>
         </div>
 
         <h1 className="mt-8 font-display text-3xl font-semibold tracking-[-0.03em] text-white">Sign in</h1>
         <p className="mt-2 text-[0.95rem] text-ink-400">
-          This area is for FreightBridge staff. Customer tracking is on the public site.
+          This area is for FreightBridge Logistics staff. Customer tracking is on the public site.
         </p>
 
         <Suspense fallback={null}>

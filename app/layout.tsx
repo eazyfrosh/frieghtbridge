@@ -20,8 +20,8 @@ const sora = Sora({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: 'FreightBridge | Modern Freight & Logistics Solutions',
-    template: '%s | FreightBridge',
+    default: 'FreightBridge Logistics | Freight, Warehousing & Supply Chain',
+    template: '%s | FreightBridge Logistics',
   },
   description: SITE.description,
   applicationName: SITE.name,
@@ -45,12 +45,12 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: SITE.url,
     siteName: SITE.name,
-    title: 'FreightBridge | Modern Freight & Logistics Solutions',
+    title: 'FreightBridge Logistics | Freight, Warehousing & Supply Chain',
     description: SITE.description,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'FreightBridge | Modern Freight & Logistics Solutions',
+    title: 'FreightBridge Logistics | Freight, Warehousing & Supply Chain',
     description: SITE.description,
   },
   robots: {

@@ -3,7 +3,7 @@ import { LegalArticle } from '@/components/LegalArticle';
 
 export const metadata: Metadata = {
   title: 'Terms of Service',
-  description: 'The terms that apply when you use the FreightBridge website and request freight transportation services.',
+  description: 'The terms that apply when you use the FreightBridge Logistics website and request freight transportation services.',
   alternates: { canonical: '/legal/terms' },
 };
 
@@ -12,19 +12,19 @@ export default function TermsPage() {
     <LegalArticle
       breadcrumb="Terms"
       title="Terms of Service"
-      intro="The terms that apply when you use this website and when you book freight with FreightBridge."
+      intro="The terms that apply when you use this website and when you book freight with FreightBridge Logistics."
       updated="1 January 2026"
       sections={[
         {
           heading: 'Using this website',
           paragraphs: [
-            'You may use the FreightBridge website to learn about our services, request quotes, and track shipments associated with your account. You agree not to interfere with the site, attempt to access accounts that are not yours, or use automated tools to scrape content at a scale that degrades service for others.',
+            'You may use the FreightBridge Logistics website to learn about our services, request quotes, and track shipments associated with your account. You agree not to interfere with the site, attempt to access accounts that are not yours, or use automated tools to scrape content at a scale that degrades service for others.',
           ],
         },
         {
           heading: 'Quotes and bookings',
           paragraphs: [
-            'A quote is an offer to provide transportation on the terms stated, for the window stated. It becomes a booking once accepted and confirmed by FreightBridge.',
+            'A quote is an offer to provide transportation on the terms stated, for the window stated. It becomes a booking once accepted and confirmed by FreightBridge Logistics.',
             'Quoted prices assume the shipment details you provide are accurate. Reweighs, reclassification, additional accessorial services, or changes to pickup and delivery requirements may adjust the final price.',
           ],
         },

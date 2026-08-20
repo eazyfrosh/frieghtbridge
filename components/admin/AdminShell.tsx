@@ -51,13 +51,18 @@ export function AdminShell({ email, children }: AdminShellProps) {
 
   const sidebar = (
     <div className="flex h-full flex-col">
+      {/* Stacked rather than inline: the name and an "Ops" chip side by side no
+          longer fit a 248px rail, and truncating the company name is worse than
+          putting the qualifier on its own line. */}
       <div className="flex h-[68px] items-center gap-2.5 border-b border-ink-800 px-5">
         <LogoMark />
-        <span className="font-display text-[1.02rem] font-semibold tracking-[-0.02em] text-white">
-          FreightBridge
-        </span>
-        <span className="rounded-md bg-ink-800 px-1.5 py-0.5 text-[0.62rem] font-semibold uppercase tracking-[0.1em] text-ink-300">
-          Ops
+        <span className="min-w-0">
+          <span className="block truncate font-display text-[0.98rem] font-semibold leading-tight tracking-[-0.02em] text-white">
+            FreightBridge Logistics
+          </span>
+          <span className="block text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-ink-400">
+            Operations
+          </span>
         </span>
       </div>
 
@@ -140,7 +145,9 @@ export function AdminShell({ email, children }: AdminShellProps) {
           >
             <Menu className="h-5 w-5" aria-hidden="true" />
           </button>
-          <span className="font-display text-[1rem] font-semibold text-ink-900">FreightBridge Ops</span>
+          <span className="truncate font-display text-[1rem] font-semibold text-ink-900">
+            FreightBridge Logistics
+          </span>
         </header>
 
         <main className="px-5 py-8 sm:px-8 lg:px-10 lg:py-10">{children}</main>

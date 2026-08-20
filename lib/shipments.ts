@@ -479,7 +479,7 @@ function shipmentFromBooking(trackingNumber: string, booking: BookingInput): Shi
     pieces: booking.pieces,
     weight: booking.weight,
     dimensions: booking.dimensions,
-    carrier: 'FreightBridge',
+    carrier: 'FreightBridge Logistics',
     pickupDate: booking.pickupDate,
     customer: {
       name: booking.name,

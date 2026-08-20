@@ -46,7 +46,7 @@ export function HowItWorks() {
           align="center"
           title={
             <>
-              Moving freight is easier <span className="text-brand-600">with FreightBridge.</span>
+              Moving freight is easier <span className="text-brand-600">with FreightBridge Logistics.</span>
             </>
           }
           description="Four steps from first quote to proof of delivery — with a named logistics specialist on every one of them."

@@ -113,7 +113,7 @@ export function ShowcaseCarousel() {
               One network, <span className="text-gradient">every kind of freight.</span>
             </>
           }
-          description="Three of the ways FreightBridge moves goods for customers today."
+          description="Three of the ways FreightBridge Logistics moves goods for customers today."
         />
 
         <Reveal delay={0.1} className="mt-14">
@@ -121,7 +121,7 @@ export function ShowcaseCarousel() {
             ref={regionRef}
             role="group"
             aria-roledescription="carousel"
-            aria-label="FreightBridge capabilities"
+            aria-label="FreightBridge Logistics capabilities"
             tabIndex={0}
             onKeyDown={onKeyDown}
             onMouseEnter={() => setPaused(true)}

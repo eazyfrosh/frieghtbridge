@@ -3,7 +3,7 @@ import { LegalArticle } from '@/components/LegalArticle';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
-  description: 'How FreightBridge collects, uses, and protects the information you share when requesting a quote or tracking a shipment.',
+  description: 'How FreightBridge Logistics collects, uses, and protects the information you share when requesting a quote or tracking a shipment.',
   alternates: { canonical: '/legal/privacy' },
 };
 
@@ -12,7 +12,7 @@ export default function PrivacyPage() {
     <LegalArticle
       breadcrumb="Privacy Policy"
       title="Privacy Policy"
-      intro="What we collect when you use FreightBridge, why we collect it, and the choices you have."
+      intro="What we collect when you use FreightBridge Logistics, why we collect it, and the choices you have."
       updated="1 January 2026"
       sections={[
         {

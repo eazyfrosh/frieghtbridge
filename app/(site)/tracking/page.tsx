@@ -9,7 +9,7 @@ import { SectionHeading } from '@/components/ui/SectionHeading';
 export const metadata: Metadata = {
   title: 'Track a Shipment',
   description:
-    'Track your FreightBridge shipment in real time. Enter your tracking number for live status, current location, timeline, and estimated delivery.',
+    'Track your FreightBridge Logistics shipment in real time. Enter your tracking number for live status, current location, timeline, and estimated delivery.',
   alternates: { canonical: '/tracking' },
 };
 
@@ -74,7 +74,7 @@ export default async function TrackingPage({ searchParams }: TrackingPageProps) 
           <SectionHeading
             eyebrow="Status guide"
             title="What each shipment status means"
-            description="FreightBridge uses the same five milestones on every service, from a single parcel to a full container."
+            description="FreightBridge Logistics uses the same five milestones on every service, from a single parcel to a full container."
           />
 
           <StaggerGroup className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" gap={0.07}>

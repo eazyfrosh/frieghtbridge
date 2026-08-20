@@ -39,7 +39,7 @@ export function EnterpriseSection() {
             </Reveal>
             <Reveal delay={0.12}>
               <p className="mt-6 max-w-xl text-base leading-relaxed text-white sm:text-lg">
-                From growing businesses to established enterprises, FreightBridge provides flexible logistics
+                From growing businesses to established enterprises, FreightBridge Logistics provides flexible logistics
                 solutions designed around your operation.
               </p>
             </Reveal>

@@ -6,9 +6,9 @@ import { Reveal, RevealItem, StaggerGroup } from '@/components/ui/Reveal';
 import { SITE } from '@/lib/site';
 
 export const metadata: Metadata = {
-  title: 'Contact FreightBridge',
+  title: 'Contact FreightBridge Logistics',
   description:
-    'Talk to the FreightBridge team about a quote, an existing shipment, warehousing, enterprise logistics, or partnerships.',
+    'Talk to the FreightBridge Logistics team about a quote, an existing shipment, warehousing, enterprise logistics, or partnerships.',
   alternates: { canonical: '/contact' },
 };
 

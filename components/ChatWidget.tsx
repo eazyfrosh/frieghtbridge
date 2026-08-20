@@ -333,7 +333,7 @@ export function ChatWidget() {
         <div
           id="chat-panel"
           role="dialog"
-          aria-label="Chat with FreightBridge"
+          aria-label="Chat with FreightBridge Logistics"
           className={cn(
             'fixed bottom-24 right-5 z-[60] flex w-[min(23rem,calc(100vw-2.5rem))] flex-col',
             'h-[min(30rem,calc(100vh-9rem))] overflow-hidden rounded-2xl border border-ink-200 bg-white',
@@ -345,7 +345,7 @@ export function ChatWidget() {
               <MessageCircle className="h-4 w-4 text-ink-950" aria-hidden="true" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="font-display text-[0.98rem] font-semibold text-white">FreightBridge support</p>
+              <p className="font-display text-[0.98rem] font-semibold text-white">FreightBridge Logistics</p>
               <p className="text-xs text-ink-400">
                 {conversation?.status === 'closed'
                   ? 'This conversation was closed — send a message to reopen it.'

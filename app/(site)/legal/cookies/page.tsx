@@ -3,7 +3,7 @@ import { LegalArticle } from '@/components/LegalArticle';
 
 export const metadata: Metadata = {
   title: 'Cookie Policy',
-  description: 'How FreightBridge uses cookies and similar technologies, and how you can control them.',
+  description: 'How FreightBridge Logistics uses cookies and similar technologies, and how you can control them.',
   alternates: { canonical: '/legal/cookies' },
 };
 
@@ -23,7 +23,7 @@ export default function CookiesPage() {
         },
         {
           heading: 'Categories we would use',
-          paragraphs: ['A production FreightBridge deployment would use cookies in three categories:'],
+          paragraphs: ['A production FreightBridge Logistics deployment would use cookies in three categories:'],
           bullets: [
             'Strictly necessary — sign-in sessions, security tokens, and load balancing. These cannot be switched off.',
             'Preferences — remembering settings such as units, region, or a saved tracking number.',

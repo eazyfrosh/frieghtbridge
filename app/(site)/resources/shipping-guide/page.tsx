@@ -9,7 +9,7 @@ import { SectionHeading } from '@/components/ui/SectionHeading';
 export const metadata: Metadata = {
   title: 'Shipping Guide',
   description:
-    'A practical FreightBridge guide to choosing a shipment type, packaging freight, calculating weight and dimensions, and preparing shipping documentation.',
+    'A practical FreightBridge Logistics guide to choosing a shipment type, packaging freight, calculating weight and dimensions, and preparing shipping documentation.',
   alternates: { canonical: '/resources/shipping-guide' },
 };
 
@@ -179,7 +179,7 @@ export default function ShippingGuidePage() {
 
           <Reveal delay={0.12}>
             <p className="mt-10 rounded-2xl border border-dashed border-ink-200 bg-ink-50/60 p-5 text-sm text-ink-500">
-              This guide is general shipping guidance for the FreightBridge prototype and is not legal, customs, or
+              This guide is general shipping guidance for the FreightBridge Logistics prototype and is not legal, customs, or
               tax advice. Requirements vary by lane, commodity, and country.
             </p>
           </Reveal>

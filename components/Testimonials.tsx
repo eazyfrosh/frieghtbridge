@@ -11,7 +11,7 @@ import { useReducedMotion } from '@/lib/use-reduced-motion';
 
 const TESTIMONIALS = [
   {
-    quote: 'FreightBridge has completely simplified the way we manage our shipments.',
+    quote: 'FreightBridge Logistics has completely simplified the way we manage our shipments.',
     detail:
       'We went from four inboxes and a spreadsheet to one view the whole team trusts. Booking a lane takes minutes now.',
     name: 'Operations Director',
@@ -21,7 +21,7 @@ const TESTIMONIALS = [
   {
     quote: 'Reliable, transparent, and incredibly easy to work with.',
     detail:
-      'Pricing holds, pickups happen when they say they will, and when something moves we hear it from FreightBridge first.',
+      'Pricing holds, pickups happen when they say they will, and when something moves we hear it from FreightBridge Logistics first.',
     name: 'E-commerce Founder',
     company: 'Direct-to-consumer brand',
     initials: 'EF',
@@ -76,7 +76,7 @@ export function Testimonials() {
               Teams that move freight <span className="text-brand-600">every single day.</span>
             </>
           }
-          description="What shippers tell us after their first quarter on the FreightBridge network."
+          description="What shippers tell us after their first quarter on the FreightBridge Logistics network."
         />
 
         <Reveal delay={0.1}>

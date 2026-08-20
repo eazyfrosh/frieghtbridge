@@ -25,7 +25,7 @@ export function LegalArticle({ breadcrumb, title, intro, updated, sections }: Le
           <div className="mx-auto max-w-3xl">
             <Reveal>
               <p className="rounded-2xl border border-dashed border-ink-200 bg-ink-50/60 p-5 text-sm text-ink-500">
-                <span className="font-semibold text-ink-700">Last updated {updated}.</span> FreightBridge is a
+                <span className="font-semibold text-ink-700">Last updated {updated}.</span> FreightBridge Logistics is a
                 demonstration website. This page is illustrative sample copy, not a binding legal agreement or
                 professional advice.
               </p>

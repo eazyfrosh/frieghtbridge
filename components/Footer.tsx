@@ -4,9 +4,9 @@ import { FOOTER_COLUMNS, SITE } from '@/lib/site';
 import { Logo } from './ui/Logo';
 
 const SOCIALS = [
-  { label: 'FreightBridge on LinkedIn', href: 'https://www.linkedin.com', icon: Linkedin },
-  { label: 'FreightBridge on X', href: 'https://x.com', icon: Twitter },
-  { label: 'FreightBridge on YouTube', href: 'https://www.youtube.com', icon: Youtube },
+  { label: 'FreightBridge Logistics on LinkedIn', href: 'https://www.linkedin.com', icon: Linkedin },
+  { label: 'FreightBridge Logistics on X', href: 'https://x.com', icon: Twitter },
+  { label: 'FreightBridge Logistics on YouTube', href: 'https://www.youtube.com', icon: Youtube },
 ];
 
 export function Footer() {
@@ -23,7 +23,7 @@ export function Footer() {
           <div>
             <Logo tone="light" />
             <p className="mt-5 max-w-sm text-[0.95rem] leading-relaxed text-white">
-              FreightBridge is a modern logistics and freight transportation company helping businesses move shipments
+              FreightBridge Logistics is a modern freight transportation company helping businesses move shipments
               efficiently across cities, states, and international destinations.
             </p>
 
@@ -76,7 +76,7 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="flex flex-col items-start justify-between gap-6 border-t border-white/25 py-7 sm:flex-row sm:items-center">
-          <p className="text-sm text-white">© 2023 FreightBridge. All rights reserved.</p>
+          <p className="text-sm text-white">© 2023 FreightBridge Logistics. All rights reserved.</p>
 
           <div className="flex items-center gap-4">
             <p className="hidden text-sm text-white sm:block">{SITE.tagline}</p>

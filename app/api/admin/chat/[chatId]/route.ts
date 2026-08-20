@@ -62,7 +62,7 @@ export async function POST(request: Request, { params }: Params) {
 
     // The visitor sees the part before the @, not the operator's full address.
     // They have no reason to learn internal email addresses from a chat reply.
-    const agentName = session.email.split('@')[0] || 'FreightBridge';
+    const agentName = session.email.split('@')[0] || 'FreightBridge Logistics';
 
     const sent = await addAgentMessage(chatId, body, agentName);
     if (!sent) return NextResponse.json({ error: 'Conversation not found.' }, { status: 404 });

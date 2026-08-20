@@ -11,7 +11,7 @@ interface LogoProps {
 }
 
 /**
- * Original FreightBridge wordmark: an abstract bridge span carrying a freight
+ * Original FreightBridge Logistics wordmark: an abstract bridge span carrying a freight
  * line across two piers, drawn from the brand's own geometry.
  */
 /**
@@ -67,13 +67,28 @@ export function Logo({ tone = 'dark', className, href = '/', showWordmark = true
         >
           Freight
           <span className={tone === 'light' ? 'text-white/75' : 'text-brand-600'}>Bridge</span>
+          {/* A real space, not a margin. Spacing it with `ml-*` looked right
+              and read as "FreightBridgeLogistics" to a screen reader, and to
+              anyone copying the name off the page.
+
+              Lighter and a size down, so the lockup still reads as one mark
+              rather than three words of equal weight competing in a navbar. */}
+          <span
+            className={cn(
+              'text-[0.82em] font-medium tracking-[-0.02em]',
+              tone === 'light' ? 'text-white/70' : 'text-ink-500',
+            )}
+          >
+            {' '}
+            Logistics
+          </span>
         </span>
       )}
     </span>
   );
 
   return (
-    <Link href={href} onClick={onClick} aria-label="FreightBridge — home" className="inline-flex rounded-xl">
+    <Link href={href} onClick={onClick} aria-label="FreightBridge Logistics — home" className="inline-flex rounded-xl">
       {content}
     </Link>
   );

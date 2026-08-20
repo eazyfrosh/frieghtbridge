@@ -47,7 +47,7 @@ const ERROR_COPY: Record<'empty' | 'malformed' | 'not-found', { title: string; b
     body: 'Your tracking number is on your booking confirmation and every document we send for the shipment.',
   },
   malformed: {
-    title: "That doesn't look like a FreightBridge tracking number",
+    title: "That doesn't look like a FreightBridge Logistics tracking number",
     body: 'Use the format FBX followed by 6 to 10 digits.',
   },
   'not-found': {
@@ -101,7 +101,7 @@ export function TrackingWidget({ variant = 'page', initialQuery = '', className 
             Track your shipment
           </h2>
           <p className="mt-2 max-w-md text-[0.95rem] text-ink-500">
-            Enter your FreightBridge tracking number for live status, location, and delivery estimate.
+            Enter your FreightBridge Logistics tracking number for live status, location, and delivery estimate.
           </p>
         </div>
 

@@ -17,10 +17,10 @@ import {
 } from 'lucide-react';
 
 export const SITE = {
-  name: 'FreightBridge',
+  name: 'FreightBridge Logistics',
   tagline: 'Move Freight. Build Connections.',
   description:
-    'FreightBridge provides reliable freight transportation, logistics, delivery, warehousing, and supply chain solutions for modern businesses.',
+    'FreightBridge Logistics provides reliable freight transportation, delivery, warehousing, and supply chain solutions for modern businesses.',
   url: 'https://freightbridge.example.com',
   email: 'hello@freightbridge.com',
   phone: '+1 (312) 555-0142',
@@ -55,7 +55,7 @@ export const HERO_MEDIA = {
   video: {
     src: '/video/hero-freight.mp4',
     webm: '/video/hero-freight.webm',
-    description: 'Freight moving through a FreightBridge distribution network',
+    description: 'Freight moving through a FreightBridge Logistics distribution network',
   } satisfies VideoAsset,
 
   /** Still image — the poster for the video, and the hero when there is none. */
@@ -63,7 +63,7 @@ export const HERO_MEDIA = {
   alt: 'An articulated lorry hauling a shipping container along a multi-lane highway',
   fallbackSrc: '/images/hero-freight.svg',
   fallbackAlt:
-    'Illustration of a FreightBridge semi-truck travelling a highway at dusk past a container yard and gantry cranes',
+    'Illustration of a FreightBridge Logistics semi-truck travelling a highway at dusk past a container yard and gantry cranes',
 } as const;
 
 /** A looping background clip. Leave `src` empty to fall back to the still. */
@@ -99,15 +99,15 @@ export const IMAGERY: Record<'road' | 'port' | 'warehouse' | 'lastMile' | 'drive
   /** Poster for ROAD_VIDEO — a frame from that clip, so the two match. */
   driver: {
     src: '/images/on-the-road.jpg',
-    alt: 'A FreightBridge delivery driver holding a clipboard at a customer’s gate',
+    alt: 'A FreightBridge Logistics delivery driver holding a clipboard at a customer’s gate',
     fallbackSrc: '/images/hero-freight.svg',
-    fallbackAlt: 'Illustration of a FreightBridge truck on the highway beside a container yard',
+    fallbackAlt: 'Illustration of a FreightBridge Logistics truck on the highway beside a container yard',
   },
   road: {
     src: '/images/hero-freight.png',
     alt: 'An articulated lorry hauling a shipping container along a multi-lane highway',
     fallbackSrc: '/images/hero-freight.svg',
-    fallbackAlt: 'Illustration of a FreightBridge truck on the highway beside a container yard',
+    fallbackAlt: 'Illustration of a FreightBridge Logistics truck on the highway beside a container yard',
   },
   port: {
     src: '/images/port-terminal.png',
@@ -119,13 +119,13 @@ export const IMAGERY: Record<'road' | 'port' | 'warehouse' | 'lastMile' | 'drive
     src: '/images/inside-the-network.jpg',
     alt: 'A woman smiling as she receives two parcels at her front door',
     fallbackSrc: '/images/warehouse-ops.svg',
-    fallbackAlt: 'Illustration of a FreightBridge fulfillment warehouse with pallet racking and a forklift',
+    fallbackAlt: 'Illustration of a FreightBridge Logistics fulfillment warehouse with pallet racking and a forklift',
   },
   warehouse: {
     src: '/images/warehouse-ops.png',
     alt: 'Two warehouse workers walking between tall pallet racks, one carrying a box',
     fallbackSrc: '/images/warehouse-ops.svg',
-    fallbackAlt: 'Illustration of a FreightBridge fulfillment warehouse with pallet racking and a forklift',
+    fallbackAlt: 'Illustration of a FreightBridge Logistics fulfillment warehouse with pallet racking and a forklift',
   },
 };
 
@@ -140,7 +140,7 @@ export const IMAGERY: Record<'road' | 'port' | 'warehouse' | 'lastMile' | 'drive
 export const STORY_VIDEO: VideoAsset = {
   src: '/video/inside-the-network.mp4',
   webm: '/video/inside-the-network.webm',
-  description: 'A FreightBridge delivery being handed over at a customer’s front door',
+  description: 'A FreightBridge Logistics delivery being handed over at a customer’s front door',
 };
 
 /**
@@ -161,7 +161,7 @@ export const STORY_VIDEO: VideoAsset = {
 export const ROAD_VIDEO: VideoAsset = {
   src: '/video/on-the-road.mp4',
   webm: '/video/on-the-road.webm',
-  description: 'A FreightBridge delivery driver collecting a signature at a customer’s gate',
+  description: 'A FreightBridge Logistics delivery driver collecting a signature at a customer’s gate',
 };
 
 export interface NavLink {
@@ -327,7 +327,7 @@ export const NAV_ITEMS: NavItem[] = [
     label: 'Company',
     href: '/about',
     children: [
-      { label: 'About', href: '/about', description: 'Why we built FreightBridge.', icon: Globe2 },
+      { label: 'About', href: '/about', description: 'Why we built FreightBridge Logistics.', icon: Globe2 },
       { label: 'Careers', href: '/about#careers', description: 'Open roles across our network.', icon: Gauge },
       { label: 'Contact', href: '/contact', description: 'Talk to sales, support, or dispatch.', icon: Headphones },
       { label: 'Partners', href: '/about#partners', description: 'Carriers and technology partners.', icon: Network },

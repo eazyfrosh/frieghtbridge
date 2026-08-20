@@ -10,9 +10,9 @@ import { Reveal, RevealItem, StaggerGroup } from '@/components/ui/Reveal';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 
 export const metadata: Metadata = {
-  title: 'About FreightBridge',
+  title: 'About FreightBridge Logistics',
   description:
-    'FreightBridge is a modern logistics and freight transportation company helping businesses move shipments efficiently across cities, states, and international destinations.',
+    'FreightBridge Logistics is a modern freight transportation company helping businesses move shipments efficiently across cities, states, and international destinations.',
   alternates: { canonical: '/about' },
 };
 
@@ -72,7 +72,7 @@ export default function AboutPage() {
             We build the bridge between <span className="text-gradient">freight and the people moving it.</span>
           </>
         }
-        description="FreightBridge started because moving goods should not require five phone calls to find out where a truck is. We are a logistics company with an engineering habit."
+        description="FreightBridge Logistics started because moving goods should not require five phone calls to find out where a truck is. We are a logistics company with an engineering habit."
       />
 
       {/* Story */}
@@ -83,7 +83,7 @@ export default function AboutPage() {
               <SectionHeading
                 eyebrow="Our story"
                 title="Logistics, rebuilt around visibility"
-                description="We spent years on the operator's side of freight — chasing scans, rekeying paperwork, apologising for delays nobody warned us about. FreightBridge is the company we wanted to hire."
+                description="We spent years on the operator's side of freight — chasing scans, rekeying paperwork, apologising for delays nobody warned us about. FreightBridge Logistics is the company we wanted to hire."
               />
               <Reveal delay={0.18}>
                 <p className="mt-6 text-[0.98rem] leading-relaxed text-ink-500">
@@ -197,7 +197,7 @@ export default function AboutPage() {
           <SectionHeading
             eyebrow="Partners"
             title="The network behind the network"
-            description="FreightBridge is only as good as the operators we work with. Here is how we build that bench."
+            description="FreightBridge Logistics is only as good as the operators we work with. Here is how we build that bench."
           />
           <StaggerGroup className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4" gap={0.07}>
             {PARTNERS.map((partner) => (

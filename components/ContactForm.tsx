@@ -100,7 +100,7 @@ export function ContactForm() {
           </span>
           <h2 className="mt-6 font-display text-2xl font-semibold text-ink-900">Message received</h2>
           <p className="mx-auto mt-3 max-w-md text-[0.98rem] leading-relaxed text-ink-500">
-            Thanks, {values.name.split(' ')[0]}. A FreightBridge specialist will reply to {values.email} shortly —
+            Thanks, {values.name.split(' ')[0]}. A FreightBridge Logistics specialist will reply to {values.email} shortly —
             usually within one business hour.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">

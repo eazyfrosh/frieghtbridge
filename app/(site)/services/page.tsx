@@ -12,7 +12,7 @@ import { Figure } from '@/components/ui/Figure';
 export const metadata: Metadata = {
   title: 'Freight & Logistics Services',
   description:
-    'Freight transportation, last-mile delivery, warehousing, freight forwarding, supply chain solutions and same-day delivery from FreightBridge.',
+    'Freight transportation, last-mile delivery, warehousing, freight forwarding, supply chain solutions and same-day delivery from FreightBridge Logistics.',
   alternates: { canonical: '/services' },
 };
 
@@ -54,7 +54,7 @@ export default function ServicesPage() {
             Every mode, every mile, <span className="text-gradient">one partner.</span>
           </>
         }
-        description="Parcel across town or a container across an ocean — FreightBridge coordinates the whole journey through a single account team and a single view."
+        description="Parcel across town or a container across an ocean — FreightBridge Logistics coordinates the whole journey through a single account team and a single view."
       >
         <div className="flex flex-col gap-3 sm:flex-row">
           <Button href="/quote" size="lg" variant="onDark" className="w-full sm:w-auto">

@@ -1,9 +1,9 @@
-# FreightBridge
+# FreightBridge Logistics
 
 **Move Freight. Build Connections.**
 
-A production-quality marketing site for FreightBridge, a modern freight and logistics
-company. Built with Next.js App Router, TypeScript, Tailwind CSS, Framer Motion, and
+A production-quality marketing site for FreightBridge Logistics, a modern freight
+and supply chain company. Built with Next.js App Router, TypeScript, Tailwind CSS, Framer Motion, and
 Lucide icons.
 
 ## Getting started
@@ -374,7 +374,7 @@ Reusable text/layout classes (`.section`, `.display-1`, `.display-2`, `.lead`,
 `from="left" | "right" | "up"` prop, which is how the editorial sections
 alternate their entrance direction.
 
-`ShowcaseCarousel` is the slideshow between Services and Why FreightBridge:
+`ShowcaseCarousel` is the slideshow between Services and Why FreightBridge Logistics:
 autoplaying, drag/swipe, arrow-key navigable, with a progress bar on the active
 dot and a pause control. Autoplay stops on hover and on focus, and never starts
 under `prefers-reduced-motion`.
@@ -415,7 +415,7 @@ video: {
   src: '/video/hero-freight.mp4',
   webm: '',                            // optional, served first when present
   poster: '/images/hero-freight.jpg',  // shown while the clip loads
-  description: 'Freight moving through a FreightBridge distribution network',
+  description: 'Freight moving through a FreightBridge Logistics distribution network',
 },
 ```
 
