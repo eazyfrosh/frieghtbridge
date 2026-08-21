@@ -1,7 +1,17 @@
 import 'server-only';
 
+import {
+  OWN_CARRIER_ID,
+  SHIPMENT_TYPES,
+  carrierById,
+  carrierService,
+  carriersFor,
+  matchesCarrierFormat,
+  normalizeCarrierNumber,
+} from './carriers';
 import { adminDb } from './firebase/admin';
 import { SEED_SHIPMENTS } from './fixtures/shipments';
+import { tenderShipment, shippingProviderConfigured } from './fulfilment';
 import {
   TRACKING_STAGES,
   type Shipment,
@@ -56,6 +66,11 @@ function toShipment(data: FirebaseFirestore.DocumentData | undefined): Shipment 
     weight: typeof data.weight === 'string' ? data.weight : '',
     dimensions: typeof data.dimensions === 'string' ? data.dimensions : '',
     carrier: typeof data.carrier === 'string' ? data.carrier : '',
+    carrierId: typeof data.carrierId === 'string' ? data.carrierId : null,
+    carrierService: typeof data.carrierService === 'string' ? data.carrierService : null,
+    carrierTrackingNumber:
+      typeof data.carrierTrackingNumber === 'string' ? data.carrierTrackingNumber : null,
+    labelUrl: typeof data.labelUrl === 'string' ? data.labelUrl : null,
     events: Array.isArray(data.events) ? data.events : [],
     customer: toCustomer(data.customer),
     pickupDate: typeof data.pickupDate === 'string' ? data.pickupDate : null,
@@ -143,6 +158,11 @@ export interface ShipmentPatch {
   weight: string;
   dimensions: string;
   carrier: string;
+  /** Which platform the shipment is running on. Empty means none assigned. */
+  carrierId: string | null;
+  carrierService: string | null;
+  /** That platform's own tracking number, once they have issued one. */
+  carrierTrackingNumber: string | null;
 }
 
 export const SHIPMENT_STATUSES: ShipmentStatus[] = [...TRACKING_STAGES, 'Exception'];
@@ -165,11 +185,68 @@ function count(value: unknown, min: number, max: number): number | null {
   return rounded;
 }
 
+export interface CarrierAssignment {
+  carrierId: string | null;
+  carrierService: string | null;
+  carrierTrackingNumber: string | null;
+}
+
+/**
+ * Validate the platform a shipment is running on.
+ *
+ * Shared by booking and editing, because assigning a carrier at booking and
+ * attaching one afterwards — which is what happens when freight is re-tendered
+ * — have to agree on what a valid assignment is.
+ *
+ * A tracking number that does not match the carrier's known formats is
+ * accepted with a warning rather than refused, for the same reason check
+ * digits only rank in `lib/carriers.ts`: the registry does not know every
+ * format a carrier has ever printed, and an operator holding a real number
+ * should not be argued with by a regex.
+ */
+export function validateCarrierAssignment(
+  raw: Record<string, unknown>,
+): { assignment: CarrierAssignment; warning: string | null } | { error: string } {
+  const carrierId = typeof raw.carrierId === 'string' ? raw.carrierId.trim() : '';
+  if (!carrierId) {
+    return { assignment: { carrierId: null, carrierService: null, carrierTrackingNumber: null }, warning: null };
+  }
+
+  const carrier = carrierById(carrierId);
+  if (!carrier?.services?.length) return { error: 'That is not a carrier we can book onto.' };
+
+  const serviceCode = typeof raw.carrierService === 'string' ? raw.carrierService.trim() : '';
+  if (serviceCode && !carrierService(carrierId, serviceCode)) {
+    return { error: `${carrier.name} does not offer that service.` };
+  }
+
+  const rawNumber = typeof raw.carrierTrackingNumber === 'string' ? raw.carrierTrackingNumber : '';
+  const number = normalizeCarrierNumber(rawNumber.trim());
+
+  if (number && !/^[A-Z0-9]{4,40}$/.test(number)) {
+    return { error: 'A carrier tracking number is 4–40 letters and digits.' };
+  }
+
+  return {
+    assignment: {
+      carrierId,
+      carrierService: serviceCode || null,
+      carrierTrackingNumber: number || null,
+    },
+    warning:
+      number && carrierId !== OWN_CARRIER_ID && !matchesCarrierFormat(carrierId, number)
+        ? `Saved, but ${number} does not look like a ${carrier.name} tracking number. Check it before sending it to the customer.`
+        : null,
+  };
+}
+
 /**
  * Validate an edit. Returns the reason it was rejected rather than a bare null,
  * because "Origin is required" is a fixable message and "invalid" is not.
  */
-export function validateShipmentPatch(input: unknown): { patch: ShipmentPatch } | { error: string } {
+export function validateShipmentPatch(
+  input: unknown,
+): { patch: ShipmentPatch; warning: string | null } | { error: string } {
   if (typeof input !== 'object' || input === null) return { error: 'Malformed request.' };
   const raw = input as Record<string, unknown>;
 
@@ -201,8 +278,12 @@ export function validateShipmentPatch(input: unknown): { patch: ShipmentPatch } 
   const etaInDays = count(raw.etaInDays, -365, 365);
   if (etaInDays === null) return { error: 'ETA must be a number of days within a year either side.' };
 
+  const assignment = validateCarrierAssignment(raw);
+  if ('error' in assignment) return { error: assignment.error };
+
   return {
     patch: {
+      ...assignment.assignment,
       status,
       service: values.service,
       origin: values.origin,
@@ -214,6 +295,7 @@ export function validateShipmentPatch(input: unknown): { patch: ShipmentPatch } 
       pieces,
       etaInDays,
     },
+    warning: assignment.warning,
   };
 }
 
@@ -351,7 +433,8 @@ export function shipmentsWritable(): boolean {
 //
 // The last piece that only pretended to work: /admin/book waited 1.2 seconds
 // and invented a reference number. A booking now creates a real shipment, with
-// a tracking number the customer can actually use.
+// a tracking number the customer can actually use — on our own network or on
+// whichever carrier's platform the operator books it onto.
 
 export interface BookingInput {
   fromCountry: string;
@@ -365,25 +448,21 @@ export interface BookingInput {
   dimensions: string;
   pieces: number;
   pickupDate: string;
-  deliveryPreference: string;
+  /** Registry id of the platform this is booked onto. */
+  carrierId: string;
+  /** Service code within that platform, e.g. `ups-2nd-day-air`. */
+  carrierService: string;
+  /** Their number, when the operator already has one. */
+  carrierTrackingNumber: string;
   name: string;
   businessName: string;
   email: string;
   phone: string;
 }
 
-const SHIPMENT_TYPES = ['Parcel', 'Pallet', 'LTL', 'FTL', 'Container'];
-const DELIVERY_PREFERENCES = ['Economy', 'Standard', 'Expedited', 'Same Day'];
-
-/** Transit days by service level, added to the days until collection. */
-const TRANSIT_DAYS: Record<string, number> = {
-  'Same Day': 0,
-  Expedited: 2,
-  Standard: 4,
-  Economy: 7,
-};
-
-export function validateBooking(input: unknown): { booking: BookingInput } | { error: string } {
+export function validateBooking(
+  input: unknown,
+): { booking: BookingInput; warning: string | null } | { error: string } {
   if (typeof input !== 'object' || input === null) return { error: 'Malformed request.' };
   const raw = input as Record<string, unknown>;
 
@@ -409,8 +488,22 @@ export function validateBooking(input: unknown): { booking: BookingInput } | { e
   const shipmentType = SHIPMENT_TYPES.find((option) => option === raw.shipmentType);
   if (!shipmentType) return { error: 'Choose a shipment type.' };
 
-  const deliveryPreference = DELIVERY_PREFERENCES.find((option) => option === raw.deliveryPreference);
-  if (!deliveryPreference) return { error: 'Choose a delivery preference.' };
+  // Which platform, and which of its products. Both are required at booking —
+  // unlike an edit, where a shipment can legitimately sit unassigned while the
+  // operator decides who to tender it to.
+  const assignment = validateCarrierAssignment(raw);
+  if ('error' in assignment) return { error: assignment.error };
+
+  const carrierId = assignment.assignment.carrierId;
+  if (!carrierId) return { error: 'Choose which carrier is taking this shipment.' };
+
+  const carrier = carrierById(carrierId);
+  if (!carrier?.handles?.includes(shipmentType)) {
+    return { error: `${carrier?.name ?? 'That carrier'} does not take ${shipmentType.toLowerCase()} freight.` };
+  }
+
+  const serviceCode = assignment.assignment.carrierService;
+  if (!serviceCode) return { error: `Choose a ${carrier.name} service.` };
 
   const email = typeof raw.email === 'string' ? raw.email.trim().toLowerCase() : '';
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: 'Enter a valid email address.' };
@@ -438,12 +531,15 @@ export function validateBooking(input: unknown): { booking: BookingInput } | { e
       dimensions: text(raw.dimensions) ?? 'Not specified',
       pieces,
       pickupDate,
-      deliveryPreference,
+      carrierId,
+      carrierService: serviceCode,
+      carrierTrackingNumber: assignment.assignment.carrierTrackingNumber ?? '',
       name: values.name,
       businessName: text(raw.businessName) ?? '',
       email,
       phone: values.phone,
     },
+    warning: assignment.warning,
   };
 }
 
@@ -461,25 +557,45 @@ function daysUntil(date: string): number {
   return Math.max(0, Math.round((target - startOfToday) / 86_400_000));
 }
 
-function shipmentFromBooking(trackingNumber: string, booking: BookingInput): Shipment {
+function shipmentFromBooking(
+  trackingNumber: string,
+  booking: BookingInput,
+  tendered: { trackingNumber: string; labelUrl: string | null } | null,
+): Shipment {
   const origin = `${booking.fromCity}, ${booking.fromCountry}`;
   const destination = `${booking.toCity}, ${booking.toCountry}`;
   const now = new Date().toISOString();
 
+  const carrier = carrierById(booking.carrierId);
+  const service = carrierService(booking.carrierId, booking.carrierService);
+  const onOwnNetwork = booking.carrierId === OWN_CARRIER_ID;
+
+  // A number from the provider wins over one the operator typed: it came from
+  // the carrier's own system, which is the authority on what it issued.
+  const carrierTrackingNumber = tendered?.trackingNumber ?? booking.carrierTrackingNumber ?? '';
+
+  const serviceName = service?.name ?? booking.carrierService;
+
   return {
     trackingNumber,
+    // Reads "Pallet · UPS 2nd Day Air" off-network, "Pallet · Standard" on it,
+    // since prefixing our own services with our own name says nothing.
+    service: `${booking.shipmentType} · ${serviceName}`,
     status: 'Order Confirmed',
-    service: `${booking.shipmentType} · ${booking.deliveryPreference}`,
     origin,
     destination,
     currentLocation: origin,
     // Collection plus transit, rather than transit alone — a booking made for
     // next week is not arriving in four days.
-    etaInDays: daysUntil(booking.pickupDate) + (TRANSIT_DAYS[booking.deliveryPreference] ?? 4),
+    etaInDays: daysUntil(booking.pickupDate) + (service?.transitDays ?? 4),
     pieces: booking.pieces,
     weight: booking.weight,
     dimensions: booking.dimensions,
-    carrier: 'FreightBridge Logistics',
+    carrier: carrier?.name ?? 'FreightBridge Logistics',
+    carrierId: booking.carrierId,
+    carrierService: booking.carrierService,
+    carrierTrackingNumber: carrierTrackingNumber || null,
+    labelUrl: tendered?.labelUrl ?? null,
     pickupDate: booking.pickupDate,
     customer: {
       name: booking.name,
@@ -494,12 +610,52 @@ function shipmentFromBooking(trackingNumber: string, booking: BookingInput): Shi
         location: origin,
         description: `${booking.pieces} ${booking.shipmentType.toLowerCase()}${
           booking.pieces === 1 ? '' : 's'
-        } booked for collection on ${booking.pickupDate}. ${booking.deliveryPreference} service to ${destination}.`,
+        } booked for collection on ${booking.pickupDate}. ${serviceName} to ${destination}.${
+          onOwnNetwork || !carrierTrackingNumber
+            ? ''
+            : ` ${carrier?.name ?? 'Carrier'} reference ${carrierTrackingNumber}.`
+        }`,
         at: now,
         hoursAgo: 0,
       },
     ],
   };
+}
+
+/**
+ * Hand the booking to the carrier, if there is anything to hand it to.
+ *
+ * Three cases, and `attempted` is what separates the last from the first two:
+ * our own network needs no tender, an unconfigured provider means the operator
+ * is working manually, and a configured provider that failed is a problem the
+ * operator has to be told about.
+ */
+async function tenderIfPossible(
+  booking: BookingInput,
+): Promise<{ attempted: boolean; result: { trackingNumber: string; labelUrl: string | null } | null }> {
+  if (booking.carrierId === OWN_CARRIER_ID) return { attempted: false, result: null };
+  if (!shippingProviderConfigured()) return { attempted: false, result: null };
+  // Already tendered elsewhere: the operator booked it on the carrier's own
+  // platform and pasted the number, so buying a second label would be a second
+  // consignment and a second invoice.
+  if (booking.carrierTrackingNumber) return { attempted: false, result: null };
+
+  const result = await tenderShipment({
+    carrierId: booking.carrierId,
+    serviceCode: booking.carrierService,
+    reference: `${booking.name} · ${booking.pickupDate}`,
+    from: { city: booking.fromCity, postalCode: booking.fromZip, country: booking.fromCountry },
+    to: { city: booking.toCity, postalCode: booking.toZip, country: booking.toCountry },
+    parcel: { pieces: booking.pieces, weight: booking.weight, dimensions: booking.dimensions },
+    contact: {
+      name: booking.name,
+      company: booking.businessName,
+      email: booking.email,
+      phone: booking.phone,
+    },
+  });
+
+  return { attempted: true, result };
 }
 
 /**
@@ -512,20 +668,30 @@ function shipmentFromBooking(trackingNumber: string, booking: BookingInput): Shi
  */
 export async function createShipmentFromBooking(
   booking: BookingInput,
-): Promise<{ shipment: Shipment } | { error: string }> {
+): Promise<{ shipment: Shipment; warning: string | null } | { error: string }> {
   const db = adminDb();
   if (!db) return { error: 'Firestore is not configured on this deployment.' };
 
   const takenByFixture = new Set(SEED_SHIPMENTS.map((s) => s.trackingNumber.toUpperCase()));
 
+  // Tendered once, outside the retry loop: the retries are for tracking-number
+  // collisions, and asking a carrier to create the same shipment five times
+  // would leave four orphans on their system.
+  const tendered = await tenderIfPossible(booking);
+
+  const warning =
+    tendered.attempted && !tendered.result
+      ? `The shipment is saved, but ${carrierById(booking.carrierId)?.name ?? 'the carrier'} did not accept the tender. Add their tracking number by hand once you have it.`
+      : null;
+
   for (let attempt = 0; attempt < 5; attempt += 1) {
     const trackingNumber = candidateTrackingNumber();
     if (takenByFixture.has(trackingNumber)) continue;
 
-    const shipment = shipmentFromBooking(trackingNumber, booking);
+    const shipment = shipmentFromBooking(trackingNumber, booking, tendered.result);
     try {
       await db.collection(COLLECTION).doc(trackingNumber).create(shipment);
-      return { shipment };
+      return { shipment, warning };
     } catch (error) {
       // ALREADY_EXISTS is the only error worth retrying; anything else is a
       // real fault and should surface rather than burn four more attempts.

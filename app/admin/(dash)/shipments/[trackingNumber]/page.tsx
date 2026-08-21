@@ -5,6 +5,7 @@ import { AddEventForm } from '@/components/admin/AddEventForm';
 import { NotifyPanel } from '@/components/admin/NotifyPanel';
 import { ShipmentEditor } from '@/components/admin/ShipmentEditor';
 import { adminStatusTone } from '@/lib/admin';
+import { carrierById, carrierService } from '@/lib/carriers';
 import { emailConfigError, emailConfigured, listTemplates, sendsFor } from '@/lib/email';
 import { SHIPMENT_STATUSES, findShipment, shipmentsWritable } from '@/lib/shipments';
 import { TRACKING_STAGES, resolveShipment } from '@/lib/tracking';
@@ -34,6 +35,14 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
   // rendering of the raw record that can disagree with it.
   const resolved = resolveShipment(shipment);
   const writable = shipmentsWritable();
+
+  // Null for a shipment that predates the platform picker, or one deliberately
+  // left unassigned — the panel is simply absent rather than showing blanks.
+  const platform = shipment.carrierId ? carrierById(shipment.carrierId) : null;
+  const platformService =
+    shipment.carrierId && shipment.carrierService
+      ? carrierService(shipment.carrierId, shipment.carrierService)
+      : null;
 
   const facts = [
     { icon: Flag, label: 'Origin', value: shipment.origin },
@@ -77,6 +86,65 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
           </div>
         ))}
       </dl>
+
+      {platform && (
+        <section className="mt-8 rounded-2xl border border-ink-200 bg-surface p-5 sm:p-6">
+          <div className="flex items-center gap-3">
+            <span
+              aria-hidden="true"
+              className="inline-flex h-8 min-w-[2rem] items-center justify-center rounded-lg bg-ink-900 px-2 text-[0.68rem] font-bold text-surface"
+            >
+              {platform.initials}
+            </span>
+            <h2 className="font-display text-lg font-semibold text-ink-900">{platform.name}</h2>
+          </div>
+
+          <dl className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {platformService && (
+              <div>
+                <dt className="text-xs font-semibold uppercase tracking-[0.1em] text-ink-500">Service</dt>
+                <dd className="mt-1 text-[0.95rem] font-medium text-ink-900">{platformService.name}</dd>
+              </div>
+            )}
+            <div>
+              <dt className="text-xs font-semibold uppercase tracking-[0.1em] text-ink-500">
+                Their tracking number
+              </dt>
+              <dd className="mt-1 text-[0.95rem]">
+                {resolved.carrierTrackingUrl && resolved.carrierTrackingNumber ? (
+                  <a
+                    href={resolved.carrierTrackingUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-mono font-medium text-brand-700 dark:text-brand-300 underline decoration-brand-500/40 underline-offset-2"
+                  >
+                    {resolved.carrierTrackingNumber}
+                  </a>
+                ) : (
+                  <span className="text-ink-400">
+                    Not issued yet — add it with Edit shipment once you have it.
+                  </span>
+                )}
+              </dd>
+            </div>
+            {shipment.labelUrl && (
+              <div>
+                <dt className="text-xs font-semibold uppercase tracking-[0.1em] text-ink-500">Label</dt>
+                <dd className="mt-1 text-[0.95rem]">
+                  <a
+                    href={shipment.labelUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-brand-700 dark:text-brand-300 underline decoration-brand-500/40 underline-offset-2"
+                  >
+                    Open shipping label
+                  </a>
+                </dd>
+              </div>
+            )}
+          </dl>
+        </section>
+      )}
 
       {shipment.customer && (
         <section className="mt-8 rounded-2xl border border-ink-200 bg-surface p-5 sm:p-6">
@@ -134,6 +202,9 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
           weight: shipment.weight,
           dimensions: shipment.dimensions,
           carrier: shipment.carrier,
+          carrierId: shipment.carrierId ?? '',
+          carrierService: shipment.carrierService ?? '',
+          carrierTrackingNumber: shipment.carrierTrackingNumber ?? '',
         }}
         statuses={SHIPMENT_STATUSES}
         writable={writable}
@@ -195,6 +266,18 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
         configured={emailConfigured()}
         configError={emailConfigError()}
         customer={shipment.customer ?? null}
+        revision={[
+          shipment.status,
+          shipment.service,
+          shipment.carrier,
+          shipment.origin,
+          shipment.destination,
+          shipment.currentLocation,
+          shipment.etaInDays,
+          shipment.pieces,
+          shipment.weight,
+          shipment.carrierTrackingNumber ?? '',
+        ].join('|')}
       />
 
       {!writable && (

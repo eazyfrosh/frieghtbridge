@@ -13,6 +13,23 @@
  * cost a customer the ability to track a real parcel.
  */
 
+/** What can be handed to a carrier. Shared by the booking form and the server. */
+export const SHIPMENT_TYPES = ['Parcel', 'Pallet', 'LTL', 'FTL', 'Container'] as const;
+export type ShipmentType = (typeof SHIPMENT_TYPES)[number];
+
+/**
+ * A product a carrier sells, as an operator would name it on a booking.
+ *
+ * `transitDays` is the carrier's published door-to-door time, counted from
+ * collection — added to the days until pickup, so a booking made for next week
+ * is not promised in three days.
+ */
+export interface CarrierService {
+  code: string;
+  name: string;
+  transitDays: number;
+}
+
 export interface Carrier {
   id: string;
   name: string;
@@ -24,6 +41,14 @@ export interface Carrier {
   patterns: RegExp[];
   /** Confirms a check digit when the format has one. */
   verify?: (trackingNumber: string) => boolean;
+  /**
+   * Services a shipment can be booked onto. Absent means detection-only: we
+   * recognise the carrier's numbers but cannot tender freight to it — which is
+   * true of "International post", a format rather than a company.
+   */
+  services?: CarrierService[];
+  /** Freight this carrier will take. A parcel carrier does not move containers. */
+  handles?: ShipmentType[];
 }
 
 export interface CarrierMatch {
@@ -101,6 +126,14 @@ export const CARRIERS: Carrier[] = [
     initials: 'FB',
     trackingUrl: (n) => `/tracking?number=${encodeURIComponent(n)}`,
     patterns: [/^FBX\d{6,10}$/],
+    // Our own network is the only one that takes everything up to a container.
+    handles: [...SHIPMENT_TYPES],
+    services: [
+      { code: 'fb-economy', name: 'Economy', transitDays: 7 },
+      { code: 'fb-standard', name: 'Standard', transitDays: 4 },
+      { code: 'fb-expedited', name: 'Expedited', transitDays: 2 },
+      { code: 'fb-same-day', name: 'Same Day', transitDays: 0 },
+    ],
   },
   {
     id: 'ups',
@@ -109,6 +142,14 @@ export const CARRIERS: Carrier[] = [
     trackingUrl: (n) => `https://www.ups.com/track?tracknum=${encodeURIComponent(n)}`,
     patterns: [/^1Z[0-9A-Z]{16}$/, /^T\d{10}$/, /^\d{9}$/, /^\d{26}$/],
     verify: (n) => (n.startsWith('1Z') ? upsCheck(n) : false),
+    handles: ['Parcel', 'Pallet', 'LTL'],
+    services: [
+      { code: 'ups-ground', name: 'UPS Ground', transitDays: 5 },
+      { code: 'ups-3-day-select', name: 'UPS 3 Day Select', transitDays: 3 },
+      { code: 'ups-2nd-day-air', name: 'UPS 2nd Day Air', transitDays: 2 },
+      { code: 'ups-next-day-air', name: 'UPS Next Day Air', transitDays: 1 },
+      { code: 'ups-worldwide-expedited', name: 'UPS Worldwide Expedited', transitDays: 4 },
+    ],
   },
   {
     id: 'fedex',
@@ -118,6 +159,14 @@ export const CARRIERS: Carrier[] = [
     // 12-digit Express, 15-digit Ground, 20-digit SmartPost, 22-digit.
     patterns: [/^\d{12}$/, /^\d{15}$/, /^\d{20}$/, /^\d{22}$/, /^96\d{20}$/],
     verify: (n) => (n.length === 12 ? fedex12Check(n) : false),
+    handles: ['Parcel', 'Pallet', 'LTL'],
+    services: [
+      { code: 'fedex-ground', name: 'FedEx Ground', transitDays: 5 },
+      { code: 'fedex-express-saver', name: 'FedEx Express Saver', transitDays: 3 },
+      { code: 'fedex-2day', name: 'FedEx 2Day', transitDays: 2 },
+      { code: 'fedex-priority-overnight', name: 'FedEx Priority Overnight', transitDays: 1 },
+      { code: 'fedex-international-priority', name: 'FedEx International Priority', transitDays: 3 },
+    ],
   },
   {
     id: 'usps',
@@ -126,6 +175,12 @@ export const CARRIERS: Carrier[] = [
     trackingUrl: (n) => `https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(n)}`,
     patterns: [/^(94|93|92|95)\d{18,24}$/, /^\d{20}$/, /^\d{26}$/, /^[A-Z]{2}\d{9}US$/],
     verify: (n) => (/^\d{20,26}$/.test(n) ? mod10Check(n) : /^[A-Z]{2}\d{9}US$/.test(n) ? s10Check(n) : false),
+    handles: ['Parcel'],
+    services: [
+      { code: 'usps-ground-advantage', name: 'USPS Ground Advantage', transitDays: 4 },
+      { code: 'usps-priority-mail', name: 'USPS Priority Mail', transitDays: 2 },
+      { code: 'usps-priority-express', name: 'USPS Priority Mail Express', transitDays: 1 },
+    ],
   },
   {
     id: 'dhl-express',
@@ -134,6 +189,12 @@ export const CARRIERS: Carrier[] = [
     trackingUrl: (n) => `https://www.dhl.com/en/express/tracking.html?AWB=${encodeURIComponent(n)}`,
     // Air waybills are 10 digits; some services prefix a 3-digit account.
     patterns: [/^\d{10}$/, /^\d{11}$/, /^JD\d{16,18}$/],
+    handles: ['Parcel', 'Pallet'],
+    services: [
+      { code: 'dhl-economy-select', name: 'DHL Economy Select', transitDays: 5 },
+      { code: 'dhl-express-worldwide', name: 'DHL Express Worldwide', transitDays: 3 },
+      { code: 'dhl-express-1200', name: 'DHL Express 12:00', transitDays: 2 },
+    ],
   },
   {
     id: 'dhl-ecommerce',
@@ -149,6 +210,11 @@ export const CARRIERS: Carrier[] = [
     trackingUrl: (n) => `https://www.royalmail.com/track-your-item#/tracking-results/${encodeURIComponent(n)}`,
     patterns: [/^[A-Z]{2}\d{9}GB$/],
     verify: s10Check,
+    handles: ['Parcel'],
+    services: [
+      { code: 'rm-tracked-48', name: 'Royal Mail Tracked 48', transitDays: 2 },
+      { code: 'rm-tracked-24', name: 'Royal Mail Tracked 24', transitDays: 1 },
+    ],
   },
   {
     id: 'canada-post',
@@ -157,6 +223,12 @@ export const CARRIERS: Carrier[] = [
     trackingUrl: (n) => `https://www.canadapost-postescanada.ca/track-reperage/en#/resultList?searchFor=${encodeURIComponent(n)}`,
     patterns: [/^\d{16}$/, /^[A-Z]{2}\d{9}CA$/],
     verify: (n) => (/^[A-Z]{2}\d{9}CA$/.test(n) ? s10Check(n) : false),
+    handles: ['Parcel'],
+    services: [
+      { code: 'cp-regular-parcel', name: 'Canada Post Regular Parcel', transitDays: 5 },
+      { code: 'cp-expedited-parcel', name: 'Canada Post Expedited Parcel', transitDays: 3 },
+      { code: 'cp-xpresspost', name: 'Canada Post Xpresspost', transitDays: 2 },
+    ],
   },
   {
     id: 'dpd',
@@ -164,6 +236,11 @@ export const CARRIERS: Carrier[] = [
     initials: 'DPD',
     trackingUrl: (n) => `https://www.dpd.co.uk/service/tracking?parcel=${encodeURIComponent(n)}`,
     patterns: [/^\d{14}$/, /^\d{28}$/],
+    handles: ['Parcel', 'Pallet'],
+    services: [
+      { code: 'dpd-classic', name: 'DPD Classic', transitDays: 3 },
+      { code: 'dpd-next-day', name: 'DPD Next Day', transitDays: 1 },
+    ],
   },
   {
     id: 'gls',
@@ -171,6 +248,11 @@ export const CARRIERS: Carrier[] = [
     initials: 'GLS',
     trackingUrl: (n) => `https://gls-group.eu/EU/en/parcel-tracking?match=${encodeURIComponent(n)}`,
     patterns: [/^\d{11}$/, /^\d{12}$/],
+    handles: ['Parcel', 'Pallet'],
+    services: [
+      { code: 'gls-business-parcel', name: 'GLS Business Parcel', transitDays: 3 },
+      { code: 'gls-express', name: 'GLS Express', transitDays: 1 },
+    ],
   },
   {
     id: 'tnt',
@@ -178,6 +260,11 @@ export const CARRIERS: Carrier[] = [
     initials: 'TNT',
     trackingUrl: (n) => `https://www.tnt.com/express/en_gb/site/shipping-tools/tracking.html?searchType=con&cons=${encodeURIComponent(n)}`,
     patterns: [/^\d{9}$/, /^[A-Z]{2}\d{9}[A-Z]{2}$/],
+    handles: ['Parcel', 'Pallet', 'LTL'],
+    services: [
+      { code: 'tnt-economy-express', name: 'TNT Economy Express', transitDays: 4 },
+      { code: 'tnt-express', name: 'TNT Express', transitDays: 2 },
+    ],
   },
   {
     id: 'usps-international',
@@ -245,4 +332,48 @@ export function detectCarrier(rawInput: string): CarrierMatch | null {
 
 export function isFreightBridgeNumber(rawInput: string): boolean {
   return /^FBX\d{6,10}$/.test(normalizeCarrierNumber(rawInput));
+}
+
+// ---------------------------------------------------------------------------
+// Booking
+//
+// Detection answers "who is carrying this?" after the fact. The other half of a
+// multi-carrier platform is choosing, at booking time, who is going to.
+
+export const OWN_CARRIER_ID = 'freightbridge';
+
+/** Carriers a shipment can actually be tendered to, our own network first. */
+export const BOOKABLE_CARRIERS: Carrier[] = CARRIERS.filter(
+  (carrier) => carrier.services && carrier.services.length > 0,
+);
+
+/**
+ * Who can take this freight.
+ *
+ * Filtering by shipment type is the point: offering USPS for a 40ft container
+ * is an invitation to book something that will be refused at the dock. With no
+ * type given, everything bookable is returned.
+ */
+export function carriersFor(shipmentType?: string): Carrier[] {
+  if (!shipmentType) return BOOKABLE_CARRIERS;
+  return BOOKABLE_CARRIERS.filter((carrier) => carrier.handles?.includes(shipmentType as ShipmentType));
+}
+
+export function carrierService(carrierId: string, serviceCode: string): CarrierService | null {
+  return carrierById(carrierId)?.services?.find((service) => service.code === serviceCode) ?? null;
+}
+
+/**
+ * Whether a number looks like something this carrier issues.
+ *
+ * Used to warn an operator who has pasted a UPS number under FedEx — a warning
+ * and not a rejection, for the same reason check digits only rank: our registry
+ * does not know every format a carrier has ever printed, and refusing a real
+ * number because of a gap in it is the worse outcome.
+ */
+export function matchesCarrierFormat(carrierId: string, trackingNumber: string): boolean {
+  const carrier = carrierById(carrierId);
+  if (!carrier) return false;
+  const value = normalizeCarrierNumber(trackingNumber);
+  return carrier.patterns.some((pattern) => pattern.test(value));
 }

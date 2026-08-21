@@ -1,4 +1,4 @@
-import { detectCarriers, isFreightBridgeNumber, normalizeCarrierNumber } from './carriers';
+import { carrierById, detectCarriers, isFreightBridgeNumber, normalizeCarrierNumber } from './carriers';
 import { SEED_SHIPMENTS } from './fixtures/shipments';
 
 /**
@@ -70,7 +70,24 @@ export interface Shipment {
   pieces: number;
   weight: string;
   dimensions: string;
+  /** Display name of whoever is carrying it. */
   carrier: string;
+  /**
+   * Registry id of that carrier, when the shipment was booked onto one. The
+   * display name above is what people read; this is what code matches on, and
+   * it survives the name being edited by hand.
+   */
+  carrierId?: string | null;
+  /** The carrier's own product, e.g. "UPS 2nd Day Air". */
+  carrierService?: string | null;
+  /** The carrier's tracking number, once they have issued one. */
+  carrierTrackingNumber?: string | null;
+  /**
+   * Shipping label from the carrier. Operators only — a label carries the
+   * sender's and recipient's full addresses, so it must never reach the public
+   * tracking endpoint. `TrackingResult` omits it by type.
+   */
+  labelUrl?: string | null;
   events: TrackingEvent[];
 }
 
@@ -83,18 +100,28 @@ export interface ResolvedEvent extends Omit<TrackingEvent, 'hoursAgo'> {
 /**
  * What the public tracking endpoint returns.
  *
- * `customer` and `pickupDate` are omitted deliberately, not incidentally. A
- * tracking number is the only credential for `/api/tracking`, and anyone who
- * guesses one must not thereby learn a customer's name, email and phone
- * number. Excluding them from the type means a future `...shipment` spread
- * fails to compile rather than quietly leaking.
+ * `customer`, `pickupDate` and `labelUrl` are omitted deliberately, not
+ * incidentally. A tracking number is the only credential for `/api/tracking`,
+ * and anyone who guesses one must not thereby learn a customer's name, email
+ * and phone number, nor pull up a label with both addresses on it. Excluding
+ * them from the type means a future `...shipment` spread fails to compile
+ * rather than quietly leaking.
+ *
+ * The carrier leg is public, because it is the customer's own consignment: if
+ * their pallet is moving on UPS, they get the UPS number and a link to it.
  */
 export interface TrackingResult
-  extends Omit<Shipment, 'events' | 'etaInDays' | 'customer' | 'pickupDate'> {
+  extends Omit<
+    Shipment,
+    'events' | 'etaInDays' | 'customer' | 'pickupDate' | 'labelUrl' | 'carrierTrackingNumber'
+  > {
   events: ResolvedEvent[];
   estimatedDelivery: string;
   lastUpdate: string;
   progress: number;
+  carrierTrackingNumber: string | null;
+  /** Where to follow that number on the carrier's own site. */
+  carrierTrackingUrl: string | null;
 }
 
 /** Kept as a named export for the seed script and the no-Firebase fallback. */
@@ -177,6 +204,15 @@ function resolve(shipment: Shipment): TrackingResult {
     weight: shipment.weight,
     dimensions: shipment.dimensions,
     carrier: shipment.carrier,
+    carrierId: shipment.carrierId ?? null,
+    carrierService: shipment.carrierService ?? null,
+    carrierTrackingNumber: shipment.carrierTrackingNumber ?? null,
+    // Built from the registry rather than stored, so a link is never stale:
+    // if a carrier moves its tracking page, one edit fixes every shipment.
+    carrierTrackingUrl:
+      shipment.carrierId && shipment.carrierTrackingNumber
+        ? (carrierById(shipment.carrierId)?.trackingUrl(shipment.carrierTrackingNumber) ?? null)
+        : null,
     events,
     estimatedDelivery: new Date(now + shipment.etaInDays * 86_400_000).toISOString(),
     lastUpdate: new Date(lastReachedTime ?? now).toISOString(),

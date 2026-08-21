@@ -45,7 +45,10 @@ export async function PATCH(request: Request, { params }: Params) {
       );
     }
 
-    return NextResponse.json({ ok: true, shipment: saved });
+    // A warning is not a failure: the edit saved. It says the carrier tracking
+    // number does not look like one that carrier issues, which the operator
+    // should see before it goes out to a customer.
+    return NextResponse.json({ ok: true, warning: validated.warning, shipment: saved });
   } catch (error) {
     console.error('[admin/shipments] update failed:', error);
     return NextResponse.json({ error: 'Could not save the shipment.' }, { status: 500 });

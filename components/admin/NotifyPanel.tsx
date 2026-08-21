@@ -39,6 +39,14 @@ interface NotifyPanelProps {
   configError: string | null;
   /** From the booking, when there was one. Both fields stay editable. */
   customer?: { name: string; email: string } | null;
+  /**
+   * Changes whenever the shipment does. The preview is rendered server-side
+   * against the live record, so editing the shipment — re-tendering it to
+   * another carrier, say — leaves a cached preview describing a shipment that
+   * no longer exists. Refetching on this keeps the promise that the preview is
+   * the email.
+   */
+  revision?: string;
 }
 
 export function NotifyPanel({
@@ -48,6 +56,7 @@ export function NotifyPanel({
   configured,
   configError,
   customer,
+  revision,
 }: NotifyPanelProps) {
   const [templateId, setTemplateId] = useState(templates[0]?.id ?? '');
   // Prefilled from the booking. Retyping an address that is already on the
@@ -87,10 +96,14 @@ export function NotifyPanel({
     } finally {
       setBusy(false);
     }
-  }, [templateId, trackingNumber, recipientName]);
+    // `revision` is not read in the body — it is here to refetch the preview
+    // when the shipment underneath it changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [templateId, trackingNumber, recipientName, revision]);
 
-  // Re-render whenever the choice of template or the recipient's name changes,
-  // so the preview is never showing a different email from the one selected.
+  // Re-render whenever the choice of template, the recipient's name, or the
+  // shipment itself changes, so the preview is never showing a different email
+  // from the one that would be sent.
   useEffect(() => {
     void loadPreview();
   }, [loadPreview]);

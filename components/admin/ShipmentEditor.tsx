@@ -3,6 +3,7 @@
 import { AlertCircle, CheckCircle2, Pencil, Save, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState, type FormEvent } from 'react';
+import { BOOKABLE_CARRIERS, OWN_CARRIER_ID, carrierById } from '@/lib/carriers';
 
 /**
  * Edit a shipment's details in place.
@@ -23,6 +24,9 @@ interface ShipmentFields {
   weight: string;
   dimensions: string;
   carrier: string;
+  carrierId: string;
+  carrierService: string;
+  carrierTrackingNumber: string;
 }
 
 interface ShipmentEditorProps {
@@ -39,10 +43,60 @@ export function ShipmentEditor({ trackingNumber, shipment, statuses, writable }:
   const [form, setForm] = useState<ShipmentFields>(shipment);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [warning, setWarning] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+
+  const carrier = carrierById(form.carrierId);
 
   function set<K extends keyof ShipmentFields>(key: K, value: ShipmentFields[K]) {
     setForm((current) => ({ ...current, [key]: value }));
+    setSaved(false);
+  }
+
+  /**
+   * The freight half of a service string — "Pallet" out of "Pallet · UPS
+   * Ground", "LTL Freight" out of "LTL Freight — Standard". What the shipment
+   * *is* survives a change of who is carrying it.
+   */
+  function freightPrefix(service: string): string {
+    const match = /^(.*?)\s+(?:·|—|–|-)\s+/.exec(service);
+    return (match?.[1] ?? service).trim();
+  }
+
+  /**
+   * Re-tender to a different platform.
+   *
+   * Their service and their tracking number belong to the old carrier, so both
+   * go. So do the two display fields: a shipment moved to FedEx that still
+   * reads "Carrier: UPS · 2nd Day Air" is worse than no label at all, and the
+   * customer sees those two strings. Both stay hand-editable afterwards.
+   */
+  function setCarrierId(id: string) {
+    setForm((current) => {
+      if (id === current.carrierId) return current;
+      const next = { ...current, carrierId: id, carrierService: '', carrierTrackingNumber: '' };
+
+      const carrier = carrierById(id);
+      if (carrier) {
+        const service = carrier.services?.[0];
+        next.carrierService = service?.code ?? '';
+        next.carrier = carrier.name;
+        if (service) next.service = `${freightPrefix(current.service)} · ${service.name}`;
+      }
+      return next;
+    });
+    setSaved(false);
+  }
+
+  function setCarrierServiceCode(code: string) {
+    setForm((current) => {
+      const service = (carrierById(current.carrierId)?.services ?? []).find((s) => s.code === code);
+      return {
+        ...current,
+        carrierService: code,
+        service: service ? `${freightPrefix(current.service)} · ${service.name}` : current.service,
+      };
+    });
     setSaved(false);
   }
 
@@ -50,6 +104,7 @@ export function ShipmentEditor({ trackingNumber, shipment, statuses, writable }:
     event.preventDefault();
     setBusy(true);
     setError(null);
+    setWarning(null);
     setSaved(false);
 
     try {
@@ -58,13 +113,17 @@ export function ShipmentEditor({ trackingNumber, shipment, statuses, writable }:
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       });
-      const data = (await response.json().catch(() => ({}))) as { error?: string };
+      const data = (await response.json().catch(() => ({}))) as {
+        error?: string;
+        warning?: string | null;
+      };
 
       if (!response.ok) {
         setError(data.error ?? 'Could not save the shipment.');
         return;
       }
 
+      setWarning(data.warning ?? null);
       setSaved(true);
       // The page is a server component; this is what makes the header, the
       // facts grid and the timeline show the new values.
@@ -188,16 +247,87 @@ export function ShipmentEditor({ trackingNumber, shipment, statuses, writable }:
         </div>
       </div>
 
+      {/* Carrier platform — separate from the free-text "Carrier" field above,
+          which names the vehicle or lane rather than the company. */}
+      <div className="mt-6 border-t border-ink-100 pt-5">
+        <h3 className="text-sm font-semibold text-ink-900">Carrier platform</h3>
+        <p className="mt-1 text-sm text-ink-500">
+          Who is moving it, and their own tracking number. Re-tendering a shipment to a different carrier is
+          this: change the platform, then paste the number they issue.
+        </p>
+
+        <div className="mt-4 grid gap-4 sm:grid-cols-3">
+          <div>
+            <label htmlFor="edit-carrierId" className="block text-sm font-medium text-ink-700">
+              Platform
+            </label>
+            <select
+              id="edit-carrierId"
+              value={form.carrierId}
+              onChange={(event) => setCarrierId(event.target.value)}
+              className="mt-1.5 h-11 w-full rounded-xl border border-ink-200 bg-surface px-3.5 text-[0.95rem] text-ink-900 focus:border-brand-500 focus:outline-none"
+            >
+              <option value="">Not assigned</option>
+              {BOOKABLE_CARRIERS.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="edit-carrierService" className="block text-sm font-medium text-ink-700">
+              Service
+            </label>
+            <select
+              id="edit-carrierService"
+              value={form.carrierService}
+              disabled={!carrier}
+              onChange={(event) => setCarrierServiceCode(event.target.value)}
+              className="mt-1.5 h-11 w-full rounded-xl border border-ink-200 bg-surface px-3.5 text-[0.95rem] text-ink-900 focus:border-brand-500 focus:outline-none disabled:opacity-50"
+            >
+              <option value="">Not set</option>
+              {(carrier?.services ?? []).map((service) => (
+                <option key={service.code} value={service.code}>
+                  {service.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="edit-carrierTrackingNumber" className="block text-sm font-medium text-ink-700">
+              Their tracking number
+            </label>
+            <input
+              id="edit-carrierTrackingNumber"
+              value={form.carrierTrackingNumber}
+              disabled={!carrier || form.carrierId === OWN_CARRIER_ID}
+              placeholder={form.carrierId === OWN_CARRIER_ID ? 'Our own network' : '1Z999AA10123456784'}
+              onChange={(event) => set('carrierTrackingNumber', event.target.value)}
+              className="mt-1.5 h-11 w-full rounded-xl border border-ink-200 px-3.5 font-mono text-[0.9rem] text-ink-900 focus:border-brand-500 focus:outline-none disabled:opacity-50"
+            />
+          </div>
+        </div>
+      </div>
+
       {error && (
         <p role="alert" className="mt-4 flex items-start gap-2 text-sm text-red-600 dark:text-red-300">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           {error}
         </p>
       )}
-      {saved && (
+      {saved && !warning && (
         <p role="status" className="mt-4 flex items-center gap-2 text-sm text-green-700 dark:text-green-300">
           <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden="true" />
           Saved.
+        </p>
+      )}
+      {warning && (
+        <p role="status" className="mt-4 flex items-start gap-2 text-sm text-amber-700 dark:text-amber-300">
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+          {warning}
         </p>
       )}
 

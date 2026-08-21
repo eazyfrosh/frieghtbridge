@@ -224,10 +224,11 @@ This is a front-end prototype: there is no backend.
   carry an absolute timestamp (`at`), unlike the fixtures' relative `hoursAgo`,
   and the timeline sorts chronologically so a late-arriving depot scan lands in
   the right place rather than on the end.
-- **Booking is real.** `/admin/book` creates a shipment in Firestore and
-  allocates an `FBX-` tracking number that works on the public tracking page
-  immediately. It is staff-only; the public `/quote` page remains a short
-  enquiry that transmits nothing.
+- **Booking is real, and multi-carrier.** `/admin/book` creates a shipment in
+  Firestore and allocates an `FBX-` tracking number that works on the public
+  tracking page immediately, on our own network or on FedEx, UPS, USPS, DHL and
+  the rest (see Booking onto another carrier below). It is staff-only; the
+  public `/quote` page remains a short enquiry that transmits nothing.
 - **Quote and contact forms** validate fully client-side and show a success
   state; nothing is transmitted.
 - **Admin sign-in and shipment storage are real.** Authentication is Firebase
@@ -283,6 +284,64 @@ stub that replays the documented response shape, not against the live service �
 the same situation as Resend. The request and response handling are exercised;
 the vendor's real payload is not. Expect to check the field names on first
 connection.
+
+## Booking onto another carrier
+
+Tracking recognises other carriers' numbers after the fact. This is the other
+half: at booking, `/admin/book` asks which platform the freight is going on —
+our own network, FedEx, UPS, USPS, DHL Express, Royal Mail, Canada Post, DPD,
+GLS or TNT — and then which of that carrier's services.
+
+**The service list is the carrier's own products**, not a generic
+economy/standard/express tier: UPS 2nd Day Air, FedEx Priority Overnight, USPS
+Ground Advantage. Each carries its published transit time, and the promised
+delivery date is collection plus that, so changing carrier changes the ETA
+correctly.
+
+**Carriers are filtered by what they can actually take.** Choose Container and
+only our own network is offered, because USPS will not move one. Switching
+shipment type to something the selected carrier cannot handle moves the booking
+back to our network rather than leaving an impossible pairing on screen for the
+server to reject.
+
+**Two modes, and the platform is useful in both.**
+
+- Without `SHIPPING_API_KEY` — the operator books the freight on the carrier's
+  own platform and records their tracking number here, at booking or later from
+  the shipment page. No credentials, works on deploy, and it is how most small
+  brokers actually operate.
+- With one — the carrier is tendered at booking through a multi-carrier
+  shipping API, and their tracking number and label come back automatically.
+
+**A failed tender never loses the booking.** If the carrier refuses or the
+aggregator is down, the shipment is still created and the operator is told to
+add the number by hand. The provider is called once, outside the
+tracking-number retry loop, and not at all for our own network or for freight
+the operator has already booked with the carrier themselves.
+
+**One shipment, two numbers.** The customer tracks with the `FBX-` reference
+throughout; when the freight is on somebody else's network the tracking page
+shows a "Moving with FedEx on 390244306428" strip and a link straight to that
+carrier. The shipping label stays operator-only — it carries both addresses,
+and `TrackingResult` omits it by type, the same protection the customer record
+has.
+
+**Re-tendering is a first-class action**, not a workaround: change the platform
+on the shipment page and the service, the carrier's number, the displayed
+carrier and the service string all follow. What already happened stays in the
+scan history — the booking event still records the carrier it was originally
+tendered to, because it was.
+
+`{{carrierTrackingNumber}}` and `{{carrierTrackingUrl}}` are available to email
+templates. No shipped template uses them; add them to the wording if you want
+the carrier's own reference in customer email.
+
+**Caveat, as with tracking:** the shipping adapter has been verified against a
+stub replaying the documented shape, never against a live aggregator. The
+request/response handling is exercised; the vendor's real field names are not.
+Every aggregator differs — the larger ones need a rate selected before a label
+exists — so treat `tenderShipment()` as the seam to adapt, not a finished
+integration.
 
 ## Live chat
 

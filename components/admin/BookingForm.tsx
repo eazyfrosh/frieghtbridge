@@ -1,8 +1,15 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { AlertCircle, ArrowRight, CheckCircle2, Loader2, MapPin, PackageCheck, ShieldCheck, Truck } from 'lucide-react';
+import { AlertCircle, ArrowRight, CheckCircle2, Loader2, MapPin, Network, PackageCheck, ShieldCheck, Truck } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  OWN_CARRIER_ID,
+  carrierById,
+  carriersFor,
+  matchesCarrierFormat,
+  normalizeCarrierNumber,
+} from '@/lib/carriers';
 import { EASE_PREMIUM } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/Button';
@@ -29,13 +36,6 @@ const SHIPMENT_TYPES = [
   { value: 'Container', label: 'Container', helper: '20ft / 40ft' },
 ];
 
-const DELIVERY_PREFERENCES = [
-  { value: 'Economy', label: 'Economy — lowest cost' },
-  { value: 'Standard', label: 'Standard — balanced' },
-  { value: 'Expedited', label: 'Expedited — priority transit' },
-  { value: 'Same Day', label: 'Same day — where available' },
-];
-
 interface FormState {
   fromCountry: string;
   fromCity: string;
@@ -48,7 +48,9 @@ interface FormState {
   pieces: string;
   dimensions: string;
   pickupDate: string;
-  deliveryPreference: string;
+  carrierId: string;
+  carrierService: string;
+  carrierTrackingNumber: string;
   name: string;
   businessName: string;
   email: string;
@@ -69,7 +71,9 @@ const INITIAL: FormState = {
   pieces: '1',
   dimensions: '',
   pickupDate: '',
-  deliveryPreference: 'Standard',
+  carrierId: OWN_CARRIER_ID,
+  carrierService: 'fb-standard',
+  carrierTrackingNumber: '',
   name: '',
   businessName: '',
   email: '',
@@ -91,6 +95,23 @@ function validate(values: FormState): Errors {
   if (!values.toZip.trim()) errors.toZip = 'Enter a ZIP or postal code.';
 
   if (!values.shipmentType) errors.shipmentType = 'Choose a shipment type.';
+
+  const carrier = carrierById(values.carrierId);
+  if (!carrier) {
+    errors.carrierId = 'Choose which carrier is taking this.';
+  } else if (values.shipmentType && !carrier.handles?.includes(values.shipmentType as never)) {
+    errors.carrierId = `${carrier.name} does not take ${values.shipmentType.toLowerCase()} freight.`;
+  } else if (!carrier.services?.some((service) => service.code === values.carrierService)) {
+    errors.carrierService = `Choose a ${carrier.name} service.`;
+  }
+
+  // Optional — an operator often books here first and gets the carrier's
+  // number back hours later. Only the shape is enforced; whether it looks like
+  // that carrier's format is a warning shown beside the field, not an error.
+  const carrierNumber = normalizeCarrierNumber(values.carrierTrackingNumber.trim());
+  if (carrierNumber && !/^[A-Z0-9]{4,40}$/.test(carrierNumber)) {
+    errors.carrierTrackingNumber = 'A carrier tracking number is 4–40 letters and digits.';
+  }
 
   if (!values.weight.trim()) {
     errors.weight = 'Enter an approximate weight.';
@@ -136,12 +157,26 @@ function validate(values: FormState): Errors {
   return errors;
 }
 
-export function BookingForm({ className }: { className?: string }) {
+interface BookingFormProps {
+  className?: string;
+  /**
+   * Whether a multi-carrier shipping API is configured. Connected means the
+   * carrier's number comes back from the booking; manual means the operator
+   * books on the carrier's own platform and records the number here.
+   */
+  fulfilment?: 'connected' | 'manual';
+}
+
+export function BookingForm({ className, fulfilment = 'manual' }: BookingFormProps) {
   const [values, setValues] = useState<FormState>(INITIAL);
   const [errors, setErrors] = useState<Errors>({});
   const [submitted, setSubmitted] = useState(false);
   const [pending, setPending] = useState(false);
-  const [success, setSuccess] = useState<{ reference: string } | null>(null);
+  const [success, setSuccess] = useState<{
+    reference: string;
+    carrierNumber: string | null;
+    warning: string | null;
+  } | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [minDate, setMinDate] = useState('');
   const formRef = useRef<HTMLFormElement>(null);
@@ -154,11 +189,56 @@ export function BookingForm({ className }: { className?: string }) {
 
   const errorCount = useMemo(() => Object.keys(errors).length, [errors]);
 
+  const availableCarriers = useMemo(() => carriersFor(values.shipmentType), [values.shipmentType]);
+  const carrier = carrierById(values.carrierId);
+  const offNetwork = values.carrierId !== OWN_CARRIER_ID;
+
+  // Shown beside the field, never blocking the booking: our pattern list is
+  // not exhaustive, and an operator holding a real number is a better source
+  // than a regex.
+  const numberLooksWrong =
+    offNetwork &&
+    values.carrierTrackingNumber.trim().length >= 4 &&
+    !matchesCarrierFormat(values.carrierId, values.carrierTrackingNumber);
+
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setValues((current) => {
       const next = { ...current, [key]: value };
       // Once the visitor has attempted a submit, keep validation live so errors
       // clear the moment they are fixed.
+      if (submitted) setErrors(validate(next));
+      return next;
+    });
+  }
+
+  /** Switching platform keeps the service valid: theirs, not the last one's. */
+  function selectCarrier(id: string) {
+    setValues((current) => {
+      const services = carrierById(id)?.services ?? [];
+      const keep = services.some((service) => service.code === current.carrierService);
+      const next = {
+        ...current,
+        carrierId: id,
+        carrierService: keep ? current.carrierService : (services[0]?.code ?? ''),
+        // Their reference belongs to the platform it was issued by.
+        carrierTrackingNumber: id === current.carrierId ? current.carrierTrackingNumber : '',
+      };
+      if (submitted) setErrors(validate(next));
+      return next;
+    });
+  }
+
+  function selectShipmentType(type: string) {
+    setValues((current) => {
+      const next = { ...current, shipmentType: type };
+      // USPS cannot take a 40ft container. Rather than leave an impossible
+      // pairing on screen for the server to reject, fall back to our own
+      // network, which is the one that takes everything.
+      if (!carrierById(current.carrierId)?.handles?.includes(type as never)) {
+        next.carrierId = OWN_CARRIER_ID;
+        next.carrierService = 'fb-standard';
+        next.carrierTrackingNumber = '';
+      }
       if (submitted) setErrors(validate(next));
       return next;
     });
@@ -190,6 +270,8 @@ export function BookingForm({ className }: { className?: string }) {
       });
       const data = (await response.json().catch(() => ({}))) as {
         trackingNumber?: string;
+        warning?: string | null;
+        shipment?: { carrierTrackingNumber?: string | null };
         error?: string;
       };
 
@@ -201,7 +283,11 @@ export function BookingForm({ className }: { className?: string }) {
       // The tracking number comes from the server, which allocated it. Making
       // one up here is what the old prototype did, and it meant the reference
       // read back to the customer matched nothing.
-      setSuccess({ reference: data.trackingNumber });
+      setSuccess({
+        reference: data.trackingNumber,
+        carrierNumber: data.shipment?.carrierTrackingNumber ?? null,
+        warning: data.warning ?? null,
+      });
     } catch {
       setSubmitError('Could not reach the server. Check your connection and try again.');
     } finally {
@@ -261,10 +347,32 @@ export function BookingForm({ className }: { className?: string }) {
               <div className="bg-surface p-4">
                 <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-400">Service</dt>
                 <dd className="mt-1 text-sm font-medium text-ink-900">
-                  {values.shipmentType} · {values.deliveryPreference}
+                  {values.shipmentType} ·{' '}
+                  {carrier?.services?.find((service) => service.code === values.carrierService)?.name ??
+                    'Standard'}
                 </dd>
               </div>
+              {success.carrierNumber && (
+                <div className="bg-surface p-4 sm:col-span-3">
+                  <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-400">
+                    {carrier?.name ?? 'Carrier'} reference
+                  </dt>
+                  <dd className="mt-1 font-mono text-sm font-semibold text-ink-900">
+                    {success.carrierNumber}
+                  </dd>
+                </div>
+              )}
             </dl>
+
+            {success.warning && (
+              <p
+                role="alert"
+                className="mx-auto mt-6 flex max-w-lg items-start gap-2 rounded-2xl bg-amber-50 dark:bg-amber-500/10 px-4 py-3 text-left text-sm text-amber-800 dark:text-amber-200 ring-1 ring-amber-200 dark:ring-amber-500/30"
+              >
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+                {success.warning}
+              </p>
+            )}
 
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
               <Button onClick={reset} variant="secondary" size="lg">
@@ -392,7 +500,7 @@ export function BookingForm({ className }: { className?: string }) {
                   name="shipmentType"
                   value={values.shipmentType}
                   options={SHIPMENT_TYPES}
-                  onChange={(value) => update('shipmentType', value)}
+                  onChange={selectShipmentType}
                   error={errors.shipmentType}
                 />
               </div>
@@ -439,15 +547,110 @@ export function BookingForm({ className }: { className?: string }) {
                   onChange={(event) => update('pickupDate', event.target.value)}
                   error={errors.pickupDate}
                 />
-                <SelectField
-                  id="deliveryPreference"
-                  label="Delivery preference"
-                  options={DELIVERY_PREFERENCES}
-                  value={values.deliveryPreference}
-                  onChange={(event) => update('deliveryPreference', event.target.value)}
-                  error={errors.deliveryPreference}
-                />
               </div>
+            </div>
+
+            {/* Carrier */}
+            <div className="mt-8 border-t border-ink-100 pt-8">
+              <h3 className="flex items-center gap-2 font-display text-sm font-semibold uppercase tracking-[0.14em] text-ink-700">
+                <Network className="h-4 w-4 text-brand-600 dark:text-brand-300" aria-hidden="true" />
+                Carrier platform
+              </h3>
+              <p className="mt-1.5 text-sm text-ink-500">
+                Who is moving it. Only carriers that take {values.shipmentType.toLowerCase()} freight are
+                offered.
+              </p>
+
+              <fieldset className="mt-5">
+                <legend className="sr-only">Carrier</legend>
+                <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+                  {availableCarriers.map((option) => {
+                    const active = option.id === values.carrierId;
+                    return (
+                      <label
+                        key={option.id}
+                        className={cn(
+                          'flex cursor-pointer items-center gap-3 rounded-2xl border p-3.5 transition-colors',
+                          active
+                            ? 'border-brand-500 bg-brand-50 dark:bg-brand-500/10'
+                            : 'border-ink-200 bg-surface hover:border-ink-300',
+                        )}
+                      >
+                        <input
+                          type="radio"
+                          name="carrierId"
+                          value={option.id}
+                          checked={active}
+                          onChange={() => selectCarrier(option.id)}
+                          className="h-4 w-4 shrink-0 accent-brand-600"
+                        />
+                        <span
+                          aria-hidden="true"
+                          className={cn(
+                            'inline-flex h-7 min-w-[1.75rem] shrink-0 items-center justify-center rounded-md px-1.5 text-[0.62rem] font-bold',
+                            active ? 'bg-brand-600 text-white' : 'bg-ink-900 text-surface',
+                          )}
+                        >
+                          {option.initials}
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block truncate text-[0.95rem] font-medium text-ink-900">
+                            {option.name}
+                          </span>
+                          <span className="block text-xs text-ink-500">
+                            {option.id === OWN_CARRIER_ID
+                              ? 'Our own network'
+                              : `${option.services?.length ?? 0} services`}
+                          </span>
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+                {errors.carrierId && (
+                  <p role="alert" className="mt-2 text-sm text-red-600 dark:text-red-300">
+                    {errors.carrierId}
+                  </p>
+                )}
+              </fieldset>
+
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                <SelectField
+                  id="carrierService"
+                  label="Service"
+                  required
+                  options={(carrier?.services ?? []).map((service) => ({
+                    value: service.code,
+                    label:
+                      service.transitDays === 0
+                        ? `${service.name} — same day`
+                        : `${service.name} — ${service.transitDays} day${service.transitDays === 1 ? '' : 's'}`,
+                  }))}
+                  value={values.carrierService}
+                  onChange={(event) => update('carrierService', event.target.value)}
+                  error={errors.carrierService}
+                />
+
+                {offNetwork && (
+                  <TextField
+                    id="carrierTrackingNumber"
+                    label={`${carrier?.name ?? 'Carrier'} tracking number`}
+                    placeholder="1Z999AA10123456784"
+                    hint="Optional — if you have already booked it with them"
+                    value={values.carrierTrackingNumber}
+                    onChange={(event) => update('carrierTrackingNumber', event.target.value)}
+                    error={errors.carrierTrackingNumber}
+                  />
+                )}
+              </div>
+
+              {numberLooksWrong && !errors.carrierTrackingNumber && (
+                <p className="mt-3 flex items-start gap-2 text-sm text-amber-700 dark:text-amber-300">
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+                  That does not look like a {carrier?.name} number. It will be saved as typed — check it
+                  before it goes to the customer.
+                </p>
+              )}
             </div>
 
             {/* Contact */}
@@ -516,6 +719,10 @@ export function BookingForm({ className }: { className?: string }) {
             <div className="mt-8 flex flex-col items-start gap-4 border-t border-ink-100 pt-8 sm:flex-row sm:items-center sm:justify-between">
               <p className="max-w-sm text-sm text-ink-400">
                 This creates the shipment and allocates a tracking number the customer can use immediately.
+                {offNetwork &&
+                  (fulfilment === 'connected'
+                    ? ` ${carrier?.name} is tendered automatically and their number is attached.`
+                    : ` Book it with ${carrier?.name} separately and add their number here or later.`)}
               </p>
               <Button type="submit" size="lg" disabled={pending} className="w-full sm:w-auto">
                 {pending ? (

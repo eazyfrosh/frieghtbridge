@@ -20,7 +20,7 @@ import {
 import Link from 'next/link';
 import { useCallback, useEffect, useId, useState } from 'react';
 import { EASE_PREMIUM } from '@/lib/motion';
-import { detectCarrier } from '@/lib/carriers';
+import { OWN_CARRIER_ID, carrierById, detectCarrier } from '@/lib/carriers';
 import {
   lookupShipment,
   statusTone,
@@ -412,6 +412,11 @@ function TrackingSkeleton() {
 function TrackingResultPanel({ result, reduced }: { result: TrackingResult; reduced: boolean }) {
   const tone = statusTone(result.status);
 
+  // Only when it is somebody else's network: telling a customer their
+  // FreightBridge shipment is moving with FreightBridge says nothing.
+  const carriedBy =
+    result.carrierId && result.carrierId !== OWN_CARRIER_ID ? carrierById(result.carrierId) : null;
+
   const details = [
     { label: 'Origin', value: result.origin, icon: Flag },
     { label: 'Destination', value: result.destination, icon: MapPin },
@@ -472,6 +477,37 @@ function TrackingResultPanel({ result, reduced }: { result: TrackingResult; redu
           </div>
         ))}
       </dl>
+
+      {/* The carrier leg, when the freight is moving on somebody else's
+          network. The customer booked with us and tracks with us; this is how
+          they see the handoff rather than discovering it. */}
+      {carriedBy && result.carrierTrackingNumber && (
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-ink-100 bg-brand-50/50 dark:bg-brand-500/5 px-5 py-4 sm:px-6">
+          <span
+            aria-hidden="true"
+            className="inline-flex h-7 min-w-[1.75rem] items-center justify-center rounded-md bg-ink-900 px-1.5 text-[0.62rem] font-bold text-surface"
+          >
+            {carriedBy.initials}
+          </span>
+          <p className="text-sm text-ink-600">
+            Moving with <span className="font-semibold text-ink-900">{carriedBy.name}</span> on{' '}
+            <span className="font-mono text-[0.9em] font-medium text-ink-900">
+              {result.carrierTrackingNumber}
+            </span>
+          </p>
+          {result.carrierTrackingUrl && (
+            <a
+              href={result.carrierTrackingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 dark:text-brand-300 transition-colors hover:text-brand-800"
+            >
+              Track on {carriedBy.name}
+              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+            </a>
+          )}
+        </div>
+      )}
 
       {/* Timeline */}
       <div className="border-t border-ink-100 p-5 sm:p-6">

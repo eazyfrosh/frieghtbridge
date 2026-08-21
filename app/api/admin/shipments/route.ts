@@ -41,6 +41,11 @@ export async function POST(request: Request) {
     return NextResponse.json({
       ok: true,
       trackingNumber: created.shipment.trackingNumber,
+      // Set when the booking saved but something about the carrier leg needs
+      // the operator's eye. A refused tender outranks a number that merely
+      // looks unusual — and in practice only one can happen, since a shipment
+      // the operator already has a number for is never tendered.
+      warning: created.warning ?? validated.warning,
       shipment: created.shipment,
     });
   } catch (error) {

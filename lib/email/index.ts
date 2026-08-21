@@ -173,6 +173,12 @@ export function shipmentVariables(shipment: Shipment, recipientName: string): Re
     // "Estimated delivery: 2026-08-16T23:29:02.613Z" in front of a customer.
     estimatedDelivery: formatDate(resolved.estimatedDelivery),
     trackingUrl: `${siteUrl()}/tracking?number=${encodeURIComponent(shipment.trackingNumber)}`,
+    // For freight moving on another carrier's network. Not used by any shipped
+    // template — an operator who wants the carrier's own reference in the
+    // wording can add `{{carrierTrackingNumber}}`, and it reads "not issued
+    // yet" rather than blank on a shipment that has no number from them.
+    carrierTrackingNumber: resolved.carrierTrackingNumber ?? 'not issued yet',
+    carrierTrackingUrl: resolved.carrierTrackingUrl ?? '',
     companyName: SITE.name,
   };
 }
