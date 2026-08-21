@@ -9,7 +9,9 @@ import {
   carriersFor,
   matchesCarrierFormat,
   normalizeCarrierNumber,
+  type CarrierLogos,
 } from '@/lib/carriers';
+import { CarrierLogo } from '../CarrierLogo';
 import { EASE_PREMIUM } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/Button';
@@ -165,9 +167,11 @@ interface BookingFormProps {
    * books on the carrier's own platform and records the number here.
    */
   fulfilment?: 'connected' | 'manual';
+  /** Carrier id to logo URL. Anything missing falls back to initials. */
+  logos?: CarrierLogos;
 }
 
-export function BookingForm({ className, fulfilment = 'manual' }: BookingFormProps) {
+export function BookingForm({ className, fulfilment = 'manual', logos = {} }: BookingFormProps) {
   const [values, setValues] = useState<FormState>(INITIAL);
   const [errors, setErrors] = useState<Errors>({});
   const [submitted, setSubmitted] = useState(false);
@@ -584,15 +588,11 @@ export function BookingForm({ className, fulfilment = 'manual' }: BookingFormPro
                           onChange={() => selectCarrier(option.id)}
                           className="h-4 w-4 shrink-0 accent-brand-600"
                         />
-                        <span
-                          aria-hidden="true"
-                          className={cn(
-                            'inline-flex h-7 min-w-[1.75rem] shrink-0 items-center justify-center rounded-md px-1.5 text-[0.62rem] font-bold',
-                            active ? 'bg-brand-600 text-white' : 'bg-ink-900 text-surface',
-                          )}
-                        >
-                          {option.initials}
-                        </span>
+                        <CarrierLogo
+                          src={logos[option.id]}
+                          initials={option.initials}
+                          className={cn(!logos[option.id] && active && 'bg-brand-600 text-white')}
+                        />
                         <span className="min-w-0">
                           <span className="block truncate text-[0.95rem] font-medium text-ink-900">
                             {option.name}

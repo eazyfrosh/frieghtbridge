@@ -10,6 +10,7 @@ import { ShowcaseCarousel } from '@/components/ShowcaseCarousel';
 import { TechnologySection } from '@/components/TechnologySection';
 import { Testimonials } from '@/components/Testimonials';
 import { TrackingWidget } from '@/components/TrackingWidget';
+import { carrierLogos } from '@/lib/carrier-logos';
 import { WhyFreightBridge } from '@/components/WhyFreightBridge';
 import { Button } from '@/components/ui/Button';
 import { Reveal } from '@/components/ui/Reveal';
@@ -22,7 +23,7 @@ export default function HomePage() {
       {/* Tracking widget lifted over the hero's lower edge */}
       <section id="tracking" className="relative z-10 -mt-28 bg-transparent sm:-mt-32 lg:-mt-36">
         <div className="container">
-          <TrackingWidget variant="floating" />
+          <TrackingWidget variant="floating" logos={carrierLogos()} />
         </div>
       </section>
 

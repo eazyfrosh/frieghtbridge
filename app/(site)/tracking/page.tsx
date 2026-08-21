@@ -5,6 +5,8 @@ import { TrackingWidget } from '@/components/TrackingWidget';
 import { Button } from '@/components/ui/Button';
 import { StaggerGroup, RevealItem } from '@/components/ui/Reveal';
 import { SectionHeading } from '@/components/ui/SectionHeading';
+import { CarrierLogo } from '@/components/CarrierLogo';
+import { carrierLogos } from '@/lib/carrier-logos';
 import { supportedCarriers } from '@/lib/multi-tracking';
 
 export const metadata: Metadata = {
@@ -49,6 +51,7 @@ interface TrackingPageProps {
 export default async function TrackingPage({ searchParams }: TrackingPageProps) {
   const params = await searchParams;
   const initialQuery = typeof params.number === 'string' ? params.number.slice(0, 32) : '';
+  const logos = carrierLogos();
 
   return (
     <>
@@ -66,7 +69,7 @@ export default async function TrackingPage({ searchParams }: TrackingPageProps) 
 
       <section className="relative z-10 -mt-24 sm:-mt-28">
         <div className="container">
-          <TrackingWidget variant="floating" initialQuery={initialQuery} />
+          <TrackingWidget variant="floating" initialQuery={initialQuery} logos={logos} />
         </div>
       </section>
 
@@ -128,12 +131,7 @@ export default async function TrackingPage({ searchParams }: TrackingPageProps) 
                   key={carrier.id}
                   className="inline-flex items-center gap-2 rounded-full border border-ink-200 bg-surface px-3.5 py-2 text-sm font-medium text-ink-700"
                 >
-                  <span
-                    aria-hidden="true"
-                    className="inline-flex h-6 min-w-[1.5rem] items-center justify-center rounded-md bg-ink-900 px-1.5 text-[0.6rem] font-bold text-surface"
-                  >
-                    {carrier.initials}
-                  </span>
+                  <CarrierLogo src={logos[carrier.id]} initials={carrier.initials} size="sm" />
                   {carrier.name}
                 </li>
               ))}

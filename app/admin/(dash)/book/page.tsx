@@ -1,4 +1,5 @@
 import { BookingForm } from '@/components/admin/BookingForm';
+import { carrierLogos } from '@/lib/carrier-logos';
 import { fulfilmentMode } from '@/lib/fulfilment';
 
 export const metadata = { title: 'Book shipment' };
@@ -26,7 +27,7 @@ export default function AdminBookPage() {
       )}
 
       <div className="mt-8">
-        <BookingForm fulfilment={fulfilment} />
+        <BookingForm fulfilment={fulfilment} logos={carrierLogos()} />
       </div>
     </div>
   );

@@ -20,7 +20,8 @@ import {
 import Link from 'next/link';
 import { useCallback, useEffect, useId, useState } from 'react';
 import { EASE_PREMIUM } from '@/lib/motion';
-import { OWN_CARRIER_ID, carrierById, detectCarrier } from '@/lib/carriers';
+import { CarrierLogo } from '@/components/CarrierLogo';
+import { OWN_CARRIER_ID, carrierById, detectCarrier, type CarrierLogos } from '@/lib/carriers';
 import {
   lookupShipment,
   statusTone,
@@ -37,6 +38,11 @@ interface TrackingWidgetProps {
   variant?: 'floating' | 'page';
   initialQuery?: string;
   className?: string;
+  /**
+   * Carrier id to logo URL, from `carrierLogos()` on the server. Carriers
+   * missing from it fall back to their initials, so passing nothing is fine.
+   */
+  logos?: CarrierLogos;
 }
 
 // Describe the format rather than print a specimen number. A realistic-looking
@@ -57,7 +63,12 @@ const ERROR_COPY: Record<'empty' | 'malformed' | 'not-found', { title: string; b
   },
 };
 
-export function TrackingWidget({ variant = 'page', initialQuery = '', className }: TrackingWidgetProps) {
+export function TrackingWidget({
+  variant = 'page',
+  initialQuery = '',
+  className,
+  logos = {},
+}: TrackingWidgetProps) {
   const [query, setQuery] = useState(initialQuery);
   const [status, setStatus] = useState<Status>('idle');
   const [outcome, setOutcome] = useState<LookupOutcome | null>(null);
@@ -229,12 +240,12 @@ export function TrackingWidget({ variant = 'page', initialQuery = '', className 
             >
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="flex items-start gap-3.5">
-                  <span
-                    aria-hidden="true"
-                    className="inline-flex h-11 min-w-[2.75rem] items-center justify-center rounded-xl bg-ink-900 px-2 text-[0.68rem] font-bold tracking-tight text-surface"
-                  >
-                    {carrierResult.carrier.initials}
-                  </span>
+                  <CarrierLogo
+                    src={logos[carrierResult.carrier.id]}
+                    initials={carrierResult.carrier.initials}
+                    size="lg"
+                    className="h-11 min-w-[2.75rem] rounded-xl"
+                  />
                   <div>
                     <p className="font-display text-[1.05rem] font-semibold text-ink-900">
                       {carrierResult.carrier.name}
@@ -353,7 +364,7 @@ export function TrackingWidget({ variant = 'page', initialQuery = '', className 
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4, ease: EASE_PREMIUM }}
             >
-              <TrackingResultPanel result={result} reduced={Boolean(reduced)} />
+              <TrackingResultPanel result={result} reduced={Boolean(reduced)} logos={logos} />
             </motion.div>
           )}
 
@@ -409,7 +420,15 @@ function TrackingSkeleton() {
   );
 }
 
-function TrackingResultPanel({ result, reduced }: { result: TrackingResult; reduced: boolean }) {
+function TrackingResultPanel({
+  result,
+  reduced,
+  logos,
+}: {
+  result: TrackingResult;
+  reduced: boolean;
+  logos: CarrierLogos;
+}) {
   const tone = statusTone(result.status);
 
   // Only when it is somebody else's network: telling a customer their
@@ -483,12 +502,7 @@ function TrackingResultPanel({ result, reduced }: { result: TrackingResult; redu
           they see the handoff rather than discovering it. */}
       {carriedBy && result.carrierTrackingNumber && (
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-ink-100 bg-brand-50/50 dark:bg-brand-500/5 px-5 py-4 sm:px-6">
-          <span
-            aria-hidden="true"
-            className="inline-flex h-7 min-w-[1.75rem] items-center justify-center rounded-md bg-ink-900 px-1.5 text-[0.62rem] font-bold text-surface"
-          >
-            {carriedBy.initials}
-          </span>
+          <CarrierLogo src={logos[carriedBy.id]} initials={carriedBy.initials} />
           <p className="text-sm text-ink-600">
             Moving with <span className="font-semibold text-ink-900">{carriedBy.name}</span> on{' '}
             <span className="font-mono text-[0.9em] font-medium text-ink-900">

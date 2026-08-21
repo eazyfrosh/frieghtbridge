@@ -342,6 +342,15 @@ export function isFreightBridgeNumber(rawInput: string): boolean {
 
 export const OWN_CARRIER_ID = 'freightbridge';
 
+/**
+ * Carrier id to logo URL, for the carriers that have one.
+ *
+ * Declared here rather than in `lib/carrier-logos.ts` because that module is
+ * server-only and client components need the type. Which logos exist is
+ * discovered from disk there; this is just the shape it travels in.
+ */
+export type CarrierLogos = Record<string, string | undefined>;
+
 /** Carriers a shipment can actually be tendered to, our own network first. */
 export const BOOKABLE_CARRIERS: Carrier[] = CARRIERS.filter(
   (carrier) => carrier.services && carrier.services.length > 0,

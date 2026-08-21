@@ -332,6 +332,32 @@ carrier and the service string all follow. What already happened stays in the
 scan history — the booking event still records the carrier it was originally
 tendered to, because it was.
 
+### Carrier logos
+
+Drop a file into `public/carriers/` named after the carrier's id — `ups.svg`,
+`fedex.svg`, `usps.png` — and it appears everywhere that carrier is shown: the
+booking form, the shipment page, the tracking result, the "carriers we
+recognise" list. There is no code change and no list to keep in step;
+`public/carriers/README.md` has the filenames and the artwork notes.
+
+Carriers with no file show their initials on a dark tile, which is what the
+site does today, so logos can be added one at a time. That fallback is the
+reason the folder is read from disk (`lib/carrier-logos.ts`, cached for the
+process) rather than each carrier declaring a path: a hardcoded
+`/carriers/ups.svg` would 404 on every page load until someone added the file.
+
+Logos sit on a white tile in both themes. Carrier marks are fixed-colour
+artwork drawn for white — UPS's shield, FedEx's wordmark, USPS's eagle all
+fringe or vanish on a dark ground, and there is no inverted variant to switch
+to. They carry an empty `alt` because the carrier's name is always in text
+beside them.
+
+The repository ships with no logos in it: they are other companies'
+trademarks, and the right copy is the official asset from each carrier's brand
+page, used within their guidelines.
+
+### Email placeholders
+
 `{{carrierTrackingNumber}}` and `{{carrierTrackingUrl}}` are available to email
 templates. No shipped template uses them; add them to the wording if you want
 the carrier's own reference in customer email.

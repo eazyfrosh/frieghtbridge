@@ -5,6 +5,8 @@ import { AddEventForm } from '@/components/admin/AddEventForm';
 import { NotifyPanel } from '@/components/admin/NotifyPanel';
 import { ShipmentEditor } from '@/components/admin/ShipmentEditor';
 import { adminStatusTone } from '@/lib/admin';
+import { CarrierLogo } from '@/components/CarrierLogo';
+import { carrierLogos } from '@/lib/carrier-logos';
 import { carrierById, carrierService } from '@/lib/carriers';
 import { emailConfigError, emailConfigured, listTemplates, sendsFor } from '@/lib/email';
 import { SHIPMENT_STATUSES, findShipment, shipmentsWritable } from '@/lib/shipments';
@@ -90,12 +92,7 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
       {platform && (
         <section className="mt-8 rounded-2xl border border-ink-200 bg-surface p-5 sm:p-6">
           <div className="flex items-center gap-3">
-            <span
-              aria-hidden="true"
-              className="inline-flex h-8 min-w-[2rem] items-center justify-center rounded-lg bg-ink-900 px-2 text-[0.68rem] font-bold text-surface"
-            >
-              {platform.initials}
-            </span>
+            <CarrierLogo src={carrierLogos()[platform.id]} initials={platform.initials} size="lg" />
             <h2 className="font-display text-lg font-semibold text-ink-900">{platform.name}</h2>
           </div>
 
