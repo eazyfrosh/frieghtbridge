@@ -59,7 +59,7 @@ const ERROR_COPY: Record<'empty' | 'malformed' | 'not-found', { title: string; b
   },
   'not-found': {
     title: 'No shipment found',
-    body: 'Double-check the number against your booking confirmation. If it looks right, our team can trace it for you.',
+    body: 'We track shipments booked through FreightBridge Logistics, under our reference or the carrier\u2019s. Double-check the number against your booking confirmation — if it looks right, our team can trace it for you.',
   },
 };
 
@@ -119,8 +119,9 @@ export function TrackingWidget({
             Track your shipment
           </h2>
           <p className="mt-2 max-w-md text-[0.95rem] text-ink-500">
-            Any carrier. Ours resolve to a full live timeline; FedEx, UPS, USPS, DHL and the rest are
-            recognised from the number itself.
+            One box, either reference. Our <span className="font-mono">FBX-</span> number or the
+            carrier&rsquo;s own — FedEx, UPS, USPS, DHL and the rest — both open the same live timeline
+            here.
           </p>
         </div>
 
@@ -205,8 +206,8 @@ export function TrackingWidget({
                 {detected.carrier.id === 'freightbridge'
                   ? 'One of ours — press Track for the full timeline.'
                   : detected.verified
-                    ? 'Recognised, and the check digit matches.'
-                    : 'Looks like this carrier.'}
+                    ? 'Recognised, and the check digit matches. Press Track to open it here.'
+                    : 'Looks like this carrier — press Track to open it here.'}
               </span>
             </>
           ) : (
@@ -260,22 +261,13 @@ export function TrackingWidget({
                   </div>
                 </div>
 
-                <a
-                  href={carrierResult.carrier.trackingUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 rounded-full bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-800"
-                >
-                  Track on {carrierResult.carrier.name}
-                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                </a>
               </div>
 
               {carrierResult.status && (
                 <p className="mt-4 text-[0.95rem] font-medium text-ink-800">{carrierResult.status}</p>
               )}
 
-              {carrierResult.events && carrierResult.events.length > 0 ? (
+              {carrierResult.events && carrierResult.events.length > 0 && (
                 <ol className="mt-4 space-y-3 border-t border-ink-100 pt-4">
                   {carrierResult.events.slice(0, 8).map((event, index) => (
                     <li key={`${event.timestamp}-${index}`} className="flex gap-3">
@@ -295,33 +287,12 @@ export function TrackingWidget({
                     </li>
                   ))}
                 </ol>
-              ) : (
-                <p className="mt-4 border-t border-ink-100 pt-4 text-sm text-ink-500">
-                  {carrierResult.note ??
-                    'We recognise the carrier from the number. Their own page has the live scan history.'}
-                </p>
               )}
 
-              {carrierResult.alternatives.length > 0 && (
-                <div className="mt-4 border-t border-ink-100 pt-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.1em] text-ink-500">
-                    Not the right carrier?
-                  </p>
-                  <ul className="mt-2 flex flex-wrap gap-2">
-                    {carrierResult.alternatives.map((alternative) => (
-                      <li key={alternative.id}>
-                        <a
-                          href={alternative.trackingUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 rounded-full border border-ink-200 px-3 py-1.5 text-xs font-medium text-ink-700 transition-colors hover:border-ink-300 hover:text-ink-900"
-                        >
-                          {alternative.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+              {carrierResult.note && (
+                <p className="mt-4 border-t border-ink-100 pt-4 text-sm text-ink-500">
+                  {carrierResult.note}
+                </p>
               )}
             </motion.div>
           )}

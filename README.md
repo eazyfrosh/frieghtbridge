@@ -263,12 +263,24 @@ turning away a real consignment is a worse failure than showing a second
 candidate. When several formats fit — `9400…` is both USPS and, differently
 spaced, other things — the alternatives are listed under the best guess.
 
-**What it shows depends on whether a provider key is set.**
+**Both references open the same page.** A shipment booked onto FedEx carries
+two: `FBX-…`, our document id, and FedEx's, which is what is printed on the
+label and what the customer is most likely holding. Either resolves to the same
+timeline. A platform that only recognised its own reference would make the
+customer find the right piece of paper first.
 
-- Without `TRACKING_API_KEY`: the carrier, whether the check digit verified, and
-  a deep link straight to that carrier's own tracking page. This needs no
-  credentials and works the moment it deploys.
-- With one: the carrier's scan events inline, on our page.
+**Nothing links out to a carrier's site.** This is where its shipments are
+tracked; bouncing a customer to fedex.com mid-journey is the behaviour the
+platform exists to replace. A carrier number we do not hold is a plain
+not-found — unless `TRACKING_API_KEY` is set, in which case that carrier's scan
+events render here too. The one exception is the admin shipment page, where
+staff chasing a real consignment get a lookup link, and never for a reference
+we allocated ourselves.
+
+Carrier numbers are not enforced unique — an operator can paste the same one
+onto two shipments. Doing so warns them, naming the other shipment, and until
+it is corrected the lower tracking number wins, so a customer at least gets the
+same answer every time instead of whichever document the query returned first.
 
 `lib/multi-tracking.ts` talks to a Ship24-shaped tracker API — one POST, one
 bearer token, one normalised response across carriers. Registering with each
@@ -276,10 +288,10 @@ carrier separately is the alternative: every one has its own OAuth flow and its
 own approval queue, which is a project rather than a feature. Swapping vendors
 means rewriting `fetchProviderEvents()` and nothing else.
 
-**A provider outage degrades to the deep link.** `fetchProviderEvents` returns
-null on any failure — non-200, malformed body, or the 8-second timeout — and the
-page says live events are unavailable while still linking the customer through.
-A tracking page that hangs is worse than one that costs a click.
+**A provider outage degrades to not-found rather than hanging.**
+`fetchProviderEvents` returns null on any failure — non-200, malformed body, or
+the 8-second timeout. Our own shipments never touch it, so an outage cannot
+affect them.
 
 Our own `FBX-` numbers are resolved from Firestore and never sent to a provider.
 A number shaped like ours but not on our books comes back as not found, rather
@@ -327,13 +339,8 @@ the operator has already booked with the carrier themselves.
 
 **One shipment, two numbers.** The customer tracks with the `FBX-` reference
 throughout; when the freight is on somebody else's network the tracking page
-shows a "Moving with FedEx on 390244306428" strip. There is deliberately no
-link out to the carrier from a shipment we booked — the timeline on our page is
-the record, and handing the customer to a third party mid-journey either loses
-them or shows them a thinner version of what they are already reading. (A
-number *pasted* into the tracking box is the opposite case: we hold nothing, so
-the carrier's own page is the answer and the link is the point.) The shipping
-label stays operator-only — it carries both addresses, and `TrackingResult`
+shows a "Moving with FedEx on 390244306428" strip, and that number tracks here
+too. The shipping label stays operator-only — it carries both addresses, and `TrackingResult`
 omits it by type, the same protection the customer record has.
 
 **A carrier reference is allocated at booking if none exists.** Off-network

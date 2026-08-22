@@ -46,6 +46,14 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
       ? carrierService(shipment.carrierId, shipment.carrierService)
       : null;
 
+  // Operators only, and never for a number we allocated ourselves. The public
+  // tracking page links nowhere — this platform is where its shipments are
+  // tracked — but staff chasing a real consignment need the carrier's page.
+  const carrierLookupUrl =
+    platform && shipment.carrierTrackingNumber && shipment.carrierNumberSource !== 'generated'
+      ? platform.trackingUrl(shipment.carrierTrackingNumber)
+      : null;
+
   const facts = [
     { icon: Flag, label: 'Origin', value: shipment.origin },
     { icon: MapPin, label: 'Destination', value: shipment.destination },
@@ -108,9 +116,9 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
                 Their tracking number
               </dt>
               <dd className="mt-1 text-[0.95rem]">
-                {resolved.carrierTrackingUrl && resolved.carrierTrackingNumber ? (
+                {carrierLookupUrl && resolved.carrierTrackingNumber ? (
                   <a
-                    href={resolved.carrierTrackingUrl}
+                    href={carrierLookupUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-mono font-medium text-brand-700 dark:text-brand-300 underline decoration-brand-500/40 underline-offset-2"

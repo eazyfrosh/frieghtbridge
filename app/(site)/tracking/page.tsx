@@ -83,7 +83,7 @@ export default async function TrackingPage({ searchParams }: TrackingPageProps) 
           <SectionHeading
             eyebrow="Status guide"
             title="What each shipment status means"
-            description="FreightBridge Logistics uses the same five milestones on every service, from a single parcel to a full container."
+            description="FreightBridge Logistics uses the same milestones on every service, from a single parcel to a full container, whichever carrier is moving it."
           />
 
           <StaggerGroup className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" gap={0.07}>
@@ -125,10 +125,10 @@ export default async function TrackingPage({ searchParams }: TrackingPageProps) 
           </StaggerGroup>
 
           <div className="mt-14 rounded-3xl border border-ink-100 bg-ink-50/60 p-6 sm:p-8">
-            <h3 className="font-display text-lg font-semibold text-ink-900">Carriers we recognise</h3>
+            <h3 className="font-display text-lg font-semibold text-ink-900">Carriers we move freight on</h3>
             <p className="mt-1.5 max-w-2xl text-[0.95rem] text-ink-500">
-              Paste a tracking number from any of these and we identify the carrier from the number
-              itself — no need to tell us who is carrying it.
+              Whichever of these is carrying your shipment, it is tracked here. Enter their reference or
+              ours — we work out which from the number itself, and the timeline is the same either way.
             </p>
             <ul className="mt-5 flex flex-wrap gap-2">
               {supportedCarriers().map((carrier) => (

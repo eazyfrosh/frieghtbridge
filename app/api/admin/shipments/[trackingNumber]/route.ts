@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@/lib/session';
-import { findShipment, updateShipment, validateShipmentPatch } from '@/lib/shipments';
+import {
+  carrierNumberClash,
+  findShipment,
+  updateShipment,
+  validateShipmentPatch,
+} from '@/lib/shipments';
 import { normalizeTrackingNumber } from '@/lib/tracking';
 
 export const runtime = 'nodejs';
@@ -51,6 +56,12 @@ export async function PATCH(request: Request, { params }: Params) {
           : validated.patch.carrierNumberSource,
     };
 
+    // Checked before the write, so the operator hears about it on the save
+    // that caused it rather than the next time somebody tracks the shipment.
+    const clash = patch.carrierTrackingNumber
+      ? await carrierNumberClash(patch.carrierTrackingNumber, number)
+      : null;
+
     const saved = await updateShipment(number, patch);
     if (!saved) {
       return NextResponse.json(
@@ -62,7 +73,13 @@ export async function PATCH(request: Request, { params }: Params) {
     // A warning is not a failure: the edit saved. It says the carrier tracking
     // number does not look like one that carrier issues, which the operator
     // should see before it goes out to a customer.
-    return NextResponse.json({ ok: true, warning: validated.warning, shipment: saved });
+    return NextResponse.json({
+      ok: true,
+      warning: clash
+        ? `Saved, but ${clash} already carries ${patch.carrierTrackingNumber}. A carrier issues one number per consignment, so one of the two is wrong — until it is fixed, tracking that number opens ${[clash, number].sort()[0]}.`
+        : validated.warning,
+      shipment: saved,
+    });
   } catch (error) {
     console.error('[admin/shipments] update failed:', error);
     return NextResponse.json({ error: 'Could not save the shipment.' }, { status: 500 });

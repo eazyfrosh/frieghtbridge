@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createShipmentFromBooking, validateBooking } from '@/lib/shipments';
+import { carrierNumberClash, createShipmentFromBooking, validateBooking } from '@/lib/shipments';
 import { getSession } from '@/lib/session';
 
 export const runtime = 'nodejs';
@@ -31,6 +31,12 @@ export async function POST(request: Request) {
     const validated = validateBooking(payload);
     if ('error' in validated) return NextResponse.json({ error: validated.error }, { status: 400 });
 
+    // Only a number the operator typed can clash — an allocated one is drawn
+    // fresh, and a provider's came from the carrier's own system.
+    const clash = validated.booking.carrierTrackingNumber
+      ? await carrierNumberClash(validated.booking.carrierTrackingNumber, '')
+      : null;
+
     const created = await createShipmentFromBooking(validated.booking);
     if ('error' in created) {
       // A missing service account is a deployment fault, not a bad booking.
@@ -45,7 +51,11 @@ export async function POST(request: Request) {
       // the operator's eye. A refused tender outranks a number that merely
       // looks unusual — and in practice only one can happen, since a shipment
       // the operator already has a number for is never tendered.
-      warning: created.warning ?? validated.warning,
+      warning:
+        created.warning ??
+        (clash
+          ? `Booked, but ${clash} already carries ${validated.booking.carrierTrackingNumber}. A carrier issues one number per consignment — check which shipment it belongs to.`
+          : validated.warning),
       shipment: created.shipment,
     });
   } catch (error) {

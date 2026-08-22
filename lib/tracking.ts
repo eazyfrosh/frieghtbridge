@@ -1,4 +1,4 @@
-import { carrierById, detectCarriers, isFreightBridgeNumber, normalizeCarrierNumber } from './carriers';
+import { detectCarriers, isFreightBridgeNumber, normalizeCarrierNumber } from './carriers';
 import { SEED_SHIPMENTS } from './fixtures/shipments';
 
 /**
@@ -145,12 +145,6 @@ export interface TrackingResult
   progress: number;
   carrierTrackingNumber: string | null;
   carrierNumberSource: 'provider' | 'operator' | 'generated' | null;
-  /**
-   * Where to follow that number on the carrier's own site — null for a number
-   * we generated, since the carrier never issued it and the link would land
-   * the customer on a "not found" page.
-   */
-  carrierTrackingUrl: string | null;
 }
 
 /** Kept as a named export for the seed script and the no-Firebase fallback. */
@@ -237,16 +231,6 @@ function resolve(shipment: Shipment): TrackingResult {
     carrierService: shipment.carrierService ?? null,
     carrierTrackingNumber: shipment.carrierTrackingNumber ?? null,
     carrierNumberSource: shipment.carrierNumberSource ?? null,
-    // Built from the registry rather than stored, so a link is never stale:
-    // if a carrier moves its tracking page, one edit fixes every shipment.
-    // Withheld for a number we generated ourselves — the carrier has never
-    // heard of it, and sending a customer there is a dead end.
-    carrierTrackingUrl:
-      shipment.carrierId &&
-      shipment.carrierTrackingNumber &&
-      shipment.carrierNumberSource !== 'generated'
-        ? (carrierById(shipment.carrierId)?.trackingUrl(shipment.carrierTrackingNumber) ?? null)
-        : null,
     events,
     estimatedDelivery: new Date(now + shipment.etaInDays * 86_400_000).toISOString(),
     lastUpdate: new Date(lastReachedTime ?? now).toISOString(),
@@ -258,7 +242,6 @@ export interface CarrierOutcomeSummary {
   id: string;
   name: string;
   initials: string;
-  trackingUrl: string;
   verified: boolean;
 }
 

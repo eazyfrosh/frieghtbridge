@@ -147,6 +147,67 @@ export async function findShipment(trackingNumber: string): Promise<Shipment | n
   return SEED_SHIPMENTS.find((s) => s.trackingNumber.toUpperCase() === wanted) ?? null;
 }
 
+/**
+ * Find one of ours by the *carrier's* number rather than our own.
+ *
+ * A shipment booked onto FedEx carries two references: `FBX-…`, which is the
+ * document id, and FedEx's, which is what is printed on the label and what the
+ * customer is most likely holding. Both have to resolve to the same timeline —
+ * a platform that only recognises its own reference makes the customer find
+ * the right piece of paper first.
+ *
+ * A field query rather than a point read, so it costs an index lookup. Single
+ * field indexes are automatic in Firestore, so there is nothing to deploy.
+ */
+export async function findShipmentByCarrierNumber(
+  carrierTrackingNumber: string,
+): Promise<Shipment | null> {
+  const wanted = normalizeCarrierNumber(carrierTrackingNumber.trim());
+  if (!wanted) return null;
+
+  const db = adminDb();
+  if (!db) {
+    warnOnce();
+    return SEED_SHIPMENTS.find((s) => s.carrierTrackingNumber === wanted) ?? null;
+  }
+
+  // Nothing enforces that a carrier number appears on only one shipment — an
+  // operator can paste the same one twice by mistake, and `carrierNumberClash`
+  // warns them when they do. Until it is corrected, the lowest tracking number
+  // wins, so the customer at least gets the same answer every time rather than
+  // whichever document the query happened to return first.
+  const snapshot = await db
+    .collection(COLLECTION)
+    .where('carrierTrackingNumber', '==', wanted)
+    .limit(5)
+    .get();
+
+  if (!snapshot.empty) {
+    const [first] = snapshot.docs.map((doc) => doc.id).sort();
+    return toShipment(snapshot.docs.find((doc) => doc.id === first)?.data());
+  }
+
+  return SEED_SHIPMENTS.find((s) => s.carrierTrackingNumber === wanted) ?? null;
+}
+
+/**
+ * Another shipment already carrying this number, if there is one.
+ *
+ * A carrier issues one number per consignment, so two of ours holding the same
+ * one means a mistake — and the consequence is a customer being shown somebody
+ * else's shipment. Surfaced as a warning rather than a rejection, because the
+ * operator is the one who can see both labels.
+ */
+export async function carrierNumberClash(
+  carrierTrackingNumber: string,
+  exceptTrackingNumber: string,
+): Promise<string | null> {
+  const existing = await findShipmentByCarrierNumber(carrierTrackingNumber);
+  if (!existing) return null;
+  if (existing.trackingNumber.toUpperCase() === exceptTrackingNumber.toUpperCase()) return null;
+  return existing.trackingNumber;
+}
+
 // ---------------------------------------------------------------------------
 // Writes
 //

@@ -1,25 +1,27 @@
 import 'server-only';
 
 import { CARRIERS, detectCarriers, normalizeCarrierNumber, type Carrier } from './carriers';
-import { findShipment } from './shipments';
+import { findShipment, findShipmentByCarrierNumber } from './shipments';
 import { normalizeTrackingNumber, resolveShipment, type TrackingResult } from './tracking';
 
 /**
- * Tracking for numbers we did not issue.
+ * Tracking a number, whoever issued it.
  *
- * Three outcomes, and being clear about which one you got is most of the
- * value:
+ * A shipment booked onto FedEx has two references — ours and theirs — and both
+ * resolve here, to the same timeline. That is the whole point of a
+ * multi-carrier platform: the customer types what is on their paperwork and
+ * gets an answer, without being told which of two numbers was the right one.
  *
- *  - `internal` — one of ours, resolved from Firestore with a full timeline.
- *  - `carrier` — recognised as FedEx, UPS, USPS, DHL and so on. If a tracking
- *    provider is configured we return its events; otherwise we return the
- *    carrier and a deep link, which is honest about what we know.
- *  - `unknown` — the format matches nothing we recognise.
+ * Three outcomes:
  *
- * The deep-link path needs no credentials and works the moment it deploys.
- * Real cross-carrier events need an aggregator key; the alternative is
- * registering separately with every carrier, each with its own OAuth dance and
- * its own approval process, which is a project rather than a feature.
+ *  - `internal` — one of ours, by either reference, with a full timeline.
+ *  - `carrier` — a carrier's number we do not hold. Returned with its events
+ *    when a tracking provider is configured, so the answer still renders here.
+ *  - `unknown` — not ours, and nothing to show.
+ *
+ * **Nothing links out to a carrier's own site.** This platform is where its
+ * shipments are tracked; bouncing a customer to fedex.com mid-journey is the
+ * behaviour it exists to replace.
  */
 
 export interface CarrierEvent {
@@ -33,7 +35,6 @@ export interface CarrierSummary {
   id: string;
   name: string;
   initials: string;
-  trackingUrl: string;
   /** Whether a check digit confirmed the carrier, rather than just the shape. */
   verified: boolean;
 }
@@ -54,14 +55,8 @@ export type TrackingLookup =
     }
   | { kind: 'unknown'; number: string };
 
-function summarise(carrier: Carrier, number: string, verified: boolean): CarrierSummary {
-  return {
-    id: carrier.id,
-    name: carrier.name,
-    initials: carrier.initials,
-    trackingUrl: carrier.trackingUrl(number),
-    verified,
-  };
+function summarise(carrier: Carrier, verified: boolean): CarrierSummary {
+  return { id: carrier.id, name: carrier.name, initials: carrier.initials, verified };
 }
 
 /** Everything the site can track, for the "supported carriers" list. */
@@ -165,9 +160,16 @@ export async function trackAnyNumber(rawInput: string): Promise<TrackingLookup> 
         shipment: resolveShipment(shipment),
       };
     }
-    // Shaped like ours but not on our books. Saying "not found" is the honest
-    // answer; handing it to a carrier that never issued it is not.
+    // Shaped like ours but not on our books.
     return { kind: 'unknown', number: cleaned };
+  }
+
+  // A carrier's number, checked against our own book before anything else. A
+  // shipment we booked onto FedEx is tracked here under FedEx's number too —
+  // it is our consignment, and we hold the scans for it.
+  const ours = await findShipmentByCarrierNumber(cleaned);
+  if (ours) {
+    return { kind: 'internal', number: ours.trackingNumber, shipment: resolveShipment(ours) };
   }
 
   const [best, ...rest] = matches;
@@ -175,19 +177,18 @@ export async function trackAnyNumber(rawInput: string): Promise<TrackingLookup> 
 
   const provider = await fetchProviderEvents(cleaned);
 
+  // Not ours, and no provider to ask. There is nothing to render and nowhere
+  // to send them that this platform is willing to send them, so it is a
+  // straight not-found rather than a page of shrugging.
+  if (!provider?.events.length) return { kind: 'unknown', number: cleaned };
+
   return {
     kind: 'carrier',
     number: cleaned,
-    carrier: summarise(best.carrier, cleaned, best.verified),
-    alternatives: rest.map((m) => summarise(m.carrier, cleaned, m.verified)),
-    events: provider?.events.length ? provider.events : null,
-    status: provider?.status ?? null,
-    note: provider
-      ? provider.events.length
-        ? null
-        : 'The carrier has not reported any scans for this number yet.'
-      : trackingProviderConfigured()
-        ? 'Live events are temporarily unavailable — the carrier’s own page has the latest.'
-        : null,
+    carrier: summarise(best.carrier, best.verified),
+    alternatives: rest.map((m) => summarise(m.carrier, m.verified)),
+    events: provider.events,
+    status: provider.status,
+    note: null,
   };
 }

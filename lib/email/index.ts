@@ -176,9 +176,10 @@ export function shipmentVariables(shipment: Shipment, recipientName: string): Re
     // For freight moving on another carrier's network. Not used by any shipped
     // template — an operator who wants the carrier's own reference in the
     // wording can add `{{carrierTrackingNumber}}`, and it reads "not issued
-    // yet" rather than blank on a shipment that has no number from them.
+    // yet" rather than blank on a shipment that has no number from them. There
+    // is no matching URL placeholder: `{{trackingUrl}}` already points at our
+    // own page, which is where the shipment is tracked.
     carrierTrackingNumber: resolved.carrierTrackingNumber ?? 'not issued yet',
-    carrierTrackingUrl: resolved.carrierTrackingUrl ?? '',
     companyName: SITE.name,
   };
 }
