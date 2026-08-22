@@ -179,6 +179,7 @@ export function BookingForm({ className, fulfilment = 'manual', logos = {} }: Bo
   const [success, setSuccess] = useState<{
     reference: string;
     carrierNumber: string | null;
+    carrierNumberGenerated: boolean;
     warning: string | null;
   } | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -275,7 +276,7 @@ export function BookingForm({ className, fulfilment = 'manual', logos = {} }: Bo
       const data = (await response.json().catch(() => ({}))) as {
         trackingNumber?: string;
         warning?: string | null;
-        shipment?: { carrierTrackingNumber?: string | null };
+    shipment?: { carrierTrackingNumber?: string | null; carrierNumberSource?: string | null };
         error?: string;
       };
 
@@ -290,6 +291,7 @@ export function BookingForm({ className, fulfilment = 'manual', logos = {} }: Bo
       setSuccess({
         reference: data.trackingNumber,
         carrierNumber: data.shipment?.carrierTrackingNumber ?? null,
+        carrierNumberGenerated: data.shipment?.carrierNumberSource === 'generated',
         warning: data.warning ?? null,
       });
     } catch {
@@ -364,6 +366,12 @@ export function BookingForm({ className, fulfilment = 'manual', logos = {} }: Bo
                   <dd className="mt-1 font-mono text-sm font-semibold text-ink-900">
                     {success.carrierNumber}
                   </dd>
+                  {success.carrierNumberGenerated && (
+                    <dd className="mt-1 text-xs text-ink-500">
+                      Allocated by us in their format. {carrier?.name} has not issued it — swap in
+                      theirs once the freight is tendered.
+                    </dd>
+                  )}
                 </div>
               )}
             </dl>
@@ -636,7 +644,7 @@ export function BookingForm({ className, fulfilment = 'manual', logos = {} }: Bo
                     id="carrierTrackingNumber"
                     label={`${carrier?.name ?? 'Carrier'} tracking number`}
                     placeholder="1Z999AA10123456784"
-                    hint="Optional — if you have already booked it with them"
+                    hint="Optional — leave blank and we allocate one in their format"
                     value={values.carrierTrackingNumber}
                     onChange={(event) => update('carrierTrackingNumber', event.target.value)}
                     error={errors.carrierTrackingNumber}
@@ -722,7 +730,8 @@ export function BookingForm({ className, fulfilment = 'manual', logos = {} }: Bo
                 {offNetwork &&
                   (fulfilment === 'connected'
                     ? ` ${carrier?.name} is tendered automatically and their number is attached.`
-                    : ` Book it with ${carrier?.name} separately and add their number here or later.`)}
+                    : ` With no ${carrier?.name} number given, a placeholder in their format is allocated —` +
+                      ' swap in theirs once the freight is tendered.')}
               </p>
               <Button type="submit" size="lg" disabled={pending} className="w-full sm:w-auto">
                 {pending ? (

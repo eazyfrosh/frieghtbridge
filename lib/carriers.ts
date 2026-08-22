@@ -49,6 +49,16 @@ export interface Carrier {
   services?: CarrierService[];
   /** Freight this carrier will take. A parcel carrier does not move containers. */
   handles?: ShipmentType[];
+  /**
+   * Make up a reference in this carrier's format, check digit and all.
+   *
+   * Used when a shipment is booked onto the carrier and no real number exists
+   * yet — no shipping API configured, and the operator has not been given one.
+   * It is a placeholder in the right shape, not a consignment the carrier
+   * knows about, which is why `carrierNumberSource` records where a number
+   * came from.
+   */
+  allocate?: () => string;
 }
 
 export interface CarrierMatch {
@@ -117,6 +127,62 @@ function s10Check(value: string): boolean {
 }
 
 // ---------------------------------------------------------------------------
+// Random parts
+//
+// `crypto.getRandomValues` rather than `Math.random`: it exists in browsers and
+// in Node, and two bookings raised in the same millisecond on two serverless
+// instances should not be able to draw the same sequence.
+
+const DIGITS = '0123456789';
+const ALNUM = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+function pick(alphabet: string, length: number): string {
+  const bytes = new Uint8Array(length);
+  globalThis.crypto.getRandomValues(bytes);
+  let out = '';
+  for (let i = 0; i < length; i += 1) {
+    // Modulo bias across 256 values is immaterial for a reference number.
+    out += alphabet[bytes[i] % alphabet.length];
+  }
+  return out;
+}
+
+const digits = (length: number) => pick(DIGITS, length);
+
+/** The digit that makes `body` satisfy the UPS scheme. */
+function upsCheckDigit(body: string): string {
+  let sum = 0;
+  for (let i = 0; i < body.length; i += 1) {
+    const char = body[i];
+    const digit = /\d/.test(char) ? Number(char) : (char.charCodeAt(0) - 63) % 10;
+    sum += i % 2 === 0 ? digit : digit * 2;
+  }
+  return String((Math.ceil(sum / 10) * 10 - sum) % 10);
+}
+
+function mod10CheckDigit(body: string): string {
+  const reversed = body.split('').map(Number).reverse();
+  const sum = reversed.reduce((total, digit, index) => total + digit * (index % 2 === 0 ? 3 : 1), 0);
+  return String((10 - (sum % 10)) % 10);
+}
+
+function fedexCheckDigit(body: string): string {
+  const weights = [3, 1, 7];
+  const reversed = body.split('').map(Number).reverse();
+  const sum = reversed.reduce((total, digit, index) => total + digit * weights[index % 3], 0);
+  return String((sum % 11) % 10);
+}
+
+function s10CheckDigit(body: string): string {
+  const weights = [8, 6, 4, 2, 3, 5, 9, 7];
+  const sum = weights.reduce((total, weight, index) => total + Number(body[index]) * weight, 0);
+  let check = 11 - (sum % 11);
+  if (check === 10) check = 0;
+  if (check === 11) check = 5;
+  return String(check);
+}
+
+// ---------------------------------------------------------------------------
 // Registry
 
 export const CARRIERS: Carrier[] = [
@@ -150,6 +216,12 @@ export const CARRIERS: Carrier[] = [
       { code: 'ups-next-day-air', name: 'UPS Next Day Air', transitDays: 1 },
       { code: 'ups-worldwide-expedited', name: 'UPS Worldwide Expedited', transitDays: 4 },
     ],
+    allocate: () => {
+      // 1Z, a six-character shipper number, a two-digit service level, a
+      // seven-digit package id, then the check digit over all fifteen.
+      const body = `${pick(ALNUM, 6)}${digits(2)}${digits(7)}`;
+      return `1Z${body}${upsCheckDigit(body)}`;
+    },
   },
   {
     id: 'fedex',
@@ -167,6 +239,10 @@ export const CARRIERS: Carrier[] = [
       { code: 'fedex-priority-overnight', name: 'FedEx Priority Overnight', transitDays: 1 },
       { code: 'fedex-international-priority', name: 'FedEx International Priority', transitDays: 3 },
     ],
+    allocate: () => {
+      const body = digits(11);
+      return `${body}${fedexCheckDigit(body)}`;
+    },
   },
   {
     id: 'usps',
@@ -181,6 +257,12 @@ export const CARRIERS: Carrier[] = [
       { code: 'usps-priority-mail', name: 'USPS Priority Mail', transitDays: 2 },
       { code: 'usps-priority-express', name: 'USPS Priority Mail Express', transitDays: 1 },
     ],
+    allocate: () => {
+      // 9400 is the Ground Advantage / tracked-package service banner; 22
+      // digits including the mod-10 check.
+      const body = `9400${digits(17)}`;
+      return `${body}${mod10CheckDigit(body)}`;
+    },
   },
   {
     id: 'dhl-express',
@@ -195,6 +277,11 @@ export const CARRIERS: Carrier[] = [
       { code: 'dhl-express-worldwide', name: 'DHL Express Worldwide', transitDays: 3 },
       { code: 'dhl-express-1200', name: 'DHL Express 12:00', transitDays: 2 },
     ],
+    allocate: () => {
+      // A DHL air waybill is ten digits whose last is the first nine mod 7.
+      const body = digits(9);
+      return `${body}${Number(body) % 7}`;
+    },
   },
   {
     id: 'dhl-ecommerce',
@@ -215,6 +302,12 @@ export const CARRIERS: Carrier[] = [
       { code: 'rm-tracked-48', name: 'Royal Mail Tracked 48', transitDays: 2 },
       { code: 'rm-tracked-24', name: 'Royal Mail Tracked 24', transitDays: 1 },
     ],
+    allocate: () => {
+      // UPU S10: two service letters, eight digits, the check digit, then the
+      // origin country.
+      const body = digits(8);
+      return `${pick('ABDEHLRSVZ', 2)}${body}${s10CheckDigit(body)}GB`;
+    },
   },
   {
     id: 'canada-post',
@@ -229,6 +322,7 @@ export const CARRIERS: Carrier[] = [
       { code: 'cp-expedited-parcel', name: 'Canada Post Expedited Parcel', transitDays: 3 },
       { code: 'cp-xpresspost', name: 'Canada Post Xpresspost', transitDays: 2 },
     ],
+    allocate: () => digits(16),
   },
   {
     id: 'dpd',
@@ -241,6 +335,7 @@ export const CARRIERS: Carrier[] = [
       { code: 'dpd-classic', name: 'DPD Classic', transitDays: 3 },
       { code: 'dpd-next-day', name: 'DPD Next Day', transitDays: 1 },
     ],
+    allocate: () => digits(14),
   },
   {
     id: 'gls',
@@ -253,6 +348,7 @@ export const CARRIERS: Carrier[] = [
       { code: 'gls-business-parcel', name: 'GLS Business Parcel', transitDays: 3 },
       { code: 'gls-express', name: 'GLS Express', transitDays: 1 },
     ],
+    allocate: () => digits(11),
   },
   {
     id: 'tnt',
@@ -265,6 +361,7 @@ export const CARRIERS: Carrier[] = [
       { code: 'tnt-economy-express', name: 'TNT Economy Express', transitDays: 4 },
       { code: 'tnt-express', name: 'TNT Express', transitDays: 2 },
     ],
+    allocate: () => digits(9),
   },
   {
     id: 'usps-international',
@@ -380,6 +477,23 @@ export function carrierService(carrierId: string, serviceCode: string): CarrierS
  * does not know every format a carrier has ever printed, and refusing a real
  * number because of a gap in it is the worse outcome.
  */
+/**
+ * A reference in this carrier's own format, or null if we cannot make one.
+ *
+ * Null for our own network, which has its own `FBX-` allocator, and for any
+ * carrier the registry can detect but not issue for.
+ *
+ * The result satisfies the carrier's pattern *and* its check digit, so it
+ * round-trips through `detectCarriers` as a verified match. That is the point
+ * of generating it here rather than with a loose random string: a placeholder
+ * the site's own detector would reject is worse than no placeholder.
+ */
+export function generateCarrierNumber(carrierId: string): string | null {
+  const carrier = carrierById(carrierId);
+  if (!carrier?.allocate || carrier.id === OWN_CARRIER_ID) return null;
+  return carrier.allocate();
+}
+
 export function matchesCarrierFormat(carrierId: string, trackingNumber: string): boolean {
   const carrier = carrierById(carrierId);
   if (!carrier) return false;

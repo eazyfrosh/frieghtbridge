@@ -37,7 +37,21 @@ export async function PATCH(request: Request, { params }: Params) {
     const validated = validateShipmentPatch(payload);
     if ('error' in validated) return NextResponse.json({ error: validated.error }, { status: 400 });
 
-    const saved = await updateShipment(number, validated.patch);
+    // A generated placeholder stays a placeholder. The editor posts the whole
+    // form back, so an operator who changed the ETA and left the reference
+    // alone would otherwise promote it to "the carrier issued this" and
+    // re-enable a deep link that goes nowhere. Only a *different* number means
+    // they have the carrier's own.
+    const patch = {
+      ...validated.patch,
+      carrierNumberSource:
+        validated.patch.carrierTrackingNumber &&
+        validated.patch.carrierTrackingNumber === existing.carrierTrackingNumber
+          ? (existing.carrierNumberSource ?? validated.patch.carrierNumberSource)
+          : validated.patch.carrierNumberSource,
+    };
+
+    const saved = await updateShipment(number, patch);
     if (!saved) {
       return NextResponse.json(
         { error: 'Could not save — Firestore is not configured on this deployment.' },

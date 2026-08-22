@@ -10,10 +10,19 @@ import { SEED_SHIPMENTS } from './fixtures/shipments';
  * to a real tracking API is the only change the UI needs.
  */
 
+/**
+ * The milestones a shipment passes, in order.
+ *
+ * Customs sits between the long haul and the final mile, which is where it
+ * happens: freight clears at the border or at the destination gateway, before
+ * a local driver ever sees it. Domestic shipments simply never record the
+ * stage — the timeline shows what happened, not a fixed five-step ladder.
+ */
 export const TRACKING_STAGES = [
   'Order Confirmed',
   'Picked Up',
   'In Transit',
+  'Customs Clearance',
   'Out for Delivery',
   'Delivered',
 ] as const;
@@ -83,6 +92,15 @@ export interface Shipment {
   /** The carrier's tracking number, once they have issued one. */
   carrierTrackingNumber?: string | null;
   /**
+   * Where that number came from.
+   *
+   * `generated` matters: it is a reference we allocated in the carrier's
+   * format because none existed yet, so the carrier's own site knows nothing
+   * about it. The UI does not offer a dead deep link for one, and the operator
+   * is told to replace it.
+   */
+  carrierNumberSource?: 'provider' | 'operator' | 'generated' | null;
+  /**
    * Shipping label from the carrier. Operators only — a label carries the
    * sender's and recipient's full addresses, so it must never reach the public
    * tracking endpoint. `TrackingResult` omits it by type.
@@ -113,14 +131,25 @@ export interface ResolvedEvent extends Omit<TrackingEvent, 'hoursAgo'> {
 export interface TrackingResult
   extends Omit<
     Shipment,
-    'events' | 'etaInDays' | 'customer' | 'pickupDate' | 'labelUrl' | 'carrierTrackingNumber'
+    | 'events'
+    | 'etaInDays'
+    | 'customer'
+    | 'pickupDate'
+    | 'labelUrl'
+    | 'carrierTrackingNumber'
+    | 'carrierNumberSource'
   > {
   events: ResolvedEvent[];
   estimatedDelivery: string;
   lastUpdate: string;
   progress: number;
   carrierTrackingNumber: string | null;
-  /** Where to follow that number on the carrier's own site. */
+  carrierNumberSource: 'provider' | 'operator' | 'generated' | null;
+  /**
+   * Where to follow that number on the carrier's own site — null for a number
+   * we generated, since the carrier never issued it and the link would land
+   * the customer on a "not found" page.
+   */
   carrierTrackingUrl: string | null;
 }
 
@@ -207,10 +236,15 @@ function resolve(shipment: Shipment): TrackingResult {
     carrierId: shipment.carrierId ?? null,
     carrierService: shipment.carrierService ?? null,
     carrierTrackingNumber: shipment.carrierTrackingNumber ?? null,
+    carrierNumberSource: shipment.carrierNumberSource ?? null,
     // Built from the registry rather than stored, so a link is never stale:
     // if a carrier moves its tracking page, one edit fixes every shipment.
+    // Withheld for a number we generated ourselves — the carrier has never
+    // heard of it, and sending a customer there is a dead end.
     carrierTrackingUrl:
-      shipment.carrierId && shipment.carrierTrackingNumber
+      shipment.carrierId &&
+      shipment.carrierTrackingNumber &&
+      shipment.carrierNumberSource !== 'generated'
         ? (carrierById(shipment.carrierId)?.trackingUrl(shipment.carrierTrackingNumber) ?? null)
         : null,
     events,
@@ -358,6 +392,15 @@ export function statusTone(status: ShipmentStatus): {
         label: 'Out for delivery',
         className: 'bg-brand-800 text-white ring-brand-900/30',
         dot: 'bg-white',
+      };
+    // Amber, not the in-transit blue: customs is freight sitting still, and a
+    // customer looking at the page wants to see that it is held rather than
+    // moving.
+    case 'Customs Clearance':
+      return {
+        label: 'In customs',
+        className: 'bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-200 ring-amber-600/20',
+        dot: 'bg-amber-500',
       };
     default:
       return {

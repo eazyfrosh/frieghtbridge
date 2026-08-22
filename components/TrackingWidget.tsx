@@ -499,7 +499,12 @@ function TrackingResultPanel({
 
       {/* The carrier leg, when the freight is moving on somebody else's
           network. The customer booked with us and tracks with us; this is how
-          they see the handoff rather than discovering it. */}
+          they see the handoff rather than discovering it.
+
+          No link out to the carrier. The timeline on this page is the record
+          for a shipment we booked, and sending the customer to a third party
+          mid-journey either loses them or shows them a thinner version of what
+          they are already looking at. */}
       {carriedBy && result.carrierTrackingNumber && (
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-ink-100 bg-brand-50/50 dark:bg-brand-500/5 px-5 py-4 sm:px-6">
           <CarrierLogo src={logos[carriedBy.id]} initials={carriedBy.initials} />
@@ -509,17 +514,6 @@ function TrackingResultPanel({
               {result.carrierTrackingNumber}
             </span>
           </p>
-          {result.carrierTrackingUrl && (
-            <a
-              href={result.carrierTrackingUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 dark:text-brand-300 transition-colors hover:text-brand-800"
-            >
-              Track on {carriedBy.name}
-              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </a>
-          )}
         </div>
       )}
 

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { CircleDashed, Clock4, Headphones, PackageSearch, ShieldCheck, Truck } from 'lucide-react';
+import { CircleDashed, Clock4, FileCheck2, Headphones, PackageSearch, ShieldCheck, Truck } from 'lucide-react';
 import { PageHero } from '@/components/PageHero';
 import { TrackingWidget } from '@/components/TrackingWidget';
 import { Button } from '@/components/ui/Button';
@@ -31,6 +31,11 @@ const STATUS_GUIDE = [
     icon: CircleDashed,
     title: 'In Transit',
     body: 'Your shipment is moving between facilities. Each transfer adds a new scan to the timeline.',
+  },
+  {
+    icon: FileCheck2,
+    title: 'Customs Clearance',
+    body: 'Cross-border freight only. Entry documents are lodged and the shipment waits on release before the final leg.',
   },
   {
     icon: Clock4,

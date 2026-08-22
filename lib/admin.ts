@@ -43,6 +43,9 @@ export function adminStatusTone(status: ShipmentStatus): string {
       return 'bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 ring-rose-600/20';
     case 'Out for Delivery':
       return 'bg-brand-800 text-white ring-brand-900/30';
+    // Held, not moving — worth spotting in a list of forty shipments.
+    case 'Customs Clearance':
+      return 'bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-200 ring-amber-600/20';
     default:
       return 'bg-brand-50 dark:bg-brand-500/10 text-brand-700 dark:text-brand-300 ring-brand-600/20';
   }

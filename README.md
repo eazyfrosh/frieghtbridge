@@ -212,7 +212,13 @@ This is a front-end prototype: there is no backend.
 
 - **Tracking** calls `GET /api/tracking`, which reads Firestore server-side for
   our own numbers and identifies other carriers' from the number's format (see
-  Multi-carrier tracking below).
+  Multi-carrier tracking below). Six milestones: Order Confirmed, Picked Up, In
+  Transit, Customs Clearance, Out for Delivery, Delivered. Customs sits between
+  the long haul and the final mile because that is where it happens; domestic
+  freight simply never records the stage, since the timeline shows what
+  happened rather than a fixed ladder. It carries an amber "In customs" pill
+  rather than the in-transit blue — freight in customs is sitting still, and
+  both the customer and an operator scanning a list want to see that.
   The seed fixtures cover the four states, and they are no longer advertised on
   the page — a specimen number on a live tracking form reads as a real
   consignment, and people paste it in and then ask why it is not their shipment.
@@ -321,10 +327,35 @@ the operator has already booked with the carrier themselves.
 
 **One shipment, two numbers.** The customer tracks with the `FBX-` reference
 throughout; when the freight is on somebody else's network the tracking page
-shows a "Moving with FedEx on 390244306428" strip and a link straight to that
-carrier. The shipping label stays operator-only — it carries both addresses,
-and `TrackingResult` omits it by type, the same protection the customer record
-has.
+shows a "Moving with FedEx on 390244306428" strip. There is deliberately no
+link out to the carrier from a shipment we booked — the timeline on our page is
+the record, and handing the customer to a third party mid-journey either loses
+them or shows them a thinner version of what they are already reading. (A
+number *pasted* into the tracking box is the opposite case: we hold nothing, so
+the carrier's own page is the answer and the link is the point.) The shipping
+label stays operator-only — it carries both addresses, and `TrackingResult`
+omits it by type, the same protection the customer record has.
+
+**A carrier reference is allocated at booking if none exists.** Off-network
+bookings used to sit with a blank where their reference should be until someone
+typed one in. Now, in order of authority: the provider's number if a shipping
+API answered, otherwise whatever the operator typed, otherwise one we allocate
+in that carrier's own format — `1Z` with a valid UPS check digit, twelve digits
+that satisfy FedEx's mod-11, a `9400…` USPS barcode that passes mod-10.
+
+Those are placeholders and are recorded as such in `carrierNumberSource`. The
+distinction is load-bearing rather than bookkeeping: a generated number is
+shown, but never linked to the carrier, never described as "UPS reference X" in
+the customer's timeline, and flagged in the admin panel as ours to replace. An
+operator editing another field and posting the same number back does not
+promote it — only a *different* number counts as the carrier's own.
+
+Generated numbers round-trip through our own detector as verified matches,
+which is the point of building them from the real check-digit algorithms
+instead of a random string. Two of them cannot: GLS issues 11-digit numbers and
+so does DHL Express, and TNT's 9 digits collide with UPS, so those come back as
+candidates rather than top guesses. Real numbering plans overlap that way; the
+tracking page lists the alternatives.
 
 **Re-tendering is a first-class action**, not a workaround: change the platform
 on the shipment page and the service, the carrier's number, the displayed

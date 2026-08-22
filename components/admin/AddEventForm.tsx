@@ -35,6 +35,11 @@ export function AddEventForm({ trackingNumber, stages, currentStatus, writable }
   const [location, setLocation] = useState('');
   const [description, setDescription] = useState('');
   const [at, setAt] = useState(nowForInput());
+  // What the field was prefilled with. An operator who never touched it means
+  // "now", and `datetime-local` only holds minutes — so a scan recorded in the
+  // same minute as an earlier event would be stamped :00 and sort in front of
+  // it. Left untouched, we send the real instant instead of the rounded one.
+  const [defaultAt] = useState(at);
   const [advance, setAdvance] = useState(true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -59,7 +64,7 @@ export function AddEventForm({ trackingNumber, stages, currentStatus, writable }
             description,
             // The input has no timezone, so it is read as local time — which is
             // what the operator meant — and sent as an absolute instant.
-            at: new Date(at).toISOString(),
+            at: at === defaultAt ? new Date().toISOString() : new Date(at).toISOString(),
             advanceShipment: advance,
           }),
         },

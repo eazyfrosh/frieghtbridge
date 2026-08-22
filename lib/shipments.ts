@@ -6,12 +6,13 @@ import {
   carrierById,
   carrierService,
   carriersFor,
+  generateCarrierNumber,
   matchesCarrierFormat,
   normalizeCarrierNumber,
 } from './carriers';
 import { adminDb } from './firebase/admin';
 import { SEED_SHIPMENTS } from './fixtures/shipments';
-import { tenderShipment, shippingProviderConfigured } from './fulfilment';
+import { tenderShipment, shippingProviderConfigured, type TenderResult } from './fulfilment';
 import {
   TRACKING_STAGES,
   type Shipment,
@@ -70,6 +71,12 @@ function toShipment(data: FirebaseFirestore.DocumentData | undefined): Shipment 
     carrierService: typeof data.carrierService === 'string' ? data.carrierService : null,
     carrierTrackingNumber:
       typeof data.carrierTrackingNumber === 'string' ? data.carrierTrackingNumber : null,
+    carrierNumberSource:
+      data.carrierNumberSource === 'provider' ||
+      data.carrierNumberSource === 'operator' ||
+      data.carrierNumberSource === 'generated'
+        ? data.carrierNumberSource
+        : null,
     labelUrl: typeof data.labelUrl === 'string' ? data.labelUrl : null,
     events: Array.isArray(data.events) ? data.events : [],
     customer: toCustomer(data.customer),
@@ -163,6 +170,12 @@ export interface ShipmentPatch {
   carrierService: string | null;
   /** That platform's own tracking number, once they have issued one. */
   carrierTrackingNumber: string | null;
+  /**
+   * Set by the route, not the form. An operator retyping the same generated
+   * number must not promote it to a real one — only a different number is an
+   * operator supplying the carrier's own reference.
+   */
+  carrierNumberSource: Shipment['carrierNumberSource'];
 }
 
 export const SHIPMENT_STATUSES: ShipmentStatus[] = [...TRACKING_STAGES, 'Exception'];
@@ -284,6 +297,9 @@ export function validateShipmentPatch(
   return {
     patch: {
       ...assignment.assignment,
+      // Provisional: the route replaces this once it can compare against the
+      // stored shipment.
+      carrierNumberSource: assignment.assignment.carrierTrackingNumber ? 'operator' : null,
       status,
       service: values.service,
       origin: values.origin,
@@ -560,7 +576,8 @@ function daysUntil(date: string): number {
 function shipmentFromBooking(
   trackingNumber: string,
   booking: BookingInput,
-  tendered: { trackingNumber: string; labelUrl: string | null } | null,
+  carrierNumber: { value: string; source: Shipment['carrierNumberSource'] } | null,
+  labelUrl: string | null,
 ): Shipment {
   const origin = `${booking.fromCity}, ${booking.fromCountry}`;
   const destination = `${booking.toCity}, ${booking.toCountry}`;
@@ -570,9 +587,7 @@ function shipmentFromBooking(
   const service = carrierService(booking.carrierId, booking.carrierService);
   const onOwnNetwork = booking.carrierId === OWN_CARRIER_ID;
 
-  // A number from the provider wins over one the operator typed: it came from
-  // the carrier's own system, which is the authority on what it issued.
-  const carrierTrackingNumber = tendered?.trackingNumber ?? booking.carrierTrackingNumber ?? '';
+  const carrierTrackingNumber = carrierNumber?.value ?? '';
 
   const serviceName = service?.name ?? booking.carrierService;
 
@@ -595,7 +610,8 @@ function shipmentFromBooking(
     carrierId: booking.carrierId,
     carrierService: booking.carrierService,
     carrierTrackingNumber: carrierTrackingNumber || null,
-    labelUrl: tendered?.labelUrl ?? null,
+    carrierNumberSource: carrierNumber?.source ?? null,
+    labelUrl,
     pickupDate: booking.pickupDate,
     customer: {
       name: booking.name,
@@ -611,7 +627,11 @@ function shipmentFromBooking(
         description: `${booking.pieces} ${booking.shipmentType.toLowerCase()}${
           booking.pieces === 1 ? '' : 's'
         } booked for collection on ${booking.pickupDate}. ${serviceName} to ${destination}.${
-          onOwnNetwork || !carrierTrackingNumber
+          // A generated reference is deliberately left out of the customer's
+          // timeline. It is shown alongside the shipment either way, but
+          // writing "UPS reference X" into the history asserts UPS issued it,
+          // and they did not.
+          onOwnNetwork || !carrierTrackingNumber || carrierNumber?.source === 'generated'
             ? ''
             : ` ${carrier?.name ?? 'Carrier'} reference ${carrierTrackingNumber}.`
         }`,
@@ -659,6 +679,35 @@ async function tenderIfPossible(
 }
 
 /**
+ * Which carrier reference the shipment gets, and where it came from.
+ *
+ * Three sources in strict order of authority:
+ *
+ *  1. the provider, which is the carrier's own system answering;
+ *  2. whatever the operator typed, because they are looking at the label;
+ *  3. one we allocate in the carrier's format, so the shipment is not left
+ *     with a blank where its reference should be.
+ *
+ * The third is a placeholder and is recorded as such. It has the right shape
+ * and a valid check digit — it will not be mistaken for a typo, and our own
+ * detector recognises it — but the carrier has never heard of it, so nothing
+ * downstream offers it as a link to them.
+ */
+function resolveCarrierNumber(
+  booking: BookingInput,
+  tendered: TenderResult | null,
+): { value: string; source: Shipment['carrierNumberSource'] } | null {
+  if (tendered?.trackingNumber) return { value: tendered.trackingNumber, source: 'provider' };
+  if (booking.carrierTrackingNumber) {
+    return { value: booking.carrierTrackingNumber, source: 'operator' };
+  }
+  if (booking.carrierId === OWN_CARRIER_ID) return null;
+
+  const generated = generateCarrierNumber(booking.carrierId);
+  return generated ? { value: generated, source: 'generated' } : null;
+}
+
+/**
  * Create a shipment from a booking.
  *
  * The tracking number is random rather than sequential, and written with
@@ -678,17 +727,27 @@ export async function createShipmentFromBooking(
   // collisions, and asking a carrier to create the same shipment five times
   // would leave four orphans on their system.
   const tendered = await tenderIfPossible(booking);
+  const carrierNumber = resolveCarrierNumber(booking, tendered.result);
 
   const warning =
     tendered.attempted && !tendered.result
-      ? `The shipment is saved, but ${carrierById(booking.carrierId)?.name ?? 'the carrier'} did not accept the tender. Add their tracking number by hand once you have it.`
+      ? `The shipment is saved, but ${carrierById(booking.carrierId)?.name ?? 'the carrier'} did not accept the tender. ${
+          carrierNumber?.source === 'generated'
+            ? 'A placeholder reference has been allocated — replace it with theirs once you have it.'
+            : 'Add their tracking number by hand once you have it.'
+        }`
       : null;
 
   for (let attempt = 0; attempt < 5; attempt += 1) {
     const trackingNumber = candidateTrackingNumber();
     if (takenByFixture.has(trackingNumber)) continue;
 
-    const shipment = shipmentFromBooking(trackingNumber, booking, tendered.result);
+    const shipment = shipmentFromBooking(
+      trackingNumber,
+      booking,
+      carrierNumber,
+      tendered.result?.labelUrl ?? null,
+    );
     try {
       await db.collection(COLLECTION).doc(trackingNumber).create(shipment);
       return { shipment, warning };

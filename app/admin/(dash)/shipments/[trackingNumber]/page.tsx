@@ -1,4 +1,4 @@
-import { ArrowLeft, Flag, MapPin, Navigation, Package, Truck } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, Flag, MapPin, Navigation, Package, Truck } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { AddEventForm } from '@/components/admin/AddEventForm';
@@ -117,12 +117,26 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
                   >
                     {resolved.carrierTrackingNumber}
                   </a>
+                ) : resolved.carrierTrackingNumber ? (
+                  // Generated: shown, because it is the reference on the
+                  // paperwork, but not linked, because {platform.name} has
+                  // never heard of it.
+                  <span className="font-mono font-medium text-ink-900">
+                    {resolved.carrierTrackingNumber}
+                  </span>
                 ) : (
                   <span className="text-ink-400">
                     Not issued yet — add it with Edit shipment once you have it.
                   </span>
                 )}
               </dd>
+              {resolved.carrierNumberSource === 'generated' && (
+                <dd className="mt-1.5 flex items-start gap-1.5 text-xs text-amber-700 dark:text-amber-300">
+                  <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  Allocated by us in {platform.name}&rsquo;s format — they have not issued it, so it will
+                  not track on their site. Replace it with theirs when you have it.
+                </dd>
+              )}
             </div>
             {shipment.labelUrl && (
               <div>
