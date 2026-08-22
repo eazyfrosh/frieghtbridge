@@ -417,6 +417,39 @@ Every aggregator differs — the larger ones need a rate selected before a label
 exists — so treat `tenderShipment()` as the seam to adapt, not a finished
 integration.
 
+### The tracking result
+
+Laid out to match the operator's own multi-carrier platform: a header card in
+the carrier's livery, a progress bar and last-known location, a route overview,
+then history beside a details column, with copy-link, print and a QR code.
+
+**The livery is data, not classes.** `lib/carrier-themes.ts` holds two hex
+values per carrier and derives the rest; `CarrierThemeScope` publishes them as
+`--carrier-primary` and friends. Readable text on each colour is computed from
+WCAG relative luminance rather than hand-picked, so adding a carrier needs only
+its two brand colours — which matters when DHL yellow and UPS gold need black
+text while USPS blue needs white. `:root` declares the same variables with
+FreightBridge orange, so anything themed still renders correctly outside a
+scope, and a shipment on our own network wears our livery rather than none.
+
+**The route overview is not a map**, and is not called one. A real map needs a
+geocode for every scan location and a tile provider on every page load; what a
+customer wants to know — how far along, where last seen — the checkpoint line
+answers without either. Only scans that have happened are plotted.
+
+**One deliberate departure from the reference design.** Its details card names
+the sender and the receiver. Ours shows the consignment instead — lane, pieces,
+weight, dimensions. A tracking number is the only credential for this page, and
+`TrackingResult` omits the customer record by type precisely so that guessing a
+number cannot yield somebody's name and address.
+
+Printing drops the site chrome, the page's own controls and the QR panel, forces
+the livery header to print (browsers drop backgrounds by default, which would
+leave white text on white paper), and collapses to one column.
+
+The QR encoder is imported on demand, so the only visitors who download it are
+those who found a shipment.
+
 ## Live chat
 
 Visitors chat from a bubble on every public page; operators reply at

@@ -12,6 +12,18 @@
     --header-height: 72px;
     color-scheme: light;
 
+    /**
+     * Carrier livery, defaulting to our own brand.
+     *
+     * Declared here so anything themed still renders correctly outside a
+     * `CarrierThemeScope` — a component that reads `--carrier-primary` with no
+     * scope above it gets FreightBridge orange rather than nothing.
+     */
+    --carrier-primary: #ff6a00;
+    --carrier-secondary: #9c3800;
+    --carrier-on-primary: #ffffff;
+    --carrier-on-secondary: #ffffff;
+
     --ink-50: 248 248 248;
     --ink-100: 239 239 239;
     --ink-200: 220 220 220;
@@ -194,5 +206,100 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+@layer components {
+  /**
+   * Carrier livery transitions when the colours change — navigating from a
+   * FedEx shipment to a UPS one animates rather than snapping.
+   */
+  .carrier-theme {
+    transition:
+      --carrier-primary 400ms ease,
+      --carrier-secondary 400ms ease;
+  }
+
+  /* Faint graph paper behind the route overview, so the checkpoint line has
+     something to sit on without a background image to load. */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgb(var(--ink-300) / 0.25) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(var(--ink-300) / 0.25) 1px, transparent 1px);
+    background-size: 22px 22px;
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black, transparent);
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black, transparent);
+  }
+}
+
+@layer utilities {
+  /* The live checkpoint on the route overview. */
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(0.85);
+      opacity: 0.9;
+    }
+    70% {
+      transform: scale(1.9);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1.9);
+      opacity: 0;
+    }
+  }
+
+  .animate-pulse-ring {
+    animation: pulse-ring 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+/**
+ * Printing a tracking page.
+ *
+ * A customer printing this wants the shipment, not the site: the navbar, the
+ * footer, the chat bubble and the page's own controls all come off, the
+ * carrier's gradient header is forced to print (browsers drop backgrounds by
+ * default, which would leave white text on white paper), and the layout drops
+ * to one column because a three-column grid on A4 is unreadable.
+ */
+@media print {
+  .no-print,
+  header,
+  footer,
+  nav {
+    display: none !important;
+  }
+
+  :root {
+    --surface: 255 255 255;
+    --canvas: 255 255 255;
+  }
+
+  body {
+    background: #fff !important;
+  }
+
+  .carrier-theme,
+  .carrier-theme * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .carrier-theme .lg\:col-span-2,
+  .carrier-theme .lg\:grid-cols-3 {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+  }
+
+  .carrier-theme .shadow-card,
+  .carrier-theme .shadow-soft {
+    box-shadow: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse-ring {
+    animation: none;
   }
 }
