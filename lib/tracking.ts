@@ -70,6 +70,16 @@ export interface Shipment {
   customer?: ShipmentCustomer | null;
   /** ISO date (no time) the freight is due to be collected. */
   pickupDate?: string | null;
+  /**
+   * When the booking was raised.
+   *
+   * The admin list is ordered by this. Without it the order was whatever
+   * Firestore returned, which is by document id — and since a tracking number
+   * is eight random digits, that put a brand-new booking wherever its number
+   * happened to sort. Optional, because shipments written before this existed
+   * do not have one.
+   */
+  createdAt?: string | null;
   service: string;
   origin: string;
   destination: string;

@@ -77,9 +77,20 @@ const literal = source.slice(start, source.lastIndexOf(']') + 1);
 // The literal is plain data — object/array/string/number only, no expressions.
 const shipments = new Function(`return ${literal};`)();
 
-if (!Array.isArray(shipments) || shipments.length === 0) {
-  console.error('Could not read any shipments out of lib/fixtures/shipments.ts');
+if (!Array.isArray(shipments)) {
+  console.error('Could not read the shipments array out of lib/fixtures/shipments.ts');
   process.exit(1);
+}
+
+// An empty fixture set is the normal state now — the demo consignments were
+// removed so the site runs on real bookings. Seeding nothing is a no-op, not a
+// failure, so this exits 0 and says so rather than looking like a broken read.
+if (shipments.length === 0) {
+  console.log(
+    'No seed shipments defined in lib/fixtures/shipments.ts — nothing to write.\n' +
+      'That is expected: the demo data was removed. Add entries there to seed a demo.',
+  );
+  process.exit(0);
 }
 
 console.log(

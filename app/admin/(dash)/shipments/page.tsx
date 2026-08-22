@@ -6,7 +6,7 @@ import {
   filterShipments,
   type ShipmentFilter,
 } from '@/lib/admin';
-import { listShipments } from '@/lib/shipments';
+import { listShipments, shipmentsWritable } from '@/lib/shipments';
 
 export const metadata = { title: 'Shipments' };
 
@@ -22,7 +22,9 @@ function parseFilter(raw: string | undefined): ShipmentFilter {
 export default async function AdminShipmentsPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const active = parseFilter(params.status);
-  const shipments = filterShipments(await listShipments(), active);
+  const all = await listShipments();
+  const shipments = filterShipments(all, active);
+  const writable = shipmentsWritable();
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -32,6 +34,17 @@ export default async function AdminShipmentsPage({ searchParams }: PageProps) {
       <p className="mt-1.5 text-[0.95rem] text-ink-500">
         Every booking in the network, newest first.
       </p>
+
+      {/* Without this, a deployment whose Firestore is misconfigured shows the
+          demo fixtures and looks like it is working — so a booking that never
+          saved reads as a booking that vanished. Say which it is. */}
+      {!writable && (
+        <p className="mt-4 rounded-2xl border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 px-4 py-3 text-sm text-amber-800 dark:text-amber-200">
+          Firestore is not configured on this deployment, so nothing here is saved and new bookings
+          cannot be stored. These are the seed fixtures. Set{' '}
+          <code className="font-mono text-[0.85em]">FIREBASE_SERVICE_ACCOUNT_KEY</code> and redeploy.
+        </p>
+      )}
 
       {/* Filters are links, not state — the view stays shareable and works
           without JavaScript. */}
@@ -57,7 +70,9 @@ export default async function AdminShipmentsPage({ searchParams }: PageProps) {
 
       {shipments.length === 0 ? (
         <p className="mt-8 rounded-2xl border border-dashed border-ink-200 bg-surface p-8 text-center text-sm text-ink-500">
-          No shipments with that status.
+          {all.length === 0
+            ? 'No shipments yet. Raise one from Book shipment and it appears here.'
+            : 'No shipments with that status.'}
         </p>
       ) : (
         <>
@@ -89,7 +104,7 @@ export default async function AdminShipmentsPage({ searchParams }: PageProps) {
                     <td className="px-5 py-4 text-sm text-ink-500">{shipment.service}</td>
                     <td className="px-5 py-4">
                       <span
-                        className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${adminStatusTone(shipment.status)}`}
+                        className={`inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${adminStatusTone(shipment.status)}`}
                       >
                         {shipment.status}
                       </span>
@@ -123,7 +138,7 @@ export default async function AdminShipmentsPage({ searchParams }: PageProps) {
                       {shipment.trackingNumber}
                     </span>
                     <span
-                      className={`inline-flex shrink-0 items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${adminStatusTone(shipment.status)}`}
+                      className={`inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${adminStatusTone(shipment.status)}`}
                     >
                       {shipment.status}
                     </span>

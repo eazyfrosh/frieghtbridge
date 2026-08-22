@@ -78,6 +78,7 @@ function toShipment(data: FirebaseFirestore.DocumentData | undefined): Shipment 
         ? data.carrierNumberSource
         : null,
     labelUrl: typeof data.labelUrl === 'string' ? data.labelUrl : null,
+    createdAt: typeof data.createdAt === 'string' ? data.createdAt : null,
     events: Array.isArray(data.events) ? data.events : [],
     customer: toCustomer(data.customer),
     pickupDate: typeof data.pickupDate === 'string' ? data.pickupDate : null,
@@ -117,16 +118,52 @@ export async function listShipments(): Promise<Shipment[]> {
   }
 
   const snapshot = await db.collection(COLLECTION).get();
-  const stored = snapshot.docs
-    .map((doc) => toShipment(doc.data()))
-    .filter((shipment): shipment is Shipment => shipment !== null);
+
+  // Anything that fails narrowing is dropped, which is right, but dropping it
+  // in silence is not: a shipment missing from the list with no explanation is
+  // exactly the bug that is hardest to chase. Name the documents in the log.
+  const discarded: string[] = [];
+  const stored: Shipment[] = [];
+  for (const doc of snapshot.docs) {
+    const shipment = toShipment(doc.data());
+    if (shipment) stored.push(shipment);
+    else discarded.push(doc.id);
+  }
+  if (discarded.length) {
+    console.warn(`[shipments] ${discarded.length} unreadable document(s) skipped:`, discarded.join(', '));
+  }
 
   const storedNumbers = new Set(stored.map((shipment) => shipment.trackingNumber.toUpperCase()));
   const remainingFixtures = SEED_SHIPMENTS.filter(
     (fixture) => !storedNumbers.has(fixture.trackingNumber.toUpperCase()),
   );
 
-  return [...stored, ...remainingFixtures];
+  return sortNewestFirst([...stored, ...remainingFixtures]);
+}
+
+/**
+ * Newest booking first, which is what the admin list says it shows.
+ *
+ * Firestore returns documents in id order, and a tracking number is eight
+ * random digits — so without this a shipment booked a minute ago sits wherever
+ * its number happens to sort, and an operator who has just raised one cannot
+ * find it. Records written before `createdAt` existed, and the demo fixtures,
+ * have no timestamp and go last, in their existing order.
+ */
+function sortNewestFirst(shipments: Shipment[]): Shipment[] {
+  return shipments
+    .map((shipment, index) => ({ shipment, index }))
+    .sort((a, b) => {
+      const at = a.shipment.createdAt ? Date.parse(a.shipment.createdAt) : NaN;
+      const bt = b.shipment.createdAt ? Date.parse(b.shipment.createdAt) : NaN;
+      const aHas = !Number.isNaN(at);
+      const bHas = !Number.isNaN(bt);
+      if (aHas && bHas) return bt - at;
+      if (aHas) return -1;
+      if (bHas) return 1;
+      return a.index - b.index;
+    })
+    .map(({ shipment }) => shipment);
 }
 
 export async function findShipment(trackingNumber: string): Promise<Shipment | null> {
@@ -673,6 +710,7 @@ function shipmentFromBooking(
     carrierTrackingNumber: carrierTrackingNumber || null,
     carrierNumberSource: carrierNumber?.source ?? null,
     labelUrl,
+    createdAt: now,
     pickupDate: booking.pickupDate,
     customer: {
       name: booking.name,

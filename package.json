@@ -12,6 +12,8 @@
     "hash-password": "node scripts/hash-password.mjs",
     "seed": "node scripts/seed-firestore.mjs",
     "seed:emulator": "FIRESTORE_EMULATOR_HOST=127.0.0.1:8080 node scripts/seed-firestore.mjs",
+    "reset": "node scripts/reset-data.mjs",
+    "reset:emulator": "FIRESTORE_EMULATOR_HOST=127.0.0.1:8080 node scripts/reset-data.mjs",
     "emulators": "firebase emulators:start --project demo-freightbridge",
     "doctor": "node scripts/doctor.mjs"
   },

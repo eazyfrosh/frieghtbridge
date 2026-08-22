@@ -83,7 +83,8 @@ export function Hero() {
                 </button>
               </div>
               <p className="mt-3 pl-1 text-[0.88rem] text-ink-500">
-                Tracking numbers look like <span className="font-mono text-ink-700">FBX-28473921</span>.
+                Tracking numbers are <span className="font-mono text-ink-700">FBX</span> and eight
+                digits — or paste the carrier&rsquo;s own.
               </p>
             </motion.form>
           </div>

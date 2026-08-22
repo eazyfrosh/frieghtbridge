@@ -44,7 +44,7 @@ const GROUPS: Array<{ title: string; items: AccordionItem[] }> = [
       {
         question: 'Where do I find my tracking number?',
         answer:
-          'It is on your booking confirmation and every document we send for the shipment. FreightBridge Logistics tracking numbers look like FBX-28473921 — the letters FBX followed by eight digits.',
+          'It is on your booking confirmation and every document we send for the shipment: the letters FBX followed by eight digits. If your freight is moving on another carrier and you have their number instead, that works too — the tracking page recognises it and opens the same timeline.',
       },
       {
         question: 'How often does tracking update?',

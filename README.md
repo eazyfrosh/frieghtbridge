@@ -103,9 +103,33 @@ There is **no default login**. Create the operator in the Firebase console
 `ADMIN_EMAILS`. Then seed Firestore and deploy the rules:
 
 ```bash
-npm run seed                        # writes the demo shipments
+npm run seed                        # writes lib/fixtures/shipments.ts (empty by default)
 firebase deploy --only firestore:rules
 ```
+
+### Starting from nothing
+
+To clear the data — after trying the site out, or before handing it to real
+customers:
+
+```bash
+npm run reset -- --dry-run          # count what would go, delete nothing
+npm run reset -- --yes              # delete it
+npm run reset -- --yes --only=shipments
+npm run reset:emulator -- --yes     # against a running emulator
+```
+
+Clears `shipments`, `chats` (and their `messages` subcollections), `emailLog`
+and `chatRateLimits`. **Not** `emailTemplates`: edited wording is the
+operator's writing, not test data, and losing it to a "clear the demo" command
+would be a nasty surprise — pass `--only=emailTemplates` if you do want it
+reset.
+
+It is irreversible and takes no backup, so it refuses to run without `--yes`,
+prints the project id first, and pauses five seconds before touching anything
+that is not an emulator. Deleting a parent document in Firestore does not
+delete its subcollections — it orphans them — so chat messages are walked
+explicitly rather than left behind.
 
 ### When sign-in fails
 
@@ -219,11 +243,13 @@ This is a front-end prototype: there is no backend.
   happened rather than a fixed ladder. It carries an amber "In customs" pill
   rather than the in-transit blue — freight in customs is sitting still, and
   both the customer and an operator scanning a list want to see that.
-  The seed fixtures cover the four states, and they are no longer advertised on
-  the page — a specimen number on a live tracking form reads as a real
-  consignment, and people paste it in and then ask why it is not their shipment.
-  For testing, type one of: `FBX-28473921` (in transit), `FBX-90112845` (out for
-  delivery), `FBX-55620174` (delivered), `FBX-73004466` (delayed).
+  There are no demo shipments: `lib/fixtures/shipments.ts` is empty, so the
+  site shows only what has actually been booked. The four specimen
+  consignments it used to hold were removed because a realistic number on a
+  live tracking form reads as a real consignment — people paste it in and then
+  ask why it is not their shipment — and because demo rows mixed into the
+  operations list make it impossible to see at a glance what really exists. The
+  file documents the shape if you want to seed a demo again.
 - **Shipments are editable.** An operator can correct a shipment's details and
   record tracking events from `/admin/shipments/<number>`; both write to
   Firestore and appear on the customer's tracking page immediately. Events
