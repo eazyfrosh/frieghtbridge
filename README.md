@@ -352,9 +352,19 @@ fringe or vanish on a dark ground, and there is no inverted variant to switch
 to. They carry an empty `alt` because the carrier's name is always in text
 beside them.
 
-The repository ships with no logos in it: they are other companies'
-trademarks, and the right copy is the official asset from each carrier's brand
-page, used within their guidelines.
+Ten are in the tree: UPS, FedEx, USPS, DHL (Express and eCommerce share the
+mark), Royal Mail, Canada Post, DPD, GLS and TNT. Our own network keeps its
+`FB` tile, and "International post" is a format rather than a company, so it
+has none. These are other companies' trademarks — replace any of them with the
+official asset from that carrier's brand page if you have it, and keep to their
+usage guidelines.
+
+Each file's `viewBox` has been cropped to the tight bounding box of its
+artwork, and full-canvas white background plates dropped, by measuring
+`getBBox()` in a browser rather than guessing. Source logos come with wildly
+different canvases — DHL's wordmark arrived inside a 567×567 square, which drew
+about 5px tall on a 16px tile and read as a smear. Anything you add later is
+worth passing through the same crop.
 
 ### Email placeholders
 

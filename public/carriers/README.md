@@ -37,7 +37,12 @@ share an id the first one found wins, so keep one per carrier.
 
 - **Transparent background.** The site puts the logo on a white tile.
 - **Trimmed.** No built-in padding — the tile supplies its own, and whitespace
-  baked into the file makes the mark look smaller than its neighbours.
+  baked into the file makes the mark look smaller than its neighbours. This
+  matters more than it sounds: the DHL logo here arrived as a wordmark inside a
+  567×567 square canvas, which drew about 5px tall on a 16px tile. The files in
+  this folder have had their `viewBox` cropped to the artwork's real bounding
+  box, and any full-canvas white plate removed. Crop anything you add the same
+  way.
 - **Wordmark or combination mark**, not the icon alone, where the carrier
   publishes one. They sit next to the carrier's name at roughly 20px tall.
 - **Small.** These render at 16–28px. An SVG should be a few KB; a raster file

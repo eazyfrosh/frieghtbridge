@@ -35,9 +35,9 @@ interface CarrierLogoProps {
  * the container waits on the image and the image waits on the container.
  */
 const SIZES = {
-  sm: { tile: 'h-6 px-1', image: 'h-4 max-w-[3.25rem]', text: 'text-[0.6rem]' },
-  md: { tile: 'h-7 px-1.5', image: 'h-[1.15rem] max-w-[4.5rem]', text: 'text-[0.62rem]' },
-  lg: { tile: 'h-9 px-2', image: 'h-6 max-w-[6rem]', text: 'text-[0.7rem]' },
+  sm: { tile: 'h-6 px-1', image: 'h-4 max-w-[4.5rem]', text: 'text-[0.6rem]' },
+  md: { tile: 'h-7 px-1.5', image: 'h-[1.15rem] max-w-[5.5rem]', text: 'text-[0.62rem]' },
+  lg: { tile: 'h-9 px-2', image: 'h-6 max-w-[7rem]', text: 'text-[0.7rem]' },
 } as const;
 
 export function CarrierLogo({
