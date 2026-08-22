@@ -1,4 +1,4 @@
-import { AlertTriangle, ArrowLeft, Flag, MapPin, Navigation, Package, Truck } from 'lucide-react';
+import { ArrowLeft, Flag, MapPin, Navigation, Package, Truck } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { AddEventForm } from '@/components/admin/AddEventForm';
@@ -126,9 +126,10 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
                     {resolved.carrierTrackingNumber}
                   </a>
                 ) : resolved.carrierTrackingNumber ? (
-                  // Generated: shown, because it is the reference on the
-                  // paperwork, but not linked, because {platform.name} has
-                  // never heard of it.
+                  // An allocated reference is shown plainly and not linked out.
+                  // It tracks on this platform like any other; the carrier has
+                  // no record of it, which is why there is no link — but that
+                  // needs no notice, since nothing here offers one anyway.
                   <span className="font-mono font-medium text-ink-900">
                     {resolved.carrierTrackingNumber}
                   </span>
@@ -138,13 +139,6 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
                   </span>
                 )}
               </dd>
-              {resolved.carrierNumberSource === 'generated' && (
-                <dd className="mt-1.5 flex items-start gap-1.5 text-xs text-amber-700 dark:text-amber-300">
-                  <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                  Allocated by us in {platform.name}&rsquo;s format — they have not issued it, so it will
-                  not track on their site. Replace it with theirs when you have it.
-                </dd>
-              )}
             </div>
             {shipment.labelUrl && (
               <div>
