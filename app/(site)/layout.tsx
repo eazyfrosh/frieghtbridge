@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { ChatWidget } from '@/components/ChatWidget';
 import { Footer } from '@/components/Footer';
 import { Navbar } from '@/components/Navbar';
+import { WhatsAppButton } from '@/components/WhatsAppButton';
 
 /**
  * Chrome for the public marketing site. The admin section sits outside this
@@ -14,6 +15,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
       <Navbar />
       <main id="main">{children}</main>
       <Footer />
+      <WhatsAppButton />
       <ChatWidget />
     </>
   );

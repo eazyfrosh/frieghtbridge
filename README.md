@@ -238,11 +238,10 @@ This is a front-end prototype: there is no backend.
   our own numbers and identifies other carriers' from the number's format (see
   Multi-carrier tracking below). Seven milestones: Pending, Order Confirmed,
   Picked Up, In Transit, Customs Clearance, Out for Delivery, Delivered.
-  Nothing has to climb the whole ladder — the timeline shows what happened, so
-  domestic freight never records customs and a booking raised in `/admin/book`
-  starts at Order Confirmed rather than Pending, because raising it there *is*
-  the acceptance. Pending is for consignments that arrive some other way and
-  sit awaiting a rate, capacity or a go-ahead. Two stages get their own colour:
+  Every booking starts at Pending: raising one records the request, and a
+  person still has to accept it. Nothing has to climb the whole ladder,
+  though — the timeline shows what happened, so domestic freight never records
+  customs. Two stages get their own colour:
   Customs Clearance an amber "In customs", because freight in customs is
   sitting still rather than moving, and Pending a neutral grey, because waiting
   on a decision is neither progress nor trouble.
@@ -260,8 +259,8 @@ This is a front-end prototype: there is no backend.
   and the timeline sorts chronologically so a late-arriving depot scan lands in
   the right place rather than on the end.
 - **Booking is real, and multi-carrier.** `/admin/book` creates a shipment in
-  Firestore and allocates an `FBX-` tracking number that works on the public
-  tracking page immediately, on our own network or on FedEx, UPS, USPS, DHL and
+  Firestore as Pending, and allocates an `FBX-` tracking number that works on
+  the public tracking page immediately, on our own network or on FedEx, UPS, USPS, DHL and
   the rest (see Booking onto another carrier below). It is staff-only; the
   public `/quote` page remains a short enquiry that transmits nothing.
 - **Quote and contact forms** validate fully client-side and show a success
@@ -478,6 +477,22 @@ leave white text on white paper), and collapses to one column.
 
 The QR encoder is imported on demand, so the only visitors who download it are
 those who found a shipment.
+
+### Reaching a person
+
+Two floating buttons, bottom right on every public page: WhatsApp and live
+chat. Same size, shape and elevation, twelve pixels apart, so they read as one
+pair of ways to reach somebody rather than two unrelated widgets.
+
+WhatsApp sits to the *left* rather than stacked above, because the chat panel
+opens upward and would bury a stacked button the moment a conversation started.
+It also renders unconditionally, unlike the chat launcher, which hides itself
+when the server cannot store conversations — WhatsApp needs nothing from us,
+which matters most exactly when chat is down.
+
+The bubble is WhatsApp green with a dark glyph, matching the chat bubble's
+fill-and-dark-mark treatment. The familiar white-on-green sits at about 1.9:1,
+well under the 3:1 a graphical element needs.
 
 ## Live chat
 

@@ -693,8 +693,11 @@ function shipmentFromBooking(
     trackingNumber,
     // Reads "Pallet · UPS 2nd Day Air" off-network, "Pallet · Standard" on it,
     // since prefixing our own services with our own name says nothing.
+    // Every booking starts unaccepted. Raising one records the request; a
+    // person still has to commit to it, and the first thing an operator does
+    // on the shipment page is move it on.
     service: `${booking.shipmentType} · ${serviceName}`,
-    status: 'Order Confirmed',
+    status: 'Pending',
     origin,
     destination,
     currentLocation: origin,
@@ -720,12 +723,12 @@ function shipmentFromBooking(
     } satisfies ShipmentCustomer,
     events: [
       {
-        stage: 'Order Confirmed',
-        title: 'Booking confirmed',
+        stage: 'Pending',
+        title: 'Booking received',
         location: origin,
         description: `${booking.pieces} ${booking.shipmentType.toLowerCase()}${
           booking.pieces === 1 ? '' : 's'
-        } booked for collection on ${booking.pickupDate}. ${serviceName} to ${destination}.${
+        } received for collection on ${booking.pickupDate}. ${serviceName} to ${destination}. Awaiting confirmation.${
           // A generated reference is deliberately left out of the customer's
           // timeline. It is shown alongside the shipment either way, but
           // writing "UPS reference X" into the history asserts UPS issued it,
