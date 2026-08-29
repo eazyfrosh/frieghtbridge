@@ -24,8 +24,20 @@ export const SITE = {
   url: 'https://freightbridge.example.com',
   email: 'hello@freightbridge.com',
   phone: '+1 (312) 555-0142',
+  /**
+   * Customer-service WhatsApp, in wa.me's own format: country code and
+   * number, digits only. No `+`, no spaces, no dashes — wa.me is documented
+   * that way and other forms are handled inconsistently across clients.
+   */
+  whatsapp: '13217803931',
   address: '210 Harbor Point Drive, Suite 900, Chicago, IL 60601',
 } as const;
+
+/** The link a WhatsApp icon points at. */
+export const WHATSAPP_URL = `https://wa.me/${SITE.whatsapp}`;
+
+/** The same number, formatted for reading rather than dialling. */
+export const WHATSAPP_DISPLAY = '+1 (321) 780-3931';
 
 /**
  * Hero photography.

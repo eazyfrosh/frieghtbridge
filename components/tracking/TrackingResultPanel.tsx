@@ -9,6 +9,7 @@ import {
   Copy,
   FileCheck2,
   Home,
+  Hourglass,
   MapPin,
   Printer,
   Ruler,
@@ -42,6 +43,7 @@ import { RouteMap } from './RouteMap';
  */
 
 const STAGE_ICONS: Record<string, typeof CircleDot> = {
+  Pending: Hourglass,
   'Order Confirmed': CircleDot,
   'Picked Up': Truck,
   'In Transit': Warehouse,

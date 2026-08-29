@@ -13,12 +13,20 @@ import { SEED_SHIPMENTS } from './fixtures/shipments';
 /**
  * The milestones a shipment passes, in order.
  *
+ * `Pending` is a booking that exists but has not been accepted yet — awaiting
+ * a rate, a customer's go-ahead, or capacity. It is not what a booking is
+ * created as; `/admin/book` still confirms on the spot, because raising a
+ * booking there *is* the acceptance. It is there for the consignments that
+ * arrive some other way and have to sit before anyone commits to them.
+ *
  * Customs sits between the long haul and the final mile, which is where it
  * happens: freight clears at the border or at the destination gateway, before
  * a local driver ever sees it. Domestic shipments simply never record the
- * stage — the timeline shows what happened, not a fixed five-step ladder.
+ * stage — the timeline shows what happened, not a fixed ladder every shipment
+ * has to climb.
  */
 export const TRACKING_STAGES = [
+  'Pending',
   'Order Confirmed',
   'Picked Up',
   'In Transit',
@@ -385,6 +393,15 @@ export function statusTone(status: ShipmentStatus): {
         label: 'Out for delivery',
         className: 'bg-brand-800 text-white ring-brand-900/30',
         dot: 'bg-white',
+      };
+    // Neutral: pending is not progress and not trouble, it is a shipment
+    // waiting on a decision. Giving it the in-transit blue would suggest
+    // something is moving when nothing is.
+    case 'Pending':
+      return {
+        label: 'Pending',
+        className: 'bg-ink-100 text-ink-700 ring-ink-300/40',
+        dot: 'bg-ink-400',
       };
     // Amber, not the in-transit blue: customs is freight sitting still, and a
     // customer looking at the page wants to see that it is held rather than

@@ -3,7 +3,8 @@ import { Clock4, Headphones, Mail, MapPin, MessageSquare, Phone, Truck } from 'l
 import { ContactForm } from '@/components/ContactForm';
 import { PageHero } from '@/components/PageHero';
 import { Reveal, RevealItem, StaggerGroup } from '@/components/ui/Reveal';
-import { SITE } from '@/lib/site';
+import { WhatsAppIcon } from '@/components/icons/WhatsApp';
+import { SITE, WHATSAPP_DISPLAY, WHATSAPP_URL } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: 'Contact FreightBridge Logistics',
@@ -19,6 +20,14 @@ const CHANNELS = [
     body: 'Live coverage for active shipments, 24 hours a day.',
     action: SITE.phone,
     href: `tel:${SITE.phone.replace(/[^+\d]/g, '')}`,
+  },
+  {
+    icon: WhatsAppIcon,
+    title: 'WhatsApp us',
+    body: 'Message customer service for a quick answer on an active shipment.',
+    action: WHATSAPP_DISPLAY,
+    href: WHATSAPP_URL,
+    external: true,
   },
   {
     icon: Mail,
@@ -66,11 +75,13 @@ export default function ContactPage() {
 
       <section className="section bg-surface">
         <div className="container">
-          <StaggerGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" gap={0.07}>
+          <StaggerGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" gap={0.07}>
             {CHANNELS.map((channel) => (
               <RevealItem key={channel.title}>
                 <a
                   href={channel.href}
+                  target={channel.external ? '_blank' : undefined}
+                  rel={channel.external ? 'noopener noreferrer' : undefined}
                   className="group flex h-full flex-col rounded-3xl border border-ink-100 bg-surface p-6 shadow-soft transition-all duration-400 ease-premium hover:-translate-y-1 hover:border-brand-200 dark:hover:border-brand-500/30 hover:shadow-card"
                 >
                   <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-300 transition-colors duration-400 group-hover:bg-brand-600 group-hover:text-white">

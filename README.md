@@ -236,13 +236,16 @@ This is a front-end prototype: there is no backend.
 
 - **Tracking** calls `GET /api/tracking`, which reads Firestore server-side for
   our own numbers and identifies other carriers' from the number's format (see
-  Multi-carrier tracking below). Six milestones: Order Confirmed, Picked Up, In
-  Transit, Customs Clearance, Out for Delivery, Delivered. Customs sits between
-  the long haul and the final mile because that is where it happens; domestic
-  freight simply never records the stage, since the timeline shows what
-  happened rather than a fixed ladder. It carries an amber "In customs" pill
-  rather than the in-transit blue — freight in customs is sitting still, and
-  both the customer and an operator scanning a list want to see that.
+  Multi-carrier tracking below). Seven milestones: Pending, Order Confirmed,
+  Picked Up, In Transit, Customs Clearance, Out for Delivery, Delivered.
+  Nothing has to climb the whole ladder — the timeline shows what happened, so
+  domestic freight never records customs and a booking raised in `/admin/book`
+  starts at Order Confirmed rather than Pending, because raising it there *is*
+  the acceptance. Pending is for consignments that arrive some other way and
+  sit awaiting a rate, capacity or a go-ahead. Two stages get their own colour:
+  Customs Clearance an amber "In customs", because freight in customs is
+  sitting still rather than moving, and Pending a neutral grey, because waiting
+  on a decision is neither progress nor trouble.
   There are no demo shipments: `lib/fixtures/shipments.ts` is empty, so the
   site shows only what has actually been booked. The four specimen
   consignments it used to hold were removed because a realistic number on a

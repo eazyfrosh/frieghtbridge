@@ -1,9 +1,13 @@
 import { Linkedin, Mail, MapPin, Phone, Twitter, Youtube } from 'lucide-react';
 import Link from 'next/link';
-import { FOOTER_COLUMNS, SITE } from '@/lib/site';
+import { FOOTER_COLUMNS, SITE, WHATSAPP_URL } from '@/lib/site';
+import { WhatsAppIcon } from './icons/WhatsApp';
 import { Logo } from './ui/Logo';
 
+// WhatsApp goes first: it is a way to reach a person, not a feed to follow,
+// and it is the one in this row a customer with a problem actually wants.
 const SOCIALS = [
+  { label: 'Message FreightBridge Logistics on WhatsApp', href: WHATSAPP_URL, icon: WhatsAppIcon },
   { label: 'FreightBridge Logistics on LinkedIn', href: 'https://www.linkedin.com', icon: Linkedin },
   { label: 'FreightBridge Logistics on X', href: 'https://x.com', icon: Twitter },
   { label: 'FreightBridge Logistics on YouTube', href: 'https://www.youtube.com', icon: Youtube },

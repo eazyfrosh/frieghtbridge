@@ -43,6 +43,10 @@ export function adminStatusTone(status: ShipmentStatus): string {
       return 'bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 ring-rose-600/20';
     case 'Out for Delivery':
       return 'bg-brand-800 text-white ring-brand-900/30';
+    // Waiting on a decision, not on freight. Neutral so it does not read as
+    // progress in a list.
+    case 'Pending':
+      return 'bg-ink-100 text-ink-700 ring-ink-300/40';
     // Held, not moving — worth spotting in a list of forty shipments.
     case 'Customs Clearance':
       return 'bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-200 ring-amber-600/20';

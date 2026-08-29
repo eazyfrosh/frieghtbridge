@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { CircleDashed, Clock4, FileCheck2, Headphones, PackageSearch, ShieldCheck, Truck } from 'lucide-react';
+import { CircleDashed, Clock4, FileCheck2, Headphones, Hourglass, PackageSearch, ShieldCheck, Truck } from 'lucide-react';
 import { PageHero } from '@/components/PageHero';
 import { TrackingWidget } from '@/components/TrackingWidget';
 import { Button } from '@/components/ui/Button';
@@ -17,6 +17,11 @@ export const metadata: Metadata = {
 };
 
 const STATUS_GUIDE = [
+  {
+    icon: Hourglass,
+    title: 'Pending',
+    body: 'The booking is with us and waiting to be accepted — on a rate, on capacity, or on your go-ahead.',
+  },
   {
     icon: PackageSearch,
     title: 'Order Confirmed',
