@@ -29,7 +29,7 @@ export const SITE = {
    * number, digits only. No `+`, no spaces, no dashes — wa.me is documented
    * that way and other forms are handled inconsistently across clients.
    */
-  whatsapp: '13217803931',
+  whatsapp: '18252512881',
   address: '210 Harbor Point Drive, Suite 900, Chicago, IL 60601',
 } as const;
 
@@ -37,7 +37,7 @@ export const SITE = {
 export const WHATSAPP_URL = `https://wa.me/${SITE.whatsapp}`;
 
 /** The same number, formatted for reading rather than dialling. */
-export const WHATSAPP_DISPLAY = '+1 (321) 780-3931';
+export const WHATSAPP_DISPLAY = '+1 (825) 251-2881';
 
 /**
  * Hero photography.
