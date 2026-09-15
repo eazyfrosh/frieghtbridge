@@ -97,6 +97,32 @@ export function TrackingWidget({
   const carrierResult = outcome?.ok === 'carrier' ? outcome : null;
   const error = outcome?.ok === false ? outcome.reason : null;
 
+  // Refresh the displayed shipment without clearing its history or interrupting
+  // the visitor. Stop on navigation/search and ignore late responses.
+  const displayedNumber = result?.trackingNumber;
+  useEffect(() => {
+    if (!displayedNumber) return;
+    let disposed = false;
+    let refreshing = false;
+    async function refresh() {
+      if (document.visibilityState !== 'visible' || refreshing) return;
+      refreshing = true;
+      try {
+        const latest = await lookupShipment(displayedNumber!);
+        if (!disposed && latest.ok === true) setOutcome(latest);
+      } finally {
+        refreshing = false;
+      }
+    }
+    const timer = window.setInterval(() => void refresh(), 15_000);
+    document.addEventListener('visibilitychange', refresh);
+    return () => {
+      disposed = true;
+      window.clearInterval(timer);
+      document.removeEventListener('visibilitychange', refresh);
+    };
+  }, [displayedNumber]);
+
   // Detected live, as they type. Telling someone "that looks like a UPS
   // number" before they submit is the difference between a search box and one
   // that appears to understand what was pasted into it.

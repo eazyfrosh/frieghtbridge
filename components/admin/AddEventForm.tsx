@@ -39,7 +39,7 @@ export function AddEventForm({ trackingNumber, stages, currentStatus, writable }
   // "now", and `datetime-local` only holds minutes — so a scan recorded in the
   // same minute as an earlier event would be stamped :00 and sort in front of
   // it. Left untouched, we send the real instant instead of the rounded one.
-  const [defaultAt] = useState(at);
+  const [defaultAt, setDefaultAt] = useState(at);
   const [advance, setAdvance] = useState(true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,6 +47,7 @@ export function AddEventForm({ trackingNumber, stages, currentStatus, writable }
 
   async function submit(event: FormEvent) {
     event.preventDefault();
+    if (busy) return;
     setBusy(true);
     setError(null);
     setAdded(null);
@@ -76,11 +77,13 @@ export function AddEventForm({ trackingNumber, stages, currentStatus, writable }
         return;
       }
 
-      setAdded(`${stage} recorded.`);
+      setAdded(`${stage} saved to the customer's tracking history.`);
       setTitle('');
       setLocation('');
       setDescription('');
-      setAt(nowForInput());
+      const nextAt = nowForInput();
+      setAt(nextAt);
+      setDefaultAt(nextAt);
       router.refresh();
     } catch {
       setError('Could not reach the server.');
@@ -100,7 +103,7 @@ export function AddEventForm({ trackingNumber, stages, currentStatus, writable }
           className="inline-flex h-10 items-center gap-2 rounded-xl bg-night-900 px-4 text-[0.92rem] font-semibold text-white transition-colors hover:bg-night-800 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Plus className="h-4 w-4" aria-hidden="true" />
-          Add tracking event
+          ADD TRACKING EVENT
         </button>
       </div>
     );
@@ -112,6 +115,9 @@ export function AddEventForm({ trackingNumber, stages, currentStatus, writable }
         <MapPin className="h-[1.05rem] w-[1.05rem] text-brand-700 dark:text-brand-300" aria-hidden="true" />
         Add tracking event
       </h3>
+      <p className="mt-2 text-sm text-ink-500">
+        Save an update for this shipment. Customers see its title, location, description and time in Tracking history.
+      </p>
 
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <div>
@@ -139,6 +145,7 @@ export function AddEventForm({ trackingNumber, stages, currentStatus, writable }
           <input
             id="event-at"
             type="datetime-local"
+            required
             value={at}
             onChange={(event) => setAt(event.target.value)}
             className="mt-1.5 h-11 w-full rounded-xl border border-ink-200 px-3.5 text-[0.95rem] text-ink-900 focus:border-brand-500 focus:outline-none"
@@ -216,6 +223,9 @@ export function AddEventForm({ trackingNumber, stages, currentStatus, writable }
         <p role="status" className="mt-4 flex items-center gap-2 text-sm text-green-700 dark:text-green-300">
           <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden="true" />
           {added}
+          <a href={`/tracking?number=${encodeURIComponent(trackingNumber)}`} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">
+            View tracking history
+          </a>
         </p>
       )}
 
@@ -226,7 +236,7 @@ export function AddEventForm({ trackingNumber, stages, currentStatus, writable }
           className="inline-flex h-11 items-center gap-2 rounded-xl bg-brand-500 px-5 text-[0.95rem] font-semibold text-night-950 transition-colors hover:bg-brand-400 disabled:cursor-progress disabled:opacity-60"
         >
           <Plus className="h-4 w-4" aria-hidden="true" />
-          {busy ? 'Recording…' : 'Record event'}
+          {busy ? 'Saving…' : 'Add tracking event'}
         </button>
         <button
           type="button"

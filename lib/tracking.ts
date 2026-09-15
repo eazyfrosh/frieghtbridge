@@ -329,6 +329,7 @@ export async function lookupShipment(rawInput: string): Promise<LookupOutcome> {
 
   try {
     const response = await fetch(`/api/tracking?number=${encodeURIComponent(normalized)}`, {
+      cache: 'no-store',
       headers: { Accept: 'application/json' },
     });
 

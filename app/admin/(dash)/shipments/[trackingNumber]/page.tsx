@@ -85,6 +85,13 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
       </div>
       <p className="mt-1.5 text-[0.95rem] text-ink-500">{shipment.service}</p>
 
+      <AddEventForm
+        trackingNumber={shipment.trackingNumber}
+        stages={[...TRACKING_STAGES]}
+        currentStatus={shipment.status}
+        writable={writable}
+      />
+
       <dl className="mt-8 grid gap-px overflow-hidden rounded-2xl border border-ink-200 bg-ink-200 sm:grid-cols-2 lg:grid-cols-3">
         {facts.map((fact) => (
           <div key={fact.label} className="bg-surface p-5">
@@ -224,7 +231,7 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
       />
 
       <section className="mt-8 rounded-2xl border border-ink-200 bg-surface p-5 sm:p-7">
-        <h2 className="font-display text-lg font-semibold text-ink-900">Scan history</h2>
+        <h2 className="font-display text-lg font-semibold text-ink-900">Tracking history</h2>
         <ol className="mt-5">
           {resolved.events.map((event, index) => {
             const happened = event.state !== 'upcoming';
@@ -264,12 +271,6 @@ export default async function AdminShipmentDetailPage({ params }: PageProps) {
           })}
         </ol>
 
-        <AddEventForm
-          trackingNumber={shipment.trackingNumber}
-          stages={[...TRACKING_STAGES]}
-          currentStatus={shipment.status}
-          writable={writable}
-        />
       </section>
 
       <NotifyPanel
