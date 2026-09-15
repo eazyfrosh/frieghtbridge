@@ -51,7 +51,7 @@ export function emailConfigError(): string | null {
 }
 
 function siteUrl(): string {
-  return (process.env.NEXT_PUBLIC_SITE_URL?.trim() || SITE.url).replace(/\/$/, '');
+  return (process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'https://www.freightbridgelogistics.app').replace(/\/$/, '');
 }
 
 // ---------------------------------------------------------------------------
@@ -200,7 +200,11 @@ export function renderTemplate(
   return {
     subject,
     text,
-    html: renderHtml(text, { companyName: variables.companyName ?? SITE.name, trackingUrl: variables.trackingUrl }),
+    html: renderHtml(text, {
+      companyName: variables.companyName ?? SITE.name,
+      trackingUrl: variables.trackingUrl,
+      logoUrl: `${siteUrl()}/images/email-logo.png`,
+    }),
   };
 }
 

@@ -183,7 +183,7 @@ function escapeHtml(value: string): string {
  * interpolated is escaped: the body is operator-authored, but a shipment field
  * is not, and an address containing `<` should not be able to reshape the mail.
  */
-export function renderHtml(body: string, options: { companyName: string; trackingUrl?: string }): string {
+export function renderHtml(body: string, options: { companyName: string; trackingUrl?: string; logoUrl?: string }): string {
   const paragraphs = body
     .split(/\n{2,}/)
     .map((block) => block.trim())
@@ -213,9 +213,13 @@ export function renderHtml(body: string, options: { companyName: string; trackin
     <tr><td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e6e6e3;">
         <tr><td style="background:#111111;padding:20px 28px;">
-          <span style="color:#ffffff;font-size:18px;font-weight:700;letter-spacing:-0.02em;font-family:Helvetica,Arial,sans-serif;">
+          <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+          ${options.logoUrl ? `<td width="48" style="width:48px;vertical-align:middle;">
+            <img src="${escapeHtml(options.logoUrl)}" width="36" height="36" alt="FreightBridge bridge logo" style="display:block;width:36px;height:36px;border:0;">
+          </td>` : ''}
+          <td style="vertical-align:middle;color:#ffffff;font-size:18px;font-weight:700;letter-spacing:-0.02em;font-family:Helvetica,Arial,sans-serif;">
             ${escapeHtml(options.companyName)}
-          </span>
+          </td></tr></table>
         </td></tr>
         <tr><td style="padding:28px;font-family:Helvetica,Arial,sans-serif;">
           ${paragraphs}
