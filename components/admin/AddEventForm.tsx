@@ -3,6 +3,42 @@
 import { AlertCircle, CheckCircle2, MapPin, Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState, type FormEvent } from 'react';
+import type { TrackingStage } from '@/lib/tracking';
+
+const EVENT_COPY: Record<TrackingStage, { title: string; description: string }> = {
+  Pending: {
+    title: 'Shipment pending',
+    description: 'Your shipment is awaiting confirmation before it can proceed.',
+  },
+  'Order Confirmed': {
+    title: 'Shipment confirmed',
+    description: 'Your shipment has been confirmed and is awaiting collection.',
+  },
+  'Picked Up': {
+    title: 'Shipment picked up',
+    description: 'Your shipment has been collected and is ready for onward transport.',
+  },
+  'In Transit': {
+    title: 'Shipment in transit',
+    description: 'Your shipment is in transit to its destination.',
+  },
+  'Customs Clearance': {
+    title: 'Shipment undergoing customs clearance',
+    description: 'Your shipment is undergoing customs clearance before continuing its journey.',
+  },
+  'Out for Delivery': {
+    title: 'Shipment out for delivery',
+    description: 'Your shipment is on its final delivery journey. Please ensure someone is available to receive it.',
+  },
+  Delivered: {
+    title: 'Shipment delivered',
+    description: 'Your shipment has been delivered. Thank you for choosing FreightBridge Logistics.',
+  },
+};
+
+function eventCopy(stage: string) {
+  return EVENT_COPY[stage as TrackingStage] ?? EVENT_COPY.Pending;
+}
 
 /**
  * Record a tracking scan against a shipment.
@@ -31,9 +67,9 @@ export function AddEventForm({ trackingNumber, stages, currentStatus, writable }
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [stage, setStage] = useState(stages.includes(currentStatus) ? currentStatus : stages[0]);
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState(() => eventCopy(stage).title);
   const [location, setLocation] = useState('');
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState(() => eventCopy(stage).description);
   const [at, setAt] = useState(nowForInput());
   // What the field was prefilled with. An operator who never touched it means
   // "now", and `datetime-local` only holds minutes — so a scan recorded in the
@@ -78,9 +114,9 @@ export function AddEventForm({ trackingNumber, stages, currentStatus, writable }
       }
 
       setAdded(`${stage} saved to the customer's tracking history.`);
-      setTitle('');
+      setTitle(eventCopy(stage).title);
       setLocation('');
-      setDescription('');
+      setDescription(eventCopy(stage).description);
       const nextAt = nowForInput();
       setAt(nextAt);
       setDefaultAt(nextAt);
@@ -127,7 +163,13 @@ export function AddEventForm({ trackingNumber, stages, currentStatus, writable }
           <select
             id="event-stage"
             value={stage}
-            onChange={(event) => setStage(event.target.value)}
+            onChange={(event) => {
+              const nextStage = event.target.value;
+              setStage(nextStage);
+              setTitle(eventCopy(nextStage).title);
+              setDescription(eventCopy(nextStage).description);
+              setAdded(null);
+            }}
             className="mt-1.5 h-11 w-full rounded-xl border border-ink-200 bg-surface px-3.5 text-[0.95rem] text-ink-900 focus:border-brand-500 focus:outline-none"
           >
             {stages.map((option) => (
@@ -136,6 +178,9 @@ export function AddEventForm({ trackingNumber, stages, currentStatus, writable }
               </option>
             ))}
           </select>
+          <p className="mt-1.5 text-xs text-ink-500">
+            Choosing a stage fills the title and description automatically. You can edit them before saving.
+          </p>
         </div>
 
         <div>
