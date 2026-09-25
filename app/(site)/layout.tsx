@@ -3,6 +3,7 @@ import { ChatWidget } from '@/components/ChatWidget';
 import { Footer } from '@/components/Footer';
 import { Navbar } from '@/components/Navbar';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
+import { VisitorTracker } from '@/components/VisitorTracker';
 
 /**
  * Chrome for the public marketing site. The admin section sits outside this
@@ -17,6 +18,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
       <Footer />
       <WhatsAppButton />
       <ChatWidget />
+      <VisitorTracker />
     </>
   );
 }
